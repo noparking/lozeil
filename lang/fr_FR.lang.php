@@ -8,21 +8,21 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-$__['Oui']					 = "Oui";
-$__['Non']					 = "Non";
-$__['Id']				 	 = "Id";
-$__['Account']			 	 = "Compte";
-$__['Source']				 = "Source";
-$__['Amount_inc_tax']		 = "Montant TTC";
-$__['Type']					 = "Type";
-$__['VAT']					 = "TVA";
-$__['Amount_excl_tax']		 = "Montant HT";
-$__['Delay']				 = "Date";
-$__['Paid']					 = "Payé";
-$__['Success']				 = "Succes";
-$__['Split']				 = "Séparer";
+$__['Account'] = "Compte";
+$__['Amount excl. tax'] = "Montant HT";
+$__['Amount inc tax'] = "Montant TTC";
+$__['Delay'] = "Echéance";
+$__['Id'] = "Id";
+$__['No'] = "Non";
+$__['Paid'] = "Payé";
+$__['Source'] = "Source";
+$__['Split'] = "Séparer";
+$__['Success'] = "Succès";
+$__['Type'] = "Type";
+$__['VAT'] = "TVA";
+$__['Yes'] = "Oui";
 
-$status_add_ok               = "addition OK";
+$__['add OK'] = "ajout OK";
 $status_add_multi            = "additions OK";
 $status_nothing              = "nothing to do ;)";
 $status_exist                = "existing record";
