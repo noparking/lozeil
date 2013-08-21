@@ -289,7 +289,6 @@ class Collector implements iterator, countable, arrayAccess {
 	protected function get_order() {
 		$order = "";
 		
-
 		if ($this->order_col_name !== null) {
 			$order = " ORDER BY ".$this->order_col_name;
 

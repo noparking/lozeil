@@ -30,11 +30,7 @@ class Theme_Default {
 	function css_files() {
 		$css_files[] = "medias/css/styles.css";
 		
-		$html = "";
-		foreach ($css_files as $css_file) {
-			$html .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$css_file."\" />\n";
-		}
-		return $html;
+		return show_css_files($css_files);
 	}
 	
 	function js_files() {
@@ -42,11 +38,7 @@ class Theme_Default {
 		$js_files[] = "medias/js/jquery-drag_drop.js";
 		$js_files[] = "medias/js/drag_drop.js";
 		
-		$html = "";
-		foreach ($js_files as $js_file) {
-			$html .= "<script src=\"".$js_file."\" language=\"JavaScript\" type=\"text/javascript\"></script>\n";
-		}
-		return $html;
+		return show_js_files($js_files);
 	}
 	
 	function content_top() {

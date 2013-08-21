@@ -19,7 +19,7 @@ class Writings extends Collector  {
 			$class = substr(__CLASS__, 0, -1);
 		}
 		if ($table === null) {
-			$table = $GLOBALS['dbconfig']['table_writing'];
+			$table = $GLOBALS['dbconfig']['table_writings'];
 		}
 		if ($db === null) {
 			$db = new db();
@@ -32,20 +32,20 @@ class Writings extends Collector  {
 
 		if (isset($this->account_id)) {
 			$join[] = "
-				LEFT JOIN ".$this->db->config['table_account']."
-				ON ".$this->db->config['table_account'].".id = ".$this->db->config['table_writing'].".account_id
+				LEFT JOIN ".$this->db->config['table_accounts']."
+				ON ".$this->db->config['table_accounts'].".id = ".$this->db->config['table_writings'].".account_id
 			";	
 	}
 		if (isset($this->source_id)) {
 			$join[] = "
-				LEFT JOIN ".$this->db->config['table_source']."
-				ON ".$this->db->config['table_source'].".id = ".$this->db->config['table_writing'].".source_id
+				LEFT JOIN ".$this->db->config['table_sources']."
+				ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".source_id
 			";
 		}
 		if (isset($this->type_id)) {
 			$join[] = "
-				LEFT JOIN ".$this->db->config['table_type']."
-				ON ".$this->db->config['table_type'].".id = ".$this->db->config['table_writing'].".type_id
+				LEFT JOIN ".$this->db->config['table_types']."
+				ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".type_id
 			";
 		}
 		
@@ -54,7 +54,7 @@ class Writings extends Collector  {
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		$columns[] = $this->db->config['table_account'].".name as account_name, ".$this->db->config['table_source'].".name as source_name, ".$this->db->config['table_type'].".name as type_name";
+		$columns[] = $this->db->config['table_accounts'].".name as account_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name";
 
 		return $columns;
 	}

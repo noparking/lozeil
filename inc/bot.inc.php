@@ -35,13 +35,13 @@ class Bot {
 	
 	function uninstall_database() {
 		$db = new db();
-                $tables = array();
-                foreach ($GLOBALS['dbconfig'] as $parameter => $table) {
-                        if (substr($parameter, 0, 6) == 'table_') {
-                                $tables[] = $table;
-                        }
-                }
-                $db->query("DROP TABLE IF EXISTS ".join(", ", $tables));
+			$tables = array();
+			foreach ($GLOBALS['dbconfig'] as $parameter => $table) {
+				if (substr($parameter, 0, 6) == 'table_') {
+					$tables[] = $table;
+				}
+			}
+		$db->query("DROP TABLE IF EXISTS ".join(", ", $tables));
 		return true;
 	}
 	
@@ -53,7 +53,6 @@ class Bot {
 				$help .= "--".$method->getName()."\n";
 			}
 		}
-
 		return $help;
 	}
 }

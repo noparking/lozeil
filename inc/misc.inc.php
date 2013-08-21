@@ -12,7 +12,6 @@ function clean_location($location) {
 	return preg_replace("/\/(.*\/)*([a-zA-Z_]*\.php[0-9]?)(.*)/", "\\2", $location);
 }
 
-
 function __($string, $replacements = null) {
 	if (isset($GLOBALS['__'][$string])) {
 		$string = $GLOBALS['__'][$string];

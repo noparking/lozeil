@@ -14,10 +14,10 @@ class tests_Writing extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"writing",
-			"account",
-			"type",
-			"source"
+			"writings",
+			"accounts",
+			"types",
+			"sources"
 		);
 	}
 	

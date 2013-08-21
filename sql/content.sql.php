@@ -9,19 +9,19 @@
 */
 
 $queries = array(
-	'account' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_accounts']." (
+	'accounts' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_accounts']." (
 		  id int(21) NOT NULL AUTO_INCREMENT,
 		  name VARCHAR(100) NOT NULL DEFAULT '',
 		  PRIMARY KEY (`id`)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	
-	'source' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_sources']." (
+	'sources' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_sources']." (
 		  id int(21) NOT NULL AUTO_INCREMENT,
 		  name VARCHAR(100) NOT NULL DEFAULT '',
 		  PRIMARY KEY (`id`)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	
-	'type' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_types']." (
+	'types' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_types']." (
 		  id int(21) NOT NULL AUTO_INCREMENT,
 		  name VARCHAR(100) NOT NULL DEFAULT '',
 		  PRIMARY KEY (`id`)

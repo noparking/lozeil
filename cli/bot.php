@@ -8,7 +8,6 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-
 require dirname(__FILE__)."/../inc/require.inc.php";
 
 if (isset($argv)) {

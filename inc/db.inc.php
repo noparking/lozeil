@@ -8,7 +8,7 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-class db implements serializable {
+class db {
 	public $link = null;
 	public $config = array();
 
@@ -214,6 +214,10 @@ class db implements serializable {
 				break;
 		}
 		return $value;
+	}
+	
+	function fetchArray($result) {
+		return mysql_fetch_array($result, MYSQL_ASSOC);
 	}
 
 	private function log($message) {

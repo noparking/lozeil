@@ -12,14 +12,11 @@ $current_directory = dirname(__FILE__);
 
 require $current_directory."/../cfg/config.inc.php";
 require $current_directory."/../cfg/param.inc.php";
-
 require $current_directory."/../lang/fr_FR.lang.php";
 
 require $current_directory."/bot.inc.php";
 require $current_directory."/collector.inc.php";
 require $current_directory."/db.inc.php";
-require $current_directory."/db_reporter.inc.php";
-require $current_directory."/error.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/html.inc.php";
 require $current_directory."/misc.inc.php";

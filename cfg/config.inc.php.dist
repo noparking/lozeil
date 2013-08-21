@@ -14,6 +14,8 @@ $config['version'] = "1";
 
 $config['root_url'] = "";		// adresse - de type URL - de l'application. Note : ne pas mettre de slash à la fin.
 
+$config['layout_mediaserver'] = "";		// serveur pour tous les medias -- js, css, images ("", par défaut)
+
 ## database config
 $dbconfig['type'] = "mysql";		// type de serveur de la base de données (mysql, par défaut)
 $dbconfig['host'] = "localhost";		// nom du serveur de la base de données (localhost, par défaut)
@@ -23,7 +25,7 @@ $dbconfig['name'] = "lozeil";		// nom de la base de données
 $dbconfig['new'] = "0";		// forcer la création d'une nouvelle connexion
 
 # software tables
-$dbconfig['table_writing'] = "writing";
-$dbconfig['table_account'] = "account";
-$dbconfig['table_type'] = "type";
-$dbconfig['table_source'] = "source";
+$dbconfig['table_accounts'] = "accounts";
+$dbconfig['table_sources'] = "sources";
+$dbconfig['table_types'] = "types";
+$dbconfig['table_writings'] = "writings";
