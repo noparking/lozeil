@@ -106,3 +106,13 @@ body {
 	margin: 50px;
 	box-shadow: 3px 3px 5px #888888;
 }
+
+.split {
+	cursor: pointer;
+	vertical-align: middle;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/arrow_split.png);
+	background-position: left center;
+}

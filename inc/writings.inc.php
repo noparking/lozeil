@@ -12,9 +12,6 @@ class Writings extends Collector  {
 	public $filter = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
-		$this->account_id = 1;
-		$this->source_id = 1;
-		$this->type_id = 1;
 		if ($class === null) {
 			$class = substr(__CLASS__, 0, -1);
 		}
@@ -29,25 +26,18 @@ class Writings extends Collector  {
 	
 	function get_join() {
 		$join = parent::get_join();
-
-		if (isset($this->account_id)) {
-			$join[] = "
-				LEFT JOIN ".$this->db->config['table_accounts']."
-				ON ".$this->db->config['table_accounts'].".id = ".$this->db->config['table_writings'].".account_id
-			";	
-	}
-		if (isset($this->source_id)) {
-			$join[] = "
-				LEFT JOIN ".$this->db->config['table_sources']."
-				ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".source_id
-			";
-		}
-		if (isset($this->type_id)) {
-			$join[] = "
-				LEFT JOIN ".$this->db->config['table_types']."
-				ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".type_id
-			";
-		}
+		$join[] = "
+			LEFT JOIN ".$this->db->config['table_accounts']."
+			ON ".$this->db->config['table_accounts'].".id = ".$this->db->config['table_writings'].".account_id
+		";
+		$join[] = "
+			LEFT JOIN ".$this->db->config['table_sources']."
+			ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".source_id
+		";
+		$join[] = "
+			LEFT JOIN ".$this->db->config['table_types']."
+			ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".type_id
+		";
 		
 		return $join;
 	}
@@ -155,7 +145,7 @@ class Writings extends Collector  {
 					$writing->vat,
 					round($writing->amount_inc_tax, 2),
 					$writing->paid_to_text($writing->paid),
-					"<button class=\"split\">".__("split")."</button>"
+					"<div class=\"split\"></div>"
 				),
 			);
 		}
