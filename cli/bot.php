@@ -31,4 +31,3 @@ foreach ($args as $arg) {
 		echo $bot->help();
 	}
 }
-
