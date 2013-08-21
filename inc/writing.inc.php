@@ -38,7 +38,7 @@ class Writing extends Record {
 			if ($id === null) {
 				$id = $this->id;
 			}
-			return parent::load($this->db->config['table_writing'], array('id' => (int)$id));
+			return parent::load($this->db->config['table_writings'], array('id' => (int)$id));
 		}
 	}
 	
@@ -54,10 +54,10 @@ class Writing extends Record {
 	}
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_writing'].
+		$query = "DELETE FROM ".$this->db->config['table_writings'].
 		" WHERE id = '".$this->id."'";
 		$result = $this->db->query($query);
-		$this->db->status($result[1], "u", $GLOBALS['txt_writing']);
+		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -66,7 +66,7 @@ class Writing extends Record {
 		$vat = is_null($this->vat) ? "vat = NULL" : "vat = ".$this->vat;
 		$amount_inc_tax = is_null($this->amount_inc_tax) ? "amount_inc_tax = NULL" : "amount_inc_tax = ".$this->amount_inc_tax;
 		$amount_excl_tax = is_null($this->amount_excl_tax) ? "amount_excl_tax = NULL" : "amount_excl_tax = ".$this->amount_excl_tax;
-		$query = "UPDATE ".$this->db->config['table_writing'].
+		$query = "UPDATE ".$this->db->config['table_writings'].
 		" SET account_id = ".(int)$this->account_id.",
 		source_id = ".(int)$this->source_id.",
 		".$amount_inc_tax.",
@@ -77,7 +77,7 @@ class Writing extends Record {
 		delay = ".(int)$this->delay."
 		WHERE id = ".(int)$this->id;
 		$result = $this->db->query($query);
-		$this->db->status($result[1], "u", $GLOBALS['txt_writing']);
+		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -86,8 +86,8 @@ class Writing extends Record {
 		$vat = is_null($this->vat) ? "vat = NULL" : "vat = ".$this->vat;
 		$amount_inc_tax = is_null($this->amount_inc_tax) ? "amount_inc_tax = NULL" : "amount_inc_tax = ".$this->amount_inc_tax;
 		$amount_excl_tax = is_null($this->amount_excl_tax) ? "amount_excl_tax = NULL" : "amount_excl_tax = ".$this->amount_excl_tax;
-		$result = $this->db->getID("
-			INSERT INTO ".$this->db->config['table_writing']."
+		$result = $this->db->id("
+			INSERT INTO ".$this->db->config['table_writings']."
 			SET account_id = ".(int)$this->account_id.",
 			source_id = ".(int)$this->source_id.",
 			".$amount_inc_tax.",
@@ -98,7 +98,7 @@ class Writing extends Record {
 			paid = ".(int)$this->paid
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", $GLOBALS['txt_writing']);
+		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -122,9 +122,9 @@ class Writing extends Record {
 	
 	function paid_to_text() {
 		if($this->paid == 0) {
-			return __("Non");
+			return __("non");
 		} else {
-			return __("Oui");
+			return __("oui");
 		}
 	}
 	

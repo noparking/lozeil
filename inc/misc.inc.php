@@ -26,10 +26,6 @@ function __($string, $replacements = null) {
 	}
 }
 
-function compareSPLFileInfo($splFileInfo1, $splFileInfo2) {
-    return strcmp($splFileInfo1->getFileName(), $splFileInfo2->getFileName());
-}
-
 function utf8_real_decode($string) {
 	if (extension_loaded("mbstring")) {
 		$real_decode = mb_convert_encoding($string, "ISO-8859-1", "UTF-8");

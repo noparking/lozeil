@@ -44,7 +44,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
 		$this->assertEqual($writing_loaded->source_id, $writing->source_id);
 		$this->assertEqual($writing_loaded->delay, $writing->delay);
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 	}
 	
 	function test_update() {
@@ -79,7 +79,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->vat, 5.5);
 		$this->assertEqual($writing_loaded->source_id, 1);
 		$this->assertEqual($writing_loaded->delay, mktime(10, 30, 0, 7, 29, 2013));
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 	}
 	
 	function test_delete() {
@@ -95,19 +95,17 @@ class tests_Writing extends TableTestCase {
 		$writing->save();
 		$writing->delete();
 		
-		$writing_loaded = new Writing();
-		$writing_loaded->id = 1;
-		$this->assertFalse($writing_loaded->load());
-		$this->truncateTable("writing");
+		$this->assertFalse($writing->load());
+		$this->truncateTable("writings");
 	}
 	
 	function test_paid_to_text() {
 		$writing = new Writing();
 		$writing->paid = 0;
-		$this->assertEqual($writing->paid_to_text(), __("Non"));
+		$this->assertEqual($writing->paid_to_text(), __("non"));
 		$writing->paid = 1;
-		$this->assertEqual($writing->paid_to_text(), __("Oui"));
-		$this->truncateTable("writing");
+		$this->assertEqual($writing->paid_to_text(), __("oui"));
+		$this->truncateTable("writings");
 	}
 	
 	function test_merge() {
@@ -174,7 +172,7 @@ class tests_Writing extends TableTestCase {
 		$writing->merge($writing_to_merge_2);
 		
 		$this->assertIdentical($writing_to_merge_3, $writing);
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 	}
 	
 	function test_split() {
@@ -203,7 +201,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->source_id, 2);
 		$this->assertEqual($writing_splited->delay, mktime(10, 0, 0, 7, 31, 2013));
 		
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 		
 		$writing = new Writing();
 		$writing->account_id = 1;
@@ -230,6 +228,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->source_id, 2);
 		$this->assertEqual($writing_splited->delay, mktime(10, 0, 0, 7, 31, 2013));
 		
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 	}
 }

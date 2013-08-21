@@ -29,8 +29,26 @@ class Theme_Default {
 	
 	function css_files() {
 		$css_files[] = "medias/css/styles.css";
+		$css_files[] = "http://fonts.googleapis.com/css?family=Bitter:400,700";
 		
-		return show_css_files($css_files);
+		$html = "";
+
+		if (is_array($css_files)) {
+			$media_css_file = "";
+			foreach ($css_files as $css_file) {
+				if (preg_match("/(print)/", $css_file)) {
+					$media_css_file = " media=\"print\"";
+				}
+				if (substr($css_file, 0, 7) != 'http://') {
+					$css_file = $GLOBALS['config']['layout_mediaserver'].$css_file;
+				}
+				$css_file .= "?v=".urlencode($GLOBALS['config']['version']);
+				$html .= "<link rel=\"stylesheet\" type=\"text/css\"".$media_css_file." href=\"".$css_file."\" />\n";
+				$media_css_file = "";
+			}
+		}
+
+		return $html;
 	}
 	
 	function js_files() {
@@ -38,7 +56,16 @@ class Theme_Default {
 		$js_files[] = "medias/js/jquery-drag_drop.js";
 		$js_files[] = "medias/js/drag_drop.js";
 		
-		return show_js_files($js_files);
+		$html = "";
+
+		if (is_array($js_files)) {
+			foreach ($js_files as $js_file) {
+				$js_file = $GLOBALS['config']['layout_mediaserver'].$js_file."?v=".urlencode($GLOBALS['config']['version']);
+				$html .= "<script src=\"".$js_file."\" language=\"JavaScript\" type=\"text/javascript\"></script>\n";
+			}
+		}
+
+		return $html;
 	}
 	
 	function content_top() {

@@ -99,7 +99,7 @@ class db {
 
 	function table_exists($table) {
 		$query = "SELECT COUNT(*) FROM ".$table;
-		return $this->getVerif($query);
+		return $this->value_exists($query);
 	}
 
 	function database_exists($database) {
@@ -153,47 +153,47 @@ class db {
 
 	function status($result_id, $type, $record="") {
 		if (!$record) {
-			$record = $GLOBALS['txt_record'];
+			$record = __('record');
 		}
 		if ($type == "d") {
 			if ($result_id == 1) {
-				success_status($record." -> ".$GLOBALS['status_del']);
+				success_status($record." -> ".__('deletion OK'));
 			} elseif ($result_id > 1) {
-				success_status($record." -> ".$GLOBALS['status_del_multi']);
+				success_status($record." -> ".__('deletions OK'));
 			} elseif ($result_id == 0) {
-				success_status($record." -> ".$GLOBALS['status_nothing']);
+				success_status($record." -> ".__('nothing to do'));
 			} else {
-				error_status($record." -> ".$GLOBALS['status_del_err']);
+				error_status($record." -> ".__('error while deleting'));
 			}
 		} elseif($type == "i") {
 			if ($result_id == 1) {
-				success_status($record." -> ".$GLOBALS['status_add_ok']);
+				success_status($record." -> ".__('add OK'));
 			} elseif ($result_id > 1) {
-				success_status($record." -> ".$GLOBALS['status_add_multi']);
+				success_status($record." -> ".__('adds OK'));
 			} elseif ($result_id == 0) {
-				success_status($record." -> ".$GLOBALS['status_nothing']);
+				success_status($record." -> ".__('nothing to do'));
 			} elseif ($result_id == -1) {
-				success_status($record." -> ".$GLOBALS['status_exist']);
+				success_status($record." -> ".__('existing record'));
 			} else {
-				error_status($record." -> ".$GLOBALS['status_add_err']);
+				error_status($record." -> ".__('error while creating'));
 			}
 		} elseif($type == "u") {
 			if ($result_id == 1) {
-				success_status($record." -> ".$GLOBALS['status_upd']);
+				success_status($record." -> ".__('update OK'));
 			} elseif ($result_id > 1) {
-				success_status($record." -> ".$GLOBALS['status_upd_multi']);
+				success_status($record." -> ".__('updates OK'));
 			} elseif ($result_id == 0) {
-				success_status($record." -> ".$GLOBALS['status_nothing']);
+				success_status($record." -> ".__('nothing to do'));
 			} else {
-				error_status($record." -> ".$GLOBALS['status_upd_err']);
+				error_status($record." -> ".__('error while updating'));
 			}
 		} else {
 			if ($result_id == 1) {
-				success_status($record." -> ".$GLOBALS['status_seemsOK']);
+				success_status($record." -> ".__('seems OK'));
 			} elseif ($result_id == 0) {
-				success_status($record." -> ".$GLOBALS['status_nothing']);
+				success_status($record." -> ".__('nothing to do'));
 			} else {
-				error_status($record." -> ".$GLOBALS['status_unk_err']);
+				error_status($record." -> ".__('unknown error'));
 			}
 		}
 
@@ -225,5 +225,13 @@ class db {
 		if (self::$log !== null) {
 			error_log(($number === 0 ? '>>>>>> SESSION start <<<<<<'."\n" : "").date('d/m/y h:i:s')." [".++$number."] : ".$message."\n", 3, self::$log);
 		}
+	}
+
+	function insertID() {
+		return mysql_insert_id($this->link);
+	}
+	
+	function fetchRow($result) {
+		return mysql_fetch_row($result);
 	}
 }

@@ -84,31 +84,31 @@ class Writings extends Collector  {
 						'type' => "th",
 						'class' => "sort",
 						'id' => "delay",
-						'value' => __("Delay"),
+						'value' => utf8_ucfirst(__("delay")),
 					),
 					array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "account_name",
-						'value' => __("Account"),
+						'value' => utf8_ucfirst(__("account")),
 					),
 					array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "source_name",
-						'value' => __("Source"),
+						'value' => utf8_ucfirst(__("source")),
 						),
 					array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "type_name",
-						'value' => __("Type"),
+						'value' => utf8_ucfirst(__("type")),
 					),
 					array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "amount_excl_tax",
-						'value' => __("Amount_excl_tax"),
+						'value' => utf8_ucfirst(__("amount excluding tax")),
 					),
 					array(
 						'type' => "th",
@@ -120,18 +120,18 @@ class Writings extends Collector  {
 						'type' => "th",
 						'class' => "sort",
 						'id' => "amount_inc_tax",
-						'value' => __("Amount_inc_tax"),
+						'value' => utf8_ucfirst(__("amount including tax")),
 					),
 					array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "paid",
-						'value' => __("Paid"),
+						'value' => utf8_ucfirst(__("paid")),
 					),
 					array(
 						'type' => "th",
 						'id' => "split",
-						'value' => __("Split"),
+						'value' => utf8_ucfirst(__("split")),
 					),
 				),
 			),
@@ -155,7 +155,7 @@ class Writings extends Collector  {
 					$writing->vat,
 					round($writing->amount_inc_tax, 2),
 					$writing->paid_to_text($writing->paid),
-					"<button class=\"split\">".__("Split")."</button>"
+					"<button class=\"split\">".__("split")."</button>"
 				),
 			);
 		}
@@ -172,10 +172,11 @@ class Writings extends Collector  {
 	}
 	
 	function show() {
+		$html_table = new Html_table(array('lines' => $this->grid()));
 		if (empty($_REQUEST)) {
-			return "<div class=\"table_drag_drop\">".show_table(array('lines' => $this->grid()))."</div>";
+			return "<div class=\"table_drag_drop\">".$html_table->show()."</div>";
 		} else {
-			return show_table(array('lines' => $this->grid()));
+			return $html_table->show();
 		}
 	}
 }

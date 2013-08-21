@@ -24,19 +24,19 @@ class tests_Writing extends TableTestCase {
 	function test_get_join() {
 		$writings = new Writings();
 		$join = $writings->get_join();
-		$this->assertPattern("/LEFT JOIN account/", $join[0]);
-		$this->assertPattern("/ON account.id = writing.account_id/", $join[0]);
-		$this->assertPattern("/LEFT JOIN source/", $join[1]);
-		$this->assertPattern("/ON source.id = writing.source_id/", $join[1]);
-		$this->assertPattern("/LEFT JOIN type/", $join[2]);
-		$this->assertPattern("/ON type.id = writing.type_id/", $join[2]);
+		$this->assertPattern("/LEFT JOIN accounts/", $join[0]);
+		$this->assertPattern("/ON accounts.id = writings.account_id/", $join[0]);
+		$this->assertPattern("/LEFT JOIN sources/", $join[1]);
+		$this->assertPattern("/ON sources.id = writings.source_id/", $join[1]);
+		$this->assertPattern("/LEFT JOIN types/", $join[2]);
+		$this->assertPattern("/ON types.id = writings.type_id/", $join[2]);
 	}
 	
 	function test_get_columns() {
 		$writings = new Writings();
 		$columns = $writings->get_columns();
-		$this->assertPattern("/`writing`.*/", $columns[0]);
-		$this->assertPattern("/account.name as account_name, source.name as source_name, type.name as type_name/", $columns[1]);
+		$this->assertPattern("/`writings`.*/", $columns[0]);
+		$this->assertPattern("/accounts.name as account_name, sources.name as source_name, types.name as type_name/", $columns[1]);
 	}
 	
 	function test_determine_order() {
@@ -101,6 +101,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/class=\"grid_header\"/", $html);
 		$this->assertPattern("/class=\"draggable\"/", $html);
 		
-		$this->truncateTable("writing");
+		$this->truncateTable("writings");
 	}
 }

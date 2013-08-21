@@ -16,9 +16,9 @@ session_start();
 $GLOBALS['dbconfig']['name'] = "dvlpt_test";
 
 $db = new db();
-if (!$db->getVerifDatabase($GLOBALS['dbconfig']['name'])) {
+if (!$db->database_exists($GLOBALS['dbconfig']['name'])) {
 	$db->query("CREATE SCHEMA `".$GLOBALS['dbconfig']['name']."`");
-	if (!$db->getVerifDatabase($GLOBALS['dbconfig']['name'])) {
+	if (!$db->database_exists($GLOBALS['dbconfig']['name'])) {
 		echo "<br />"."Access denied"."\n";
 		exit();
 	}

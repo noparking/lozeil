@@ -18,7 +18,7 @@ require $current_directory."/bot.inc.php";
 require $current_directory."/collector.inc.php";
 require $current_directory."/db.inc.php";
 require $current_directory."/format.inc.php";
-require $current_directory."/html.inc.php";
+require $current_directory."/html_table.inc.php";
 require $current_directory."/misc.inc.php";
 require $current_directory."/record.inc.php";
 require $current_directory."/theme_default.inc.php";
