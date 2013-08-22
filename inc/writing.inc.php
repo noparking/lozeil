@@ -104,7 +104,12 @@ class Writing extends Record {
 	}
 	
 	function get_name_from_table($table) {
-		$where = $table."_id";
+		if ($table[strlen($table) - 1] == 's') {
+			$table_row = substr($table, 0, -1);
+		} else {
+			$table_row = $table;
+		}
+		$where = $table_row."_id";
 		$query = "SELECT ".$table.".name as name ".
 		" FROM ".$table.
 		" WHERE ".$this->$where." = ".$table.".id";
@@ -154,5 +159,104 @@ class Writing extends Record {
 			$new_writing->amount_excl_tax = round($amount/(($this->vat/100) + 1), 6);
 			$new_writing->save();
 		}
+	}
+	
+	function form() {
+		$form = "<div class=\"form_add_edit_writing\">
+			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		
+		if ($this->id) {
+			$input_hidden = new Html_Input("action", "do_edit");
+			$input_hidden->id = $this->id;
+		} else {
+			$input_hidden = new Html_Input("action", "insert");
+		}
+		$form .= $input_hidden->input_hidden();
+		
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$form .= $input_hidden_id->input_hidden();
+		
+		if ($this->delay > 0) {
+			$date = date('Y', $this->delay)."-".date('m', $this->delay)."-".date('d', $this->delay);
+		} else {
+			$date = 0;
+		}
+		
+		$accounts = new Accounts();
+		$accounts->select();
+		$accounts_name = $accounts->names();
+		$types = new Types();
+		$types->select();
+		$types_name = $types->names();
+		$sources = new Sources();
+		$sources->select();
+		$sources_name = $sources->names();
+		
+		$delay = new Html_Input("delay", $date, "date");
+		$account = new Html_Select("account_id", $accounts_name, $this->account_id);
+		$source = new Html_Select("source_id", $sources_name, $this->source_id);
+		$type = new Html_Select("type_id", $types_name, $this->type_id);
+		$amount_excl_tax = new Html_Input("amount_excl_tax", $this->amount_excl_tax);
+		$vat = new Html_Input("vat", $this->vat);
+		$amount_inc_tax = new Html_Input("amount_inc_tax", $this->amount_inc_tax);
+		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
+		$submit = new Html_Input("submit", "", "submit");
+		$submit->value =__('save');
+		
+		$grid = array();
+		$grid['class'] = "itemsform";
+		$grid['leaves']['delay']['value'] = $delay->item(__('delay'));
+		$grid['leaves']['account']['value'] = $account->item(__('account'));
+		$grid['leaves']['source']['value'] = $source->item(__('source'));
+		$grid['leaves']['type']['value'] = $type->item(__('type'));
+		$grid['leaves']['amount_excl_tax']['value'] = $amount_excl_tax->item(__('amount excluding tax'));
+		$grid['leaves']['vat']['value'] = $vat->item(__('VAT'));
+		$grid['leaves']['amount_inc_tax']['value'] = $amount_inc_tax->item(__('amount including tax'));
+		$grid['leaves']['paid']['value'] = $paid->item(__('paid'));
+		$grid['leaves']['submit']['value'] = $submit->item("");
+		
+		$list = new Html_List($grid);
+		$form .= $list->show();
+		
+		$form .= "</form></div>";
+
+		return $form;
+	}
+	
+	function form_edit() {
+		$form = "<div class=\"modify\"><form method=\"post\" name=\"edit_writing\" id=\"edit_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$input_hidden_action = new Html_Input("action", "getid");
+		$submit = new Html_Input("edit_submit", "", "submit");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function form_duplicate() {
+		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"duplicate_writing\" id=\"duplicate_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$input_hidden_action = new Html_Input("action", "duplicate");
+		$submit = new Html_Input("duplicate_submit", "", "submit");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function form_delete() {
+		$form = "<div class=\"delete\"><form method=\"post\" name=\"delete_writing\" id=\"delete_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$input_hidden_action = new Html_Input("action", "delete");
+		$submit = new Html_Input("delete_submit", "", "submit");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function fill($hash) {
+		$writing = parent::fill($hash);
+		$delay = explode("-", $writing->delay);
+		$writing->delay = mktime(0, 0, 0, $delay[1], $delay[2], $delay[0]);
+		return $writing;
 	}
 }

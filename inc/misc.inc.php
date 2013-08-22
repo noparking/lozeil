@@ -232,4 +232,46 @@ function error_handling($type, $msg, $file, $line, $args) {
 	if ($type == E_USER_ERROR) {
 		die($msg);
 	}
+	
+}
+
+function link_content($parameters="") {
+	$link_content = "";
+
+	if (isset($GLOBALS['config']['link_handling']) && $GLOBALS['config']['link_handling']) {
+		$link_content .= $GLOBALS['config']['name'];
+		if ($parameters) {
+			$link_content .= "&".$parameters;
+		}
+	} elseif (isset($GLOBALS['location'])) {
+		$link_content .= $GLOBALS['location'];
+		if ($parameters) {
+			$link_content .= "?".$parameters;
+		}
+	} else {
+		$link_content = $_SERVER['SCRIPT_NAME']."?".$parameters;
+	}
+
+	return $link_content;
+}
+
+function determine_integer_from_post_get_session() {
+	$keys = func_get_args();
+	$integer = array_shift($keys);
+
+	if ($integer > 0) {
+		return $integer;
+	}
+
+	$variables = array("_POST", "_GET", "_SESSION");
+
+	foreach ($variables as $variable) {
+		foreach ($keys as $key) {
+			if (isset($GLOBALS[$variable][$key]) and (!is_numeric($GLOBALS[$variable][$key]) or $GLOBALS[$variable][$key] > 0)) {
+				return (int)$GLOBALS[$variable][$key];
+			}
+		}
+	}
+
+	return 0;
 }

@@ -55,6 +55,8 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_show() {
+		$_SESSION['month_encours'] = mktime(0, 0, 0, date("m", time()), 1, date("Y", time()));
+		
 		$writing = new Writing();
 		$writing->account_id = 1;
 		$writing->amount_excl_tax = 190.50;
@@ -63,7 +65,7 @@ class tests_Writing extends TableTestCase {
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
 		$writing->source_id = 2;
-		$writing->delay = mktime(10, 0, 0, 7, 31, 2013);
+		$writing->delay = time();
 		$writing->save();
 		
 		$writing2 = new Writing();
@@ -74,7 +76,7 @@ class tests_Writing extends TableTestCase {
 		$writing2->type_id = 2;
 		$writing2->vat = 5.5;
 		$writing2->source_id = 3;
-		$writing2->delay = mktime(10, 30, 0, 7, 31, 2013);
+		$writing2->delay = time();
 		$writing2->save();
 		
 		$writing3 = new Writing();
@@ -85,22 +87,54 @@ class tests_Writing extends TableTestCase {
 		$writing3->type_id = 1;
 		$writing3->vat = 5.5;
 		$writing3->source_id = 2;
-		$writing3->delay = mktime(10, 45, 0, 7, 31, 2013);
+		$writing3->delay = strtotime('+1 months', time());
 		$writing3->save();
+		
+		$writing4 = new Writing();
+		$writing4->account_id = 1;
+		$writing4->amount_excl_tax = 250;
+		$writing4->amount_inc_tax = 279;
+		$writing4->paid = 0;
+		$writing4->type_id = 1;
+		$writing4->vat = 5.5;
+		$writing4->source_id = 2;
+		$writing4->delay = strtotime('-1 months', time());
+		$writing4->save();
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
 		$writings->select();
 		
 		$html = $writings->show();
-		$this->assertPattern("/<button class=\"split\"/", $html);
+		$this->assertPattern("/<div class=\"split\"/", $html);
 		$this->assertPattern("/<th /", $html);
 		$this->assertPattern("/<td>10.5<\/td>/", $html);
-		$this->assertPattern("/<td>250<\/td>/", $html);
 		$this->assertPattern("/<td>19.60<\/td>/", $html);
 		$this->assertPattern("/class=\"grid_header\"/", $html);
 		$this->assertPattern("/class=\"draggable\"/", $html);
+		$this->assertNoPattern("/<td>250<\/td>/", $html);
+		$this->assertNoPattern("/279/", $html);
 		
 		$this->truncateTable("writings");
+	}
+	
+	function test_show_timeline() {
+		$_SESSION['month_encours'] = 1375308000;
+		$writings = new Writings();
+		
+		$this->assertPattern("/".strtotime('-2 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('-1 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/1375308000/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+1 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+2 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+3 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+4 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+5 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+6 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+7 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+8 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+9 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('+10 months', 1375308000)."/", $writings->show_timeline());
+		$this->assertPattern("/08\/2013/", $writings->show_timeline());
 	}
 }

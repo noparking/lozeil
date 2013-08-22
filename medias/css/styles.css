@@ -1,3 +1,7 @@
+ul,li{list-style:none;}
+a{color:#2489CE;text-decoration:none;}
+a:hover{color:#2489CE;text-decoration:underline;}
+
 td, th {
 	padding: 10px;
 	border-bottom: 1px solid #efefef;
@@ -107,7 +111,7 @@ body {
 	box-shadow: 3px 3px 5px #888888;
 }
 
-.split {
+.split{
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
@@ -115,4 +119,76 @@ body {
 	height: 16px;
 	background-image :  url(../images/arrow_split.png);
 	background-position: left center;
+}
+
+.timeline a,
+.timeline a {
+    padding:5px 10px;
+    color:#000;
+    font-size:0.9em;
+	
+}
+
+.timeline, .timeline ul, .timeline li, .timeline form, .timeline strong {
+    float: none;
+    display: inline;
+}
+
+.timeline_month_encours {
+	font-weight: bold;
+}
+
+.modify, .delete, .duplicate {
+	display: inline-block;
+}
+
+.itemsform li {
+	clear: left;
+	margin: 0;
+	padding: 8px 0 4px 0;
+	cursor: pointer;
+	position: relative;
+	list-style: none;
+}
+
+.itemsform label {
+	padding: 8px 20px 8px 0;
+	line-height: 1.2em;
+	width: 125px;
+	padding: 8px 20px 8px 0;
+	line-height: 1em;
+	display: block;
+	text-align: right;
+	float: left;
+}
+
+.modify input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/bullet-wrench.png);
+	cursor: pointer;
+}
+
+.delete input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/delete.png);
+	cursor: pointer;
+}
+
+.duplicate input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
 }

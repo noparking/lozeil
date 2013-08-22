@@ -33,7 +33,7 @@ class Format {
 	
 	static function name($string) {
 		if (!trim($string)) {
-			$string = "<em>".$GLOBALS['txt_noname']."</em>";
+			$string = "<em>".__('no name')."</em>";
 		}
 	
 		return $string;

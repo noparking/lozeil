@@ -11,6 +11,10 @@
 class Writings extends Collector  {
 	public $filter = null;
 	
+	private $start = 0;
+	private $stop = 0;
+	private $month = 0;
+	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
 			$class = substr(__CLASS__, 0, -1);
@@ -130,6 +134,15 @@ class Writings extends Collector  {
 	}
 
 	function grid_body() {
+		$accounts = new Accounts();
+		$accounts->select();
+		$accounts_names = $accounts->names();
+		$types = new Types();
+		$types->select();
+		$types_name = $types->names();
+		$sources = new Sources();
+		$sources->select();
+		$sources_name = $sources->names();
 		$grid = array();
 
 		foreach ($this as $writing) {
@@ -138,14 +151,15 @@ class Writings extends Collector  {
 				'id' => $writing->id,
 				'cells' => array(
 					date("d", $writing->delay)."/".date("m", $writing->delay)."/".date("Y", $writing->delay),
-					$writing->get_name_from_table("account"),
-					$writing->get_name_from_table("source"),
-					$writing->get_name_from_table("type"),
+					$accounts_names[$writing->account_id],
+					$sources_name[$writing->source_id],
+					$types_name[$writing->type_id],
 					round($writing->amount_excl_tax, 2),
 					$writing->vat,
 					round($writing->amount_inc_tax, 2),
 					$writing->paid_to_text($writing->paid),
-					"<div class=\"split\"></div>"
+					"<div class=\"split\"></div>".$writing->form_edit().
+					$writing->form_duplicate().$writing->form_delete()
 				),
 			);
 		}
@@ -163,10 +177,49 @@ class Writings extends Collector  {
 	
 	function show() {
 		$html_table = new Html_table(array('lines' => $this->grid()));
-		if (empty($_REQUEST)) {
+		if (empty($_REQUEST) or (isset($_REQUEST['content']) and $_REQUEST['content'] != "lines.ajax.php")) {
 			return "<div class=\"table_drag_drop\">".$html_table->show()."</div>";
 		} else {
 			return $html_table->show();
 		}
+	}
+	
+	function show_timeline($content="lines.php") {
+		$grid = array();
+		$grid['leaves']['date']['value'] = "<strong>".$GLOBALS['array_month'][date("n", $_SESSION['month_encours'])]."</strong>";
+		$grid['leaves']['date']['class'] = "timeline_month";
+
+		$encours = $_SESSION['month_encours'];
+		$this->month = $encours;
+		$this->start = strtotime('-2 months', $encours);
+		$this->stop = strtotime('+10 months', $encours);
+		$start = $this->start;
+		while ($start <= $this->stop) {
+			if ($this->month == $start) {
+				$grid['leaves'][$start]['class'] = "timeline_month_encours";
+			}
+			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".date("m/Y", $start)."</a>";
+			$start = mktime(0, 0, 0, date("m", $start) + 1, 1, date("Y", $start));
+		}
+		$timeline = "<span class=\"timeline\">";
+		$list = new Html_List($grid);
+		$timeline .= $list->show();
+		$timeline .= "</span>";
+
+		return $timeline;
+	}
+	
+	function get_where() {
+		if ($this->month == 0) {
+			$this->month = $_SESSION['month_encours'];
+		}
+		$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->month;
+		$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month);
+		if(isset($query_where)) {
+			return $query_where;
+		} else {
+			return array(1);
+		}
+		
 	}
 }
