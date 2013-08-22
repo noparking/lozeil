@@ -158,7 +158,7 @@ class Writings extends Collector  {
 					$writing->vat,
 					round($writing->amount_inc_tax, 2),
 					$writing->paid_to_text($writing->paid),
-					"<div class=\"split\"></div>".$writing->form_edit().
+					$writing->form_split().$writing->form_edit().
 					$writing->form_duplicate().$writing->form_delete()
 				),
 			);

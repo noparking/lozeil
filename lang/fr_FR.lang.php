@@ -9,10 +9,12 @@
 */
 
 $__['account'] = "compte";
+$__['add new line'] = "ajouter une nouvelle ligne";
 $__['add OK'] = "ajout OK";
 $__['adds OK'] = "additions OK";
 $__['amount excluding tax'] = "montant HT";
 $__['amount including tax'] = "montant TTC";
+$__['are you sure?'] = "êtes vous sure?";
 $__['delay'] = "echéance";
 $__['deletion OK'] = "suppression OK";
 $__['deletions OK'] = "suppressions OK";

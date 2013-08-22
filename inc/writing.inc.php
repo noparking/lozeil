@@ -179,7 +179,7 @@ class Writing extends Record {
 		if ($this->delay > 0) {
 			$date = date('Y', $this->delay)."-".date('m', $this->delay)."-".date('d', $this->delay);
 		} else {
-			$date = 0;
+			$date = date('Y', $_SESSION['month_encours'])."-".date('m', $_SESSION['month_encours'])."-".date('d', $_SESSION['month_encours']);
 		}
 		
 		$accounts = new Accounts();
@@ -228,7 +228,7 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$input_hidden_action = new Html_Input("action", "getid");
 		$submit = new Html_Input("edit_submit", "", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}
@@ -238,7 +238,8 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
 		$submit = new Html_Input("duplicate_submit", "", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$input_hidden_value = new Html_Input("duplicate_amount", "");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
 		return $form;
 	}
@@ -248,7 +249,21 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$input_hidden_action = new Html_Input("action", "delete");
 		$submit = new Html_Input("delete_submit", "", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."</div>";
+		$submit->properties = array(
+			'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
+		);
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function form_split() {
+		$form = "<div class=\"split\"><form method=\"post\" name=\"split_writing\" id=\"split_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$input_hidden_action = new Html_Input("action", "split");
+		$submit = new Html_Input("split_submit", "", "submit");
+		$input_hidden_value = new Html_Input("split_amount", "");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
 		return $form;
 	}
@@ -258,5 +273,26 @@ class Writing extends Record {
 		$delay = explode("-", $writing->delay);
 		$writing->delay = mktime(0, 0, 0, $delay[1], $delay[2], $delay[0]);
 		return $writing;
+	}
+	
+	function duplicate($amount) {
+		if ($amount > 0) {
+			$new_writing->delay = $this->delay;
+			for ( $i=1; $i<=$amount; $i++) {
+				$new_writing = $this;
+				$new_writing->id = 0;
+				$new_writing->delay = strtotime('+1 months', $new_writing->delay);
+				$new_writing->save();
+			}
+		}
+	}
+	
+	function get_form_new() {
+		$form = "<div class=\"new\"><form method=\"post\" name=\"new_writing\" id=\"new_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_action = new Html_Input("action", "getnew");
+		$submit = new Html_Input("new_submit", __('add new line') ,"submit");
+		$form .= $input_hidden_action->input_hidden().$submit->input();
+		$form .= "</form></div>";
+		return $form;
 	}
 }

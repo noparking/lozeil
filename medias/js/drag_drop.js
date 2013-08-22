@@ -44,31 +44,45 @@ function make_draggable() {
 	});
 }
 
+//function make_split() {
+//	$(".split").bind("click", function() {
+//		var grandparent = $(this).parent().parent();
+//		$(".form-split").parent().parent().css({"background-color" : "inherit"});
+//		$(".form-split").remove();
+//		$(this).after("<form class=\"form-split\"><input type=\"text\"/></form>");
+//		var tosplit = grandparent.attr('id');
+//		grandparent.css({"background-color" : "#f6f6f6"});
+//		$(".form-split").bind("submit", function(event) {
+//			event.preventDefault();
+//			var amount = $(this).children().val();
+//			$.post(
+//				"index.php?content=lines.ajax.php",
+//				{ method: "json", action: "split", tosplit: tosplit, amount: amount, sort_by: sort_by, order_direction: order_direction },
+//				function(data) {
+//					$('.content table').html(data);
+//				}
+//			);
+//		})
+//	})
+//	$("#split").bind("click", function() {
+//		$(".form-split").parent().parent().css({"background-color" : "inherit"});
+//		$(".form-split").remove();
+//	})
+//	
+//}
+//
+//
 function make_split() {
-	$(".split").bind("click", function() {
-		var grandparent = $(this).parent().parent();
-		$(".form-split").parent().parent().css({"background-color" : "inherit"});
-		$(".form-split").remove();
-		$(this).after("<form class=\"form-split\"><input type=\"text\"/></form>");
-		var tosplit = grandparent.attr('id');
-		grandparent.css({"background-color" : "#f6f6f6"});
-		$(".form-split").bind("submit", function(event) {
+	$("input#split_submit, input#duplicate_submit").bind("click", function() {
+		if ($(this).next().val() == "") {
 			event.preventDefault();
-			var amount = $(this).children().val();
-			$.post(
-				"index.php?content=lines.ajax.php",
-				{ method: "json", action: "split", tosplit: tosplit, amount: amount, sort_by: sort_by, order_direction: order_direction },
-				function(data) {
-					$('.content table').html(data);
-				}
-			);
-		})
+			if ($(this).next().attr("type") == "hidden") {
+				$(this).next().attr("type", "text");
+			} else {
+				$(this).next().attr("type", "hidden");
+			}
+		}
 	})
-	$("#split").bind("click", function() {
-		$(".form-split").parent().parent().css({"background-color" : "inherit"});
-		$(".form-split").remove();
-	})
-	
 }
 
 function sort_elements() {

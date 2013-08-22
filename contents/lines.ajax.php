@@ -22,16 +22,16 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 					}
 				}
 				break;
-			case "split":
-				if (isset($_REQUEST['amount']) && isset($_REQUEST['tosplit']) && $_REQUEST['tosplit'] != 0) {
-					$amount = str_replace(",", ".", $_REQUEST['amount']);
-					if (is_numeric($amount)) {
-						$writing_to_split = new Writing();
-						$writing_to_split->load((int)$_REQUEST['tosplit']);
-						$writing_to_split->split($amount);
-					}
-				}
-				break;
+//			case "split":
+//				if (isset($_REQUEST['amount']) && isset($_REQUEST['tosplit']) && $_REQUEST['tosplit'] != 0) {
+//					$amount = str_replace(",", ".", $_REQUEST['amount']);
+//					if (is_numeric($amount)) {
+//						$writing_to_split = new Writing();
+//						$writing_to_split->load((int)$_REQUEST['tosplit']);
+//						$writing_to_split->split($amount);
+//					}
+//				}
+//				break;
 			default :
 				break;
 		}

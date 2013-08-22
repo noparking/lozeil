@@ -115,10 +115,23 @@ body {
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
-	width: 16px;
-	height: 16px;
+	width: auto;
+	height: 25px;
 	background-image :  url(../images/arrow_split.png);
+	background-repeat: no-repeat;
 	background-position: left center;
+}
+
+.split input[type="submit"] {
+	cursor: pointer;
+	border: 0;
+	background: transparent;
+}
+
+.table_drag_drop input[type="text"] {
+	vertical-align: middle;
+	margin-left: 5px;
+	width: 50px;
 }
 
 .timeline a,
