@@ -18,7 +18,7 @@ class Heading_Area {
 	}
 
 	function show() {
-		$content = "<div class\"heading\">";
+		$content = "<div class=\"heading\">";
 		$content .= "<h2>".$this->title."</h2>";
 		if (!empty($this->extra)) {
 			$content .= "<div class=\"extra\">".$this->extra."</div>";

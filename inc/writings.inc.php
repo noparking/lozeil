@@ -186,8 +186,6 @@ class Writings extends Collector  {
 	
 	function show_timeline($content="lines.php") {
 		$grid = array();
-		$grid['leaves']['date']['value'] = "<strong>".$GLOBALS['array_month'][date("n", $_SESSION['month_encours'])]."</strong>";
-		$grid['leaves']['date']['class'] = "timeline_month";
 
 		$encours = $_SESSION['month_encours'];
 		$this->month = $encours;
@@ -197,8 +195,10 @@ class Writings extends Collector  {
 		while ($start <= $this->stop) {
 			if ($this->month == $start) {
 				$grid['leaves'][$start]['class'] = "timeline_month_encours";
+			} else {
+				$grid['leaves'][$start]['class'] = "timeline_month_navigation";
 			}
-			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".date("m/Y", $start)."</a>";
+			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".date("Y", $start)."</a>";
 			$start = mktime(0, 0, 0, date("m", $start) + 1, 1, date("Y", $start));
 		}
 		$timeline = "<span class=\"timeline\">";

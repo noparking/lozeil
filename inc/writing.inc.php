@@ -177,9 +177,9 @@ class Writing extends Record {
 		$form .= $input_hidden_id->input_hidden();
 		
 		if ($this->delay > 0) {
-			$date = date('Y', $this->delay)."-".date('m', $this->delay)."-".date('d', $this->delay);
+			$date = (int)$this->delay;
 		} else {
-			$date = date('Y', $_SESSION['month_encours'])."-".date('m', $_SESSION['month_encours'])."-".date('d', $_SESSION['month_encours']);
+			$date = (int)$_SESSION['month_encours'];
 		}
 		
 		$accounts = new Accounts();
@@ -192,7 +192,8 @@ class Writing extends Record {
 		$sources->select();
 		$sources_name = $sources->names();
 		
-		$delay = new Html_Input("delay", $date, "date");
+		$datepicker = new Html_Input_Date("datepicker");
+		$datepicker->value = $date;
 		$account = new Html_Select("account_id", $accounts_name, $this->account_id);
 		$source = new Html_Select("source_id", $sources_name, $this->source_id);
 		$type = new Html_Select("type_id", $types_name, $this->type_id);
@@ -205,7 +206,7 @@ class Writing extends Record {
 		
 		$grid = array();
 		$grid['class'] = "itemsform";
-		$grid['leaves']['delay']['value'] = $delay->item(__('delay'));
+		$grid['leaves']['date']['value'] = $datepicker->item(__('delay'));
 		$grid['leaves']['account']['value'] = $account->item(__('account'));
 		$grid['leaves']['source']['value'] = $source->item(__('source'));
 		$grid['leaves']['type']['value'] = $type->item(__('type'));
@@ -214,6 +215,7 @@ class Writing extends Record {
 		$grid['leaves']['amount_inc_tax']['value'] = $amount_inc_tax->item(__('amount including tax'));
 		$grid['leaves']['paid']['value'] = $paid->item(__('paid'));
 		$grid['leaves']['submit']['value'] = $submit->item("");
+		
 		
 		$list = new Html_List($grid);
 		$form .= $list->show();
@@ -270,8 +272,7 @@ class Writing extends Record {
 	
 	function fill($hash) {
 		$writing = parent::fill($hash);
-		$delay = explode("-", $writing->delay);
-		$writing->delay = mktime(0, 0, 0, $delay[1], $delay[2], $delay[0]);
+		$writing->delay = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
 		return $writing;
 	}
 	

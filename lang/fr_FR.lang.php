@@ -55,3 +55,14 @@ $array_month[9] = "septembre";
 $array_month[10] = "octobre";
 $array_month[11] = "novembre";
 $array_month[12] = "décembre";
+
+$array_week[0] = "Dimanche";
+$array_week[1] = "Lundi";
+$array_week[2] = "Mardi";
+$array_week[3] = "Mercredi";
+$array_week[4] = "Jeudi";
+$array_week[5] = "Vendredi";
+$array_week[6] = "Samedi";
+$array_week[7] = "Dimanche";
+
+$txt_mask                    = "masquer";

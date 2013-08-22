@@ -136,19 +136,40 @@ body {
 
 .timeline a,
 .timeline a {
-    padding:5px 10px;
     color:#000;
     font-size:0.9em;
-	
 }
 
 .timeline, .timeline ul, .timeline li, .timeline form, .timeline strong {
     float: none;
-    display: inline;
+    display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.timeline ul {
+	padding-right: 40px;
+}
+
+.timeline li {
+	width: 70px;
+	border: #000 solid thin;
+	margin: 2px;
 }
 
 .timeline_month_encours {
+	height: 40px;
 	font-weight: bold;
+}
+
+.timeline_month_navigation {
+	height: 37px;
+	padding-top: 3px;
+}
+
+.timeline_month {
+	border: none !important;
+	width: 80px;
 }
 
 .modify, .delete, .duplicate {
@@ -204,4 +225,77 @@ body {
 	background-image :  url(../images/more.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
+}
+
+.input-date-calendar {
+	z-index:999;
+	padding:40px 16px 16px 16px;
+	border:1px solid #CCC !important;
+	background:#f6f6f6 !important;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#f6f6f6') !important; /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#f6f6f6)) !important; /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #FFFFFF,  #f6f6f6) !important; /* for firefox 3.6+ */
+	border-radius:4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    box-shadow: 0px 0px 4px #999;
+    -moz-box-shadow: 0px 0px 4px #999;  
+    -webkit-box-shadow: 0px 0px 4px #999; 
+     	
+}
+
+.input-date-calendar table {
+	border-collapse:separate !important;
+	table-layout:fixed;
+	width:auto !important;
+}
+
+.input-date-calendar table td, 
+.input-date-calendar table th {
+    height: auto !important;
+    background:none !important;
+    margin:0 !important;
+    padding:0 !important;
+}
+
+
+.input-date-calendar table .hand {
+	color:#666;
+}
+
+.input-date-calendar table .hand td  {
+	padding:1px;
+	border-radius:4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    -khtml-border-radius:4px;
+}
+
+.input-date-calendar table .hand td:hover  {
+	color:#000;
+	background:#CCC !important;
+}
+
+.input-date-calendar a {
+	left: 18px;
+    position: absolute;
+    top: -2px;
+	font-weight:normal;
+	font-size:0.9em;
+	text-decoration:none;
+	padding:6px 8px;
+	display: block;
+	background:url(../images/futura/btn-grey.png) repeat-x left top;
+	border:1px solid #d3d3d3;
+	color:#555555;
+	text-shadow:0 1px 0 #f6f6f6;  
+	border-radius:0 0 4px 4px;
+    -moz-border-radius:0 0 4px 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+}
+
+.input-date-calendar a:hover {
+	background:url(../images/futura/btn-grey-hover.png) repeat-x left top;
+	border:1px solid #bebebe;  
 }

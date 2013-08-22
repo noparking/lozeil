@@ -20,10 +20,13 @@ require $current_directory."/record.inc.php";
 
 require $current_directory."/account.inc.php";
 require $current_directory."/accounts.inc.php";
+require $current_directory."/adodb-time.inc.php";
 require $current_directory."/bot.inc.php";
+require $current_directory."/calendar.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/heading_area.inc.php";
 require $current_directory."/html_input.inc.php";
+require $current_directory."/html_input_date.inc.php";
 require $current_directory."/html_list.inc.php";
 require $current_directory."/html_radio.inc.php";
 require $current_directory."/html_select.inc.php";

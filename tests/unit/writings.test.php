@@ -57,19 +57,23 @@ class tests_Writing extends TableTestCase {
 	function test_show() {
 		$_SESSION['month_encours'] = mktime(0, 0, 0, date("m", time()), 1, date("Y", time()));
 		
+//		$account = new Account();
+//		$account->id = 1;
+//		$account->save();
+		
 		$writing = new Writing();
 		$writing->account_id = 1;
 		$writing->amount_excl_tax = 190.50;
 		$writing->amount_inc_tax = 25;
 		$writing->paid = 0;
-		$writing->type_id = 1;
+		$writing->type_id = 2;
 		$writing->vat = 19.6;
-		$writing->source_id = 2;
+		$writing->source_id = 3;
 		$writing->delay = time();
 		$writing->save();
 		
 		$writing2 = new Writing();
-		$writing2->account_id = 2;
+		$writing2->account_id = 1;
 		$writing2->amount_excl_tax = 10.50;
 		$writing2->amount_inc_tax = 20;
 		$writing2->paid = 1;
@@ -84,9 +88,9 @@ class tests_Writing extends TableTestCase {
 		$writing3->amount_excl_tax = 190.50;
 		$writing3->amount_inc_tax = 250;
 		$writing3->paid = 0;
-		$writing3->type_id = 1;
+		$writing3->type_id = 2;
 		$writing3->vat = 5.5;
-		$writing3->source_id = 2;
+		$writing3->source_id = 3;
 		$writing3->delay = strtotime('+1 months', time());
 		$writing3->save();
 		

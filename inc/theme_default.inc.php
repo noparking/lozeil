@@ -55,6 +55,8 @@ class Theme_Default {
 		$js_files[] = "medias/js/jquery-1.9.1.js";
 		$js_files[] = "medias/js/jquery-drag_drop.js";
 		$js_files[] = "medias/js/drag_drop.js";
+		$js_files[] = "medias/js/calendar.js";
+		$js_files[] = "medias/js/common.js";
 		
 		$html = "";
 
