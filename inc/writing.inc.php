@@ -20,6 +20,7 @@ class Writing extends Record {
 	public $paid = 0;
 	public $source_id = 0;
 	public $type_id = 0;
+	public $unique_key = "";
 	public $vat = 0;
 	
 	function __construct($id = 0, db $db = null) {
@@ -104,42 +105,13 @@ class Writing extends Record {
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			delay = ".(int)$this->delay.",
+			unique_key = ".$this->db->quote($this->unique_key).",
 			paid = ".(int)$this->paid
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
-	}
-	
-	function get_name_from_table($table) {
-		if ($table[strlen($table) - 1] == 's') {
-			$table_row = substr($table, 0, -1);
-		} else {
-			$table_row = $table;
-		}
-		$where = $table_row."_id";
-		$query = "SELECT ".$table.".name as name ".
-		" FROM ".$table.
-		" WHERE ".$this->$where." = ".$table.".id";
-
-		$result = $this->db->query($query);
-		while ($row = $this->db->fetchArray($result[0])) {
-			if (isset($row['name'])) {
-				$name = $row['name'];
-				return $name;
-			} else {
-				return "";
-			}
-		}
-	}
-	
-	function paid_to_text() {
-		if($this->paid == 0) {
-			return __("non");
-		} else {
-			return __("oui");
-		}
 	}
 	
 	function merge(Writing $to_merge) {
@@ -320,7 +292,7 @@ class Writing extends Record {
 		if (!empty($this->information)) {
 			return "<div class=\"further_information\">".nl2br($this->information)."</div>";
 		} else {
-			return 0;
+			return "";
 		}
 	}
 }

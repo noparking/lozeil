@@ -44,6 +44,7 @@ $queries = array(
 		  information TEXT NOT NULL,
 		  paid tinyint(1) NOT NULL DEFAULT '0',
 		  source_id INT(11),
+		  unique_key TEXT,
 		  type_id INT(11),
 		  vat DECIMAL(5,2),
 		  PRIMARY KEY (`id`),

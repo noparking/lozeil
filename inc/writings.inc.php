@@ -42,13 +42,17 @@ class Writings extends Collector  {
 			LEFT JOIN ".$this->db->config['table_types']."
 			ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".type_id
 		";
+		$join[] = "
+			LEFT JOIN ".$this->db->config['table_banks']."
+			ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".bank_id
+		";
 		
 		return $join;
 	}
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		$columns[] = $this->db->config['table_accounts'].".name as account_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name";
+		$columns[] = $this->db->config['table_accounts'].".name as account_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name, ".$this->db->config['table_banks'].".name as bank_name";
 
 		return $columns;
 	}
@@ -125,7 +129,7 @@ class Writings extends Collector  {
 					array(
 						'type' => "th",
 						'class' => "sort",
-						'id' => "bank",
+						'id' => "bank_name",
 						'value' => utf8_ucfirst(__("bank")),
 					),
 					array(
@@ -176,7 +180,8 @@ class Writings extends Collector  {
 		
 		foreach ($this as $writing) {
 			$class = "";
-			if (!is_int($writing->show_further_information())) {
+			$informations = $writing->show_further_information();
+			if (!empty($informations)) {
 				$class = "comment";
 			}
 			$grid[$writing->id] =  array(
@@ -333,6 +338,9 @@ class Writings extends Collector  {
             }
 			fclose($file_opened);
 			unset($csv[0]);
+			$writings = new Writings();
+			$writings->select();
+			$writings_key = $writings->get_unique_key();
 			foreach ($csv as $data) {
 				$writing = new Writing();
 				$time = explode("/", $data['delay']);
@@ -344,7 +352,10 @@ class Writings extends Collector  {
 				} else {
 					$writing->amount_inc_vat = (float)str_replace(",", ".", $data['credit']);
 				}
-				$writing->save();
+				$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+				if (!in_array($writing->unique_key, $writings_key)) {
+					$writing->save();
+				}
 			}
 		}
 	}
@@ -372,6 +383,9 @@ class Writings extends Collector  {
 			fclose($file_opened);
 			$row_names = $csv[0];
 			unset($csv[0]);
+			$writings = new Writings();
+			$writings->select();
+			$writings_key = $writings->get_unique_key();
 			foreach ($csv as $data) {
 				$information = "";
 				for ($i = 0; $i < count($data); $i++) {
@@ -390,8 +404,20 @@ class Writings extends Collector  {
 					$data[3] = "-".$data[3];
 				}
 				$writing->amount_inc_vat = (float)$data[3];
-				$writing->save();
+				$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+				if (!in_array($writing->unique_key, $writings_key)) {
+					$writing->save();
+				}
 			}
 		}
+	}
+	
+	function get_unique_key() {
+		$keys = array();
+		foreach ($this as $writing) {
+			if (!empty($writing->unique_key))
+			$keys[] = $writing->unique_key;
+		}
+		return $keys;
 	}
 }

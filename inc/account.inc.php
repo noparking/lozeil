@@ -45,6 +45,17 @@ class Account extends Record {
 
 		return $this->id;
 	}
+	
+	function insert() {
+		$result = $this->db->id("
+			INSERT INTO ".$this->db->config['table_accounts']."
+			SET name = ".$this->db->quote($this->name)
+		);
+		$this->id = $result[2];
+		$this->db->status($result[1], "u", __('account'));
+
+		return $this->id;
+	}
 
 	function delete() {
 		$query = "DELETE FROM ".$this->db->config['table_accounts'].
