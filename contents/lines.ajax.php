@@ -37,6 +37,7 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 		}
 		
 		$writings = new Writings();
+		$writings->filter = "month";
 		echo $writings->show_in_determined_order();
 	}
 	exit(0);

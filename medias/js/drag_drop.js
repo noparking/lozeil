@@ -1,6 +1,18 @@
 var order_direction = 0;
 var sort_by = "delay";
 
+function show_further_information() {
+	$(".comment").on("click", function() {
+		$(".further_information").slideUp();
+		var cell = $(this).find(".further_information");
+		if (cell.css("display") == "none") {
+			cell.slideDown();
+		} else {
+			cell.slideUp();
+		}
+	})
+}
+
 function make_droppable() {
 	$("tr.draggable").droppable({
 		tolerance : "pointer",
@@ -73,14 +85,17 @@ function make_draggable() {
 //
 //
 function make_split() {
-	$("input#split_submit, input#duplicate_submit").bind("click", function() {
+	$("input#split_submit, input#duplicate_submit").on("click", function() {
+		var next = "";
 		if ($(this).next().val() == "") {
 			event.preventDefault();
 			if ($(this).next().attr("type") == "hidden") {
-				$(this).next().attr("type", "text");
+				next = "text";
 			} else {
-				$(this).next().attr("type", "hidden");
+				next = "hidden";
 			}
+		$("input#split_submit, input#duplicate_submit").next().attr("type", "hidden");
+				$(this).next().attr("type", next);
 		}
 	})
 }
@@ -110,6 +125,7 @@ function jQuery_table() {
 	make_draggable();
 	make_split();
 	sort_elements();
+	show_further_information();
 }
 
 $(function() {

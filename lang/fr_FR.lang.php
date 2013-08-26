@@ -8,13 +8,18 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
+$__['€'] = "€";
+
 $__['account'] = "compte";
+$__['accounting on'] = "trésorerie au";
 $__['add new line'] = "ajouter une nouvelle ligne";
 $__['add OK'] = "ajout OK";
 $__['adds OK'] = "additions OK";
-$__['amount excluding tax'] = "montant HT";
-$__['amount including tax'] = "montant TTC";
+$__['amount excluding tax'] = "HT";
+$__['amount including tax'] = "TTC";
 $__['are you sure?'] = "êtes vous sure?";
+$__['bank'] = "banque";
+$__['comment'] = "commentaire";
 $__['delay'] = "echéance";
 $__['deletion OK'] = "suppression OK";
 $__['deletions OK'] = "suppressions OK";
@@ -23,6 +28,8 @@ $__['error while deleting'] = "erreur pendant la suppression";
 $__['error while updating'] = "erreur pendant la création";
 $__['existing record'] = "enregistrement existant";
 $__['id'] = "id";
+$__['less'] = "moins";
+$__['more'] = "plus";
 $__['no'] = "non";
 $__['no name'] = "sans nom";
 $__['nothing to do'] = "rien à faire";

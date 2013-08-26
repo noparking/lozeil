@@ -16,7 +16,6 @@ $selected_month = determine_integer_from_post_get_session(null, "month");
 if(isset($selected_month) and $selected_month > 0) {
 	$_SESSION['month_encours'] = $selected_month;
 }
-
 $writing_form = "";
 
 if (isset($_POST) and count($_POST) > 0) {
@@ -57,20 +56,37 @@ if (isset($_POST) and count($_POST) > 0) {
 			$writing = new Writing();
 			$writing_form = $writing->form();
 			break;
+		case 'import':
+			if (isset($_POST['bank_id']) && isset($_FILES) && $_FILES['input_file']['type'] == "text/csv" && $_FILES['input_file']['error'] == 0) {
+				$imported_writings = new Writings();
+				$bank = new Bank();
+				$bank->load((int)$_POST['bank_id']);
+				if (preg_match("/cic/", $bank->name)) {
+					$imported_writings->import_cic($_FILES['input_file']);
+				} elseif (preg_match("/coop/", $bank->name)) {
+					$imported_writings->import_coop($_FILES['input_file']);
+				}
+			}
+			break;
 		default:
 			break;
 	}
 }
 
 $writings = new Writings();
+$writings->set_order('delay', 'ASC');
+$writings->select();
+
+$menu = new Menu_Area($writings->show_balance_on_current_date());
+echo $menu->show();
+
+$writings->filter = "month";
+$writings->select();
 
 $extra = $writings->show_timeline();
 
 $heading = new Heading_Area(null, $extra);
 echo $heading->show();
-
-$writings->set_order('delay', 'ASC');
-$writings->select();
 
 echo $writings->show();
 

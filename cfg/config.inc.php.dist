@@ -29,3 +29,4 @@ $dbconfig['table_accounts'] = "accounts";
 $dbconfig['table_sources'] = "sources";
 $dbconfig['table_types'] = "types";
 $dbconfig['table_writings'] = "writings";
+$dbconfig['table_banks'] = "banks";

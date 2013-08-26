@@ -395,3 +395,25 @@ function addOnloadEvent(fnc){
 		}
 	}
 }
+
+$(document).ready(function() {
+	$(".actions").hide();
+	$(".more").on("click", function() {
+		if ($(this).hasClass("hide")) {
+			$(this).addClass("show");
+			$(this).removeClass("hide");
+			$(".actions").slideDown(400, function() {
+				$("#menu_more").hide();
+				$("#menu_less").show();
+			});
+			
+		} else {
+			$(this).addClass("hide");
+			$(this).removeClass("show");
+			$(".actions").slideUp(400, function() {
+				$("#menu_less").hide();
+				$("#menu_more").show();
+			});
+		}
+	})
+})

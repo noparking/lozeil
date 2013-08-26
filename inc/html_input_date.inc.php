@@ -14,10 +14,6 @@ class Html_Input_Date extends Html_Input {
 	public $img_width = 14;
 	public $img_height = 14;
 	public $img_src = "medias/images/link_calendar.gif";
-	public $clock = 0;
-	public $clock_img_width = 14;
-	public $clock_img_height = 14;
-	public $clock_img_src = "medias/images/link_clock.gif";
 	
 	function __construct($name, $value = 0) {
 		$this->name = $name;
@@ -83,23 +79,6 @@ class Html_Input_Date extends Html_Input {
 				case $this->properties['disabled'] != "disabled":
 					$string .= "<img class=\"hand\"".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\" onclick=\"ToggleCalendar('".$this->name("calendar")."')\" />";
 					$string .= $this->show_calendar();
-					if ($this->clock) {
-						$h = new Html_Input($this->name."[h]", (($this->value) ? adodb_date("H", $this->value) : ""));
-						$h->properties = $this->properties + array(
-								'class' => "input-date",
-								'size' => 3,
-						);
-						$i = new Html_Input($this->name."[i]", (($this->value) ? adodb_date("i", $this->value) : ""));
-						$i->properties = $this->properties + array(
-								'class' => "input-date",
-								'size' => 3,
-						);
-						
-						$string .= $h->input()." ".$i->input()."&nbsp;";
-						$string .= "<img class=\"hand\"".(!$this->clock_img_width ? "" : " width=\"".$this->clock_img_width."\"").(!$this->clock_img_height ? "" : " height=\"".$this->clock_img_height."\"")." src=\"".$this->clock_img_src."\" onclick=\"ToggleClock('".$this->name("calendarclock")."')\" />";
-						$string .= $this->show_clock();
-					}
-						
 					break;
 				default:
 					break;					
@@ -110,58 +89,7 @@ class Html_Input_Date extends Html_Input {
 
 		return $string;
 	}
-	
-	private function show_clock() {
-		$value = ($this->value > 0) ? $this->value : time();
-		
-		if ($GLOBALS['param']['calendar_picker']) {
-			$input_clock = "<br /><table id=\"".$this->name("calendar")."clock\" style=\"visibility: hidden; display: none;\">\n";
-			$input_clock .= "<tbody>\n";
-			$input_clock .= "<tr>\n";
-			$input_clock .= "<td colspan=\"7\" valign=\"center\">\n";
-			$input_clock .= "<select id=\"".$this->name("calendar")."clockhour\" onchange=\"FillClock('".$this->name("calendar")."clock', event)\"> \n";
-			$input_clock .= "<option> -- </option>\n";
-			for ($i=7; $i <= 22; $i++) {
-				if ($i < 10) {
-					$i = "0".$i;
-				}
-				$selected = "";
-				if ($i == adodb_date("H", $value) and adodb_date("G\hi", $value) != "0h00") {
-					$selected = " selected=\"selected\"";
-				}
-				$input_clock .= "<option".$selected.">".$i."h</option>\n";
-			}
-			$input_clock .= "</select> \n";
-			$input_clock .= "<select id=\"".$this->name("calendar")."clockminute\" onchange=\"FillClock('".$this->name("calendar")."clock', event);\"> \n";
-			$input_clock .= "<option> -- </option>\n";
-			for ($i=0; $i < 60; $i += 5) {
-				if ($i < 10) {
-					$i = "0".$i;
-				}
-				$selected = "";
-				if ($i == get_minute($value, "5") and adodb_date("G\hi", $value) != "0h00") {
-					$selected = " selected=\"selected\"";
-				}
-				$input_clock .= "<option".$selected.">".$i."</option>\n";
-			}
-			$input_clock .= "</select> \n";
-			$input_clock .= "</td>\n";
-			$input_clock .= "</tr>\n";
-			$input_clock .= "</tbody>\n";
-			$input_clock .= "<tbody>\n";
-			$input_clock .= "<tr>\n";
-			$input_clock .= "<td align=\"right\" colspan=\"2\"><a href=\"javascript: HideClock('".$this->name("calendar")."clock');\">".@$GLOBALS['txt_mask']."</a></td>\n";
-			$input_clock .= "</tr>\n";
-			$input_clock .= "</tbody>\n";
-			$input_clock .= "</table>\n";
-		
-		} else {
-			$input_clock = "";
-		}
-		
-		return $input_clock;
-	}
-	
+
 	private function show_calendar() {
 		$value = ($this->value > 0) ? $this->value : time();
 

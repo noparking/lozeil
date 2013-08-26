@@ -26,6 +26,7 @@ class Types extends Collector  {
 	
 	function names() {
 		$names = array();
+		$names[0] = "--";
 		foreach ($this as $type) {
 			$names[$type->id] = $type->name();
 		}

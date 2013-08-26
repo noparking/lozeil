@@ -26,6 +26,7 @@ class Sources extends Collector  {
 	
 	function names() {
 		$names = array();
+		$names[0] = "--";
 		foreach ($this as $source) {
 			$names[$source->id] = $source->name();
 		}

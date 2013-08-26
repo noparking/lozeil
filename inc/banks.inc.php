@@ -8,7 +8,7 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-class Accounts extends Collector  {
+class Banks extends Collector  {
 	public $filter = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
@@ -16,7 +16,7 @@ class Accounts extends Collector  {
 			$class = substr(__CLASS__, 0, -1);
 		}
 		if ($table === null) {
-			$table = $GLOBALS['dbconfig']['table_accounts'];
+			$table = $GLOBALS['dbconfig']['table_banks'];
 		}
 		if ($db === null) {
 			$db = new db();
@@ -27,8 +27,8 @@ class Accounts extends Collector  {
 	function names() {
 		$names = array();
 		$names[0] = "--";
-		foreach ($this as $account) {
-			$names[$account->id] = $account->name();
+		foreach ($this as $bank) {
+			$names[$bank->id] = $bank->name();
 		}
 		return $names;
 	}

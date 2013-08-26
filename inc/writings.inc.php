@@ -101,7 +101,7 @@ class Writings extends Collector  {
 					array(
 						'type' => "th",
 						'class' => "sort",
-						'id' => "amount_excl_tax",
+						'id' => "amount_excl_vat",
 						'value' => utf8_ucfirst(__("amount excluding tax")),
 					),
 					array(
@@ -113,14 +113,20 @@ class Writings extends Collector  {
 					array(
 						'type' => "th",
 						'class' => "sort",
-						'id' => "amount_inc_tax",
+						'id' => "amount_inc_vat",
 						'value' => utf8_ucfirst(__("amount including tax")),
 					),
 					array(
 						'type' => "th",
 						'class' => "sort",
-						'id' => "paid",
-						'value' => utf8_ucfirst(__("paid")),
+						'id' => "comment",
+						'value' => utf8_ucfirst(__("comment")),
+					),
+					array(
+						'type' => "th",
+						'class' => "sort",
+						'id' => "bank",
+						'value' => utf8_ucfirst(__("bank")),
 					),
 					array(
 						'type' => "th",
@@ -143,27 +149,83 @@ class Writings extends Collector  {
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
+		$banks = new Banks();
+		$banks->select();
+		$banks_name = $banks->names();
 		$grid = array();
-
+//		foreach ($this as $writing) {
+//			$grid[$writing->id] = array(
+//				'class' => "draggable",
+//				'id' => $writing->id,
+//				'cells' => array(
+//					date("d", $writing->delay)."/".date("m", $writing->delay)."/".date("Y", $writing->delay),
+//					isset($writing->account_id) && $writing->account_id > 0 ? $accounts_names[$writing->account_id] : "",
+//					isset($writing->source_id) && $writing->source_id > 0 ? $sources_name[$writing->source_id] : "",
+//					isset($writing->type_id) && $writing->type_id > 0 ? $types_name[$writing->type_id] : "",
+//					round($writing->amount_excl_vat, 2),
+//					$writing->vat,
+//					round($writing->amount_inc_vat, 2),
+//					$writing->comment.$writing->show_further_information(),
+//					isset($writing->bank_id) && $writing->bank_id > 0 ? $banks_name[$writing->bank_id] : "",
+//					$writing->paid_to_text($writing->paid),
+//					$writing->form_split().$writing->form_edit().
+//					$writing->form_duplicate().$writing->form_delete()
+//				),
+//			);
+//		}
+		
 		foreach ($this as $writing) {
-			$grid[$writing->id] = array(
-				'class' => "draggable",
-				'id' => $writing->id,
-				'cells' => array(
-					date("d", $writing->delay)."/".date("m", $writing->delay)."/".date("Y", $writing->delay),
-					$accounts_names[$writing->account_id],
-					$sources_name[$writing->source_id],
-					$types_name[$writing->type_id],
-					round($writing->amount_excl_tax, 2),
-					$writing->vat,
-					round($writing->amount_inc_tax, 2),
-					$writing->paid_to_text($writing->paid),
-					$writing->form_split().$writing->form_edit().
-					$writing->form_duplicate().$writing->form_delete()
-				),
+			$class = "";
+			if (!is_int($writing->show_further_information())) {
+				$class = "comment";
+			}
+			$grid[$writing->id] =  array(
+					'class' => "draggable",
+					'cells' => array(
+						array(
+							'type' => "td",
+							'value' => date("d", $writing->delay)."/".date("m", $writing->delay)."/".date("Y", $writing->delay),
+						),
+						array(
+							'type' => "td",
+							'value' => isset($writing->account_id) && $writing->account_id > 0 ? $accounts_names[$writing->account_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => isset($writing->source_id) && $writing->source_id > 0 ? $sources_name[$writing->source_id] : "",
+							),
+						array(
+							'type' => "td",
+							'value' => isset($writing->type_id) && $writing->type_id > 0 ? $types_name[$writing->type_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => round($writing->amount_excl_vat, 2),
+						),
+						array(
+							'type' => "td",
+							'value' => $writing->vat,
+						),
+						array(
+							'type' => "td",
+							'value' => round($writing->amount_inc_vat, 2),
+						),
+						array(
+							'type' => "td",
+							'class' => $class,
+							'value' => $writing->comment.$writing->show_further_information(),
+						),
+						array(
+							'type' => "td",
+							'value' => isset($writing->bank_id) && $writing->bank_id > 0 ? $banks_name[$writing->bank_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => $writing->form_split().$writing->form_edit().$writing->form_duplicate().$writing->form_delete(),
+						),
+					),
 			);
 		}
-
 		return $grid;
 	}
 
@@ -210,16 +272,126 @@ class Writings extends Collector  {
 	}
 	
 	function get_where() {
-		if ($this->month == 0) {
-			$this->month = $_SESSION['month_encours'];
+		if ($this->filter == "month") {
+			if ($this->month == 0) {
+				$this->month = $_SESSION['month_encours'];
+			}
+			$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->month;
+			$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month);
+			if(isset($query_where)) {
+				return $query_where;
+			} else {
+				return array(1);
+			}
+		} else return array(1);
+	}
+	
+	function show_balance_on_current_date() {
+		$date = date("d", time())."/".date("m", time())."/".date("Y", time());
+		$balance = $this->balance_on_date(time());
+		$summary = utf8_ucfirst(__("accounting on"))." ".$date." : ".$balance." ".__("€");
+		return $summary;
+	}
+	
+	function balance_on_date($timestamp) {
+		$amount = 0;
+		foreach ($this->instances as $writing) {
+			if($writing->delay < $timestamp) {
+				$amount = $amount + $writing->amount_inc_vat;
+			}
 		}
-		$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->month;
-		$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month);
-		if(isset($query_where)) {
-			return $query_where;
-		} else {
-			return array(1);
+		return round($amount, 2);
+	}
+	
+	function form_import($title) {
+		$banks = new Banks();
+		$banks->select();
+		$banks_name = $banks->names();
+		$form = "<div class=\"import\"><form method=\"post\" name=\"import_writings\" id=\"import_writings\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_action = new Html_Input("action", "import");
+		$input_file = new Html_Input("input_file", "", "file");
+		$bank = new Html_Select("bank_id", $banks_name);
+		$submit = new Html_Input("duplicate_submit", "Ok", "submit");
+		$form .= $input_hidden_action->input_hidden().$input_file->item(utf8_ucfirst($title)).$bank->item(__('bank')).$submit->input();
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function import_cic($file) {
+		if ($file_opened = fopen( $file['tmp_name'] , 'r') ) {
+			$row = 0;
+			$csv = array();
+
+            while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
+
+                $csv[$row]['delay'] = $data[1];
+                $csv[$row]['debit'] = $data[2];
+                $csv[$row]['credit'] = $data[3];
+                $csv[$row]['comment'] = $data[4];
+
+                $row++;
+            }
+			fclose($file_opened);
+			unset($csv[0]);
+			foreach ($csv as $data) {
+				$writing = new Writing();
+				$time = explode("/", $data['delay']);
+				$writing->delay = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+				$writing->comment = $data['comment'];
+				$writing->bank_id = (int)$_POST['bank_id'];
+				if (!empty($data['debit'])) {
+					$writing->amount_inc_vat = (float)str_replace(",", ".", $data['debit']);
+				} else {
+					$writing->amount_inc_vat = (float)str_replace(",", ".", $data['credit']);
+				}
+				$writing->save();
+			}
 		}
-		
+	}
+	
+	function import_coop($file) {
+		if ($file_opened = fopen( $file['tmp_name'] , 'r') ) {
+			$row = 0;
+			$csv = array();
+
+            while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
+				foreach ($data as $key => $value) {
+					if ($key == 0) {
+						$time = explode("/", $value);
+						if (isset($time[1]) && $time[2]) {
+							$value = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+						}
+					}
+					if ($key == 3) {
+						$value = (float)str_replace(",", ".", $value);
+					}
+					$csv[$row][$key] = trim($value);
+				}
+	              $row++;
+            }
+			fclose($file_opened);
+			$row_names = $csv[0];
+			unset($csv[0]);
+			foreach ($csv as $data) {
+				$information = "";
+				for ($i = 0; $i < count($data); $i++) {
+					if (!empty($data[$i]) && $i != 0 && $i != 1 && $i != 3 && $i != 4) {
+						$information .= $row_names[$i]." : ".$data[$i]."\n";
+					}
+				}
+				$writing = new Writing();
+				$writing->delay = $data[0];
+				$writing->comment = $data[1];
+				$writing->bank_id = (int)$_POST['bank_id'];
+				if (!empty($information)) {
+					$writing->information = utf8_encode($information);
+				}
+				if ($data[4] == "DEBIT") {
+					$data[3] = "-".$data[3];
+				}
+				$writing->amount_inc_vat = (float)$data[3];
+				$writing->save();
+			}
+		}
 	}
 }

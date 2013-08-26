@@ -24,8 +24,8 @@ class tests_Writing extends TableTestCase {
 	function test_save_load() {
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 190.50;
-		$writing->amount_inc_tax = 250;
+		$writing->amount_excl_vat = 190.50;
+		$writing->amount_inc_vat = 250;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -37,8 +37,8 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->load();
 		$this->assertEqual($writing_loaded->id, $writing->id);
 		$this->assertEqual($writing_loaded->account_id, $writing->account_id);
-		$this->assertEqual($writing_loaded->amount_excl_tax, $writing->amount_excl_tax);
-		$this->assertEqual($writing_loaded->amount_inc_tax, $writing->amount_inc_tax);
+		$this->assertEqual($writing_loaded->amount_excl_vat, $writing->amount_excl_vat);
+		$this->assertEqual($writing_loaded->amount_inc_vat, $writing->amount_inc_vat);
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
 		$this->assertEqual($writing_loaded->type_id, $writing->type_id);
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
@@ -50,8 +50,8 @@ class tests_Writing extends TableTestCase {
 	function test_update() {
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 190.50;
-		$writing->amount_inc_tax = 250;
+		$writing->amount_excl_vat = 190.50;
+		$writing->amount_inc_vat = 250;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -62,8 +62,8 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->id = 1;
 		$writing_loaded->load();
 		$writing_loaded->account_id = 2;
-		$writing_loaded->amount_excl_tax = 19.50;
-		$writing_loaded->amount_inc_tax = 25;
+		$writing_loaded->amount_excl_vat = 19.50;
+		$writing_loaded->amount_inc_vat = 25;
 		$writing_loaded->paid = 1;
 		$writing_loaded->type_id = 2;
 		$writing_loaded->vat = 5.5;
@@ -72,8 +72,8 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->save();
 		$this->assertEqual($writing_loaded->id, 1);
 		$this->assertEqual($writing_loaded->account_id, 2);
-		$this->assertEqual($writing_loaded->amount_excl_tax, 19.5);
-		$this->assertEqual($writing_loaded->amount_inc_tax, 25);
+		$this->assertEqual($writing_loaded->amount_excl_vat, 19.5);
+		$this->assertEqual($writing_loaded->amount_inc_vat, 25);
 		$this->assertEqual($writing_loaded->paid, 1);
 		$this->assertEqual($writing_loaded->type_id, 2);
 		$this->assertEqual($writing_loaded->vat, 5.5);
@@ -85,8 +85,8 @@ class tests_Writing extends TableTestCase {
 	function test_delete() {
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 190.50;
-		$writing->amount_inc_tax = 250;
+		$writing->amount_excl_vat = 190.50;
+		$writing->amount_inc_vat = 250;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -112,8 +112,8 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->id = 1;
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 190.50;
-		$writing->amount_inc_tax = 250;
+		$writing->amount_excl_vat = 190.50;
+		$writing->amount_inc_vat = 250;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -123,8 +123,8 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge = new Writing();
 		$writing_to_merge->id = 1;
 		$writing_to_merge->account_id = 2;
-		$writing_to_merge->amount_excl_tax = 100;
-		$writing_to_merge->amount_inc_tax = 25;
+		$writing_to_merge->amount_excl_vat = 100;
+		$writing_to_merge->amount_inc_vat = 25;
 		$writing_to_merge->paid = 1;
 		$writing_to_merge->type_id = 5;
 		$writing_to_merge->vat = 5.5;
@@ -137,8 +137,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing_to_merge_2 = new Writing();
 		$writing_to_merge_2->account_id = NULL;
-		$writing_to_merge_2->amount_excl_tax = NULL;
-		$writing_to_merge_2->amount_inc_tax = NULL;
+		$writing_to_merge_2->amount_excl_vat = NULL;
+		$writing_to_merge_2->amount_inc_vat = NULL;
 		$writing_to_merge_2->paid = NULL;
 		$writing_to_merge_2->type_id = NULL;
 		$writing_to_merge_2->vat = NULL;
@@ -150,8 +150,8 @@ class tests_Writing extends TableTestCase {
 		$this->assertIdentical($writing_to_merge, $writing);
 		
 		$writing_to_merge_2->account_id = 0;
-		$writing_to_merge_2->amount_excl_tax = 0;
-		$writing_to_merge_2->amount_inc_tax = 0;
+		$writing_to_merge_2->amount_excl_vat = 0;
+		$writing_to_merge_2->amount_inc_vat = 0;
 		$writing_to_merge_2->paid = 0;
 		$writing_to_merge_2->type_id = 0;
 		$writing_to_merge_2->vat = 0;
@@ -161,8 +161,8 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3 = new Writing();
 		$writing_to_merge_3->id = 1;
 		$writing_to_merge_3->account_id = 2;
-		$writing_to_merge_3->amount_excl_tax = 0;
-		$writing_to_merge_3->amount_inc_tax = 0;
+		$writing_to_merge_3->amount_excl_vat = 0;
+		$writing_to_merge_3->amount_inc_vat = 0;
 		$writing_to_merge_3->paid = 0;
 		$writing_to_merge_3->type_id = 5;
 		$writing_to_merge_3->vat = 0;
@@ -178,8 +178,8 @@ class tests_Writing extends TableTestCase {
 	function test_split() {
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 167.22;
-		$writing->amount_inc_tax = 200;
+		$writing->amount_excl_vat = 167.22;
+		$writing->amount_inc_vat = 200;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -190,11 +190,11 @@ class tests_Writing extends TableTestCase {
 		$writing->split(250);
 		$writing_splited = new Writing();
 		$writing_splited->load(2);
-		$this->assertEqual($writing->amount_inc_tax, -50);
-		$this->assertEqual($writing->amount_excl_tax, -41.806020);
+		$this->assertEqual($writing->amount_inc_vat, -50);
+		$this->assertEqual($writing->amount_excl_vat, -41.806020);
 		$this->assertEqual($writing_splited->account_id, 1);
-		$this->assertEqual($writing_splited->amount_excl_tax, 209.030106);
-		$this->assertEqual($writing_splited->amount_inc_tax, 250);
+		$this->assertEqual($writing_splited->amount_excl_vat, 209.030106);
+		$this->assertEqual($writing_splited->amount_inc_vat, 250);
 		$this->assertEqual($writing_splited->paid, 0);
 		$this->assertEqual($writing_splited->type_id, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
@@ -205,8 +205,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 188.13;
-		$writing->amount_inc_tax = 225;
+		$writing->amount_excl_vat = 188.13;
+		$writing->amount_inc_vat = 225;
 		$writing->paid = 0;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -217,11 +217,11 @@ class tests_Writing extends TableTestCase {
 		$writing->split(225);
 		$writing_splited = new Writing();
 		$writing_splited->load(2);
-		$this->assertEqual($writing->amount_inc_tax, 0);
-		$this->assertEqual($writing->amount_excl_tax, 0);
+		$this->assertEqual($writing->amount_inc_vat, 0);
+		$this->assertEqual($writing->amount_excl_vat, 0);
 		$this->assertEqual($writing_splited->account_id, 1);
-		$this->assertEqual($writing_splited->amount_excl_tax, 188.127090);
-		$this->assertEqual($writing_splited->amount_inc_tax, 225);
+		$this->assertEqual($writing_splited->amount_excl_vat, 188.127090);
+		$this->assertEqual($writing_splited->amount_inc_vat, 225);
 		$this->assertEqual($writing_splited->paid, 0);
 		$this->assertEqual($writing_splited->type_id, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);

@@ -1,6 +1,74 @@
-ul,li{list-style:none;}
+/*
+	lozeil
+	$Author: $
+	$URL: $
+	$Revision: $
+
+	Copyright (C) No Parking 2013 - 2013
+*/
+
+/*-----------------------------------------------------------------------------------------------------
+		Projet : lozeil
+		Website : http://www.lozeil.fr/
+		Auteur : noParking
+
+		Sommaire :  Reset
+					General
+					Menu
+					Contenu :
+						Timeline
+						
+					Tableaux :
+						Form area
+						Calendrier
+						
+					Formulaires :
+						Boutons
+						Input date (calendrier)
+	
+					Footer : 
+						Copyright
+					
+-------------------------------------------------------------------------------------------------------*/
+
+/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+
+/* --- General --- */
+
+ul,li{list-style:none;margin: 0 40px;}
 a{color:#2489CE;text-decoration:none;}
 a:hover{color:#2489CE;text-decoration:underline;}
+p{line-height:1em;}
+header, section, footer,
+aside, nav, article, figure {
+	display: block;
+}
+
+body {
+	color: #000;
+	font-size: 14px;
+	font-family: 'Bitter', Helvetica, Arial, sans-serif;
+	text-align: left;
+	background-color: #efefef;
+	background: #efefef;
+}
+
+img { border: none; }
+
+/* --- Menu --- */
+
+
+/* --- Contenu
+-------------------------------------------------------------------------------------------------------*/
+
+.content {
+	background-color: #fff;
+	margin: 0px 50px;
+	box-shadow: 3px 3px 5px #888888;
+}
+
+/* --- Timeline --- */
 
 td, th {
 	padding: 10px;
@@ -68,10 +136,6 @@ table {
 	margin-left: 9px;
 }
 
-.form-split input {
-	width: 60px;
-}
-
 .sortedup, .sortedup:hover {
 	background-image :  url(../images/up.png)!important;
 	background-position: right center;
@@ -96,21 +160,6 @@ table {
 	visibility: collapse;
 }
 
-body {
-	color: #000;
-	font-size: 14px;
-	font-family: 'Bitter', Helvetica, Arial, sans-serif;
-	text-align: left;
-	background-color: #efefef;
-	background: #efefef;
-}
-
-.content {
-	background-color: #fff;
-	margin: 50px;
-	box-shadow: 3px 3px 5px #888888;
-}
-
 .split{
 	cursor: pointer;
 	vertical-align: middle;
@@ -131,7 +180,7 @@ body {
 .table_drag_drop input[type="text"] {
 	vertical-align: middle;
 	margin-left: 5px;
-	width: 50px;
+	width: 40px;
 }
 
 .timeline a,
@@ -298,4 +347,81 @@ body {
 .input-date-calendar a:hover {
 	background:url(../images/futura/btn-grey-hover.png) repeat-x left top;
 	border:1px solid #bebebe;  
+}
+
+.menu {
+	background-color: black;
+	color: white;
+}
+
+.header, .more {
+	border: solid black thin;
+}
+.summary {
+	margin-left: 20px;
+	margin-top: 3px;
+	position: relative;
+	display: inline-block;
+}
+
+.logo {
+	margin-right: 20px;
+	position: relative;
+	display: inline-block;
+	float: right;
+	height: 17px;
+}
+
+.more {
+	background-color: black;
+	cursor: pointer;
+	display: block;
+	float: right;
+	margin-right: 200px;
+	text-align: center;
+	width: 100px;
+}
+
+.actions {
+	display: none;
+	border: solid black thin;
+}
+
+.actions ul li {
+	list-style: circle;
+}
+
+.actions ul li a {
+	color: white;
+	list-style: circle;
+}
+
+.content {
+	min-height: 900px;
+}
+
+.actions li {
+	margin-top: 12px;
+	margin-bottom: 12px;
+	list-style: circle;
+}
+
+.import .hidden_field {
+	display: inline-block;
+}
+
+.further_information {
+	font-size: 90%;
+	display: none;
+}
+
+.comment {
+	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	cursor: pointer;
+}
+
+#menu_less {
+	display: none;
 }

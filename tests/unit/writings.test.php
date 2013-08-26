@@ -63,8 +63,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing = new Writing();
 		$writing->account_id = 1;
-		$writing->amount_excl_tax = 190.50;
-		$writing->amount_inc_tax = 25;
+		$writing->amount_excl_vat = 190.50;
+		$writing->amount_inc_vat = 25;
 		$writing->paid = 0;
 		$writing->type_id = 2;
 		$writing->vat = 19.6;
@@ -74,8 +74,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing2 = new Writing();
 		$writing2->account_id = 1;
-		$writing2->amount_excl_tax = 10.50;
-		$writing2->amount_inc_tax = 20;
+		$writing2->amount_excl_vat = 10.50;
+		$writing2->amount_inc_vat = 20;
 		$writing2->paid = 1;
 		$writing2->type_id = 2;
 		$writing2->vat = 5.5;
@@ -85,8 +85,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing3 = new Writing();
 		$writing3->account_id = 1;
-		$writing3->amount_excl_tax = 190.50;
-		$writing3->amount_inc_tax = 250;
+		$writing3->amount_excl_vat = 190.50;
+		$writing3->amount_inc_vat = 250;
 		$writing3->paid = 0;
 		$writing3->type_id = 2;
 		$writing3->vat = 5.5;
@@ -96,8 +96,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing4 = new Writing();
 		$writing4->account_id = 1;
-		$writing4->amount_excl_tax = 250;
-		$writing4->amount_inc_tax = 279;
+		$writing4->amount_excl_vat = 250;
+		$writing4->amount_inc_vat = 279;
 		$writing4->paid = 0;
 		$writing4->type_id = 1;
 		$writing4->vat = 5.5;
