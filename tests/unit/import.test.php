@@ -39,8 +39,6 @@ class tests_Import extends TableTestCase {
 		$file['tmp_name'] = $name;
 		$_POST['bank_id'] = 1;
 		$import->import_cic($file);
-		fclose($handle);
-		unlink($name);
 		
 		$this->assertRecordExists(
 			"writings",
@@ -75,7 +73,15 @@ class tests_Import extends TableTestCase {
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
 			)
 		);
+		$import->import_cic($file);
 		
+		fclose($handle);
+		unlink($name);
+		$writings = new Writings();
+		$writings->select();
+		$unique_keys = $writings->get_unique_key_in_array();
+		$this->assertTrue(array_unique($unique_keys) == $unique_keys);
+		$this->assertTrue(count($unique_keys) === 3);
 		$this->truncateTable("writings");
 	}
 	
@@ -148,6 +154,12 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				'delay' => mktime(0, 0, 0, 7, 3, 2013),
 				)
 		);
+		
+		$writings = new Writings();
+		$writings->select();
+		$unique_keys = $writings->get_unique_key_in_array();
+		$this->assertTrue(array_unique($unique_keys) == $unique_keys);
+		$this->assertTrue(count($unique_keys) === 2);
 		$this->truncateTable("writings");
 	}
 	
