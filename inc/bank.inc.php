@@ -56,6 +56,17 @@ class Bank extends Record {
 
 		return $this->id;
 	}
+	
+	function update() {
+		$query = "UPDATE ".$this->db->config['table_banks'].
+		" SET name = ".$this->db->quote($this->name)."
+		WHERE id = ".(int)$this->id;
+		$result = $this->db->query($query);
+		$this->db->status($result[1], "u", __('bank'));
+
+		return $this->id;
+	}
+
 
 	function delete() {
 		$query = "DELETE FROM ".$this->db->config['table_banks'].

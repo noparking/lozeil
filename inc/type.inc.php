@@ -56,6 +56,16 @@ class Type extends Record {
 
 		return $this->id;
 	}
+	
+	function update() {
+		$query = "UPDATE ".$this->db->config['table_types'].
+		" SET name = ".$this->db->quote($this->name)."
+		WHERE id = ".(int)$this->id;
+		$result = $this->db->query($query);
+		$this->db->status($result[1], "u", __('type'));
+
+		return $this->id;
+	}
 
 	function delete() {
 		$query = "DELETE FROM ".$this->db->config['table_types'].

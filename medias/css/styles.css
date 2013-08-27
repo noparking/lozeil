@@ -196,8 +196,10 @@ table {
 	text-align: center;
 }
 
-.timeline ul {
-	padding-right: 40px;
+.timeline {
+	display: block;
+    width: 95%;
+    margin: 0 auto;
 }
 
 .timeline li {

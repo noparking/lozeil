@@ -171,7 +171,7 @@ function error_status($message, $priority = 0) {
 	if (!isset($_SESSION['global_status'])) {
 		$_SESSION['global_status'] = array();
 	}
-	$message = Plugins::transform_hook("error_status", $message);
+	//$message = Plugins::transform_hook("error_status", $message);
 	if ($GLOBALS['param']['layout_multiplestatus']) {
 		$_SESSION['global_status'][] = array(
 				'value' => "<li class=\"content_error_status\">".$message."</li>",

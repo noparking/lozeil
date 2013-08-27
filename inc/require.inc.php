@@ -33,6 +33,7 @@ require $current_directory."/html_radio.inc.php";
 require $current_directory."/html_select.inc.php";
 require $current_directory."/html_table.inc.php";
 require $current_directory."/html_textarea.inc.php";
+require $current_directory."/import.inc.php";
 require $current_directory."/menu_area.inc.php";
 require $current_directory."/misc.inc.php";
 require $current_directory."/source.inc.php";

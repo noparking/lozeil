@@ -58,13 +58,13 @@ if (isset($_POST) and count($_POST) > 0) {
 			break;
 		case 'import':
 			if (isset($_POST['bank_id']) && isset($_FILES) && $_FILES['input_file']['type'] == "text/csv" && $_FILES['input_file']['error'] == 0) {
-				$imported_writings = new Writings();
+				$import = new Import();
 				$bank = new Bank();
 				$bank->load((int)$_POST['bank_id']);
 				if (preg_match("/cic/", $bank->name)) {
-					$imported_writings->import_cic($_FILES['input_file']);
+					$import->import_cic($_FILES['input_file']);
 				} elseif (preg_match("/coop/", $bank->name)) {
-					$imported_writings->import_coop($_FILES['input_file']);
+					$import->import_coop($_FILES['input_file']);
 				}
 			}
 			break;

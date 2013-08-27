@@ -30,13 +30,16 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/ON sources.id = writings.source_id/", $join[1]);
 		$this->assertPattern("/LEFT JOIN types/", $join[2]);
 		$this->assertPattern("/ON types.id = writings.type_id/", $join[2]);
+		$this->assertPattern("/ON sources.id = writings.source_id/", $join[1]);
+		$this->assertPattern("/LEFT JOIN banks/", $join[3]);
+		$this->assertPattern("/ON banks.id = writings.bank_id/", $join[3]);
 	}
 	
 	function test_get_columns() {
 		$writings = new Writings();
 		$columns = $writings->get_columns();
 		$this->assertPattern("/`writings`.*/", $columns[0]);
-		$this->assertPattern("/accounts.name as account_name, sources.name as source_name, types.name as type_name/", $columns[1]);
+		$this->assertPattern("/accounts.name as account_name, sources.name as source_name, types.name as type_name, banks.name as bank_name/", $columns[1]);
 	}
 	
 	function test_determine_order() {
@@ -55,32 +58,61 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_show() {
-		$_SESSION['month_encours'] = mktime(0, 0, 0, date("m", time()), 1, date("Y", time()));
+		$_SESSION['month_encours'] = mktime(0, 0, 0, 7, 1, 2013);
 		
-//		$account = new Account();
-//		$account->id = 1;
-//		$account->save();
+		$account = new Account();
+		$account->name = "Account 1";
+		$account->save();
+		$bank = new Bank();
+		$bank->name = "Bank 1";
+		$bank->save();
+		$source = new Source();
+		$source->name = "Source 1";
+		$source->save();
+		$type = new Type();
+		$type->name = "Type 1";
+		$type->save();
+		$account2 = new Account();
+		$account2->name = "Account 2";
+		$account2->save();
+		$bank2 = new Bank();
+		$bank2->name = "Bank 2";
+		$bank2->save();
+		$source2 = new Source();
+		$source2->name = "Source 2";
+		$source2->save();
+		$type2 = new Type();
+		$type2->name = "Type 2";
+		$type2->save();
 		
 		$writing = new Writing();
 		$writing->account_id = 1;
 		$writing->amount_excl_vat = 190.50;
-		$writing->amount_inc_vat = 25;
+		$writing->amount_inc_vat = 250;
+		$writing->bank_id = 1;
+		$writing->comment = "Ceci est un test";
+		$writing->delay = mktime(10, 0, 0, 7, 29, 2013);
+		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->type_id = 2;
+		$writing->source_id = 1;
+		$writing->type_id = 1;
+		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
-		$writing->source_id = 3;
-		$writing->delay = time();
 		$writing->save();
 		
 		$writing2 = new Writing();
-		$writing2->account_id = 1;
-		$writing2->amount_excl_vat = 10.50;
-		$writing2->amount_inc_vat = 20;
+		$writing2->account_id = 2;
+		$writing2->amount_excl_vat = 90.50;
+		$writing2->amount_inc_vat = 100;
+		$writing2->bank_id = 2;
+		$writing2->comment = "Ceci est un autre élément du test";
+		$writing2->delay = mktime(10, 0, 0, 7, 10, 2013);
+		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
+		$writing2->source_id = 2;
 		$writing2->type_id = 2;
+		$writing2->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing2->vat = 5.5;
-		$writing2->source_id = 3;
-		$writing2->delay = time();
 		$writing2->save();
 		
 		$writing3 = new Writing();
@@ -90,8 +122,8 @@ class tests_Writing extends TableTestCase {
 		$writing3->paid = 0;
 		$writing3->type_id = 2;
 		$writing3->vat = 5.5;
-		$writing3->source_id = 3;
-		$writing3->delay = strtotime('+1 months', time());
+		$writing3->source_id = 2;
+		$writing3->delay = strtotime('+1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing3->save();
 		
 		$writing4 = new Writing();
@@ -102,24 +134,33 @@ class tests_Writing extends TableTestCase {
 		$writing4->type_id = 1;
 		$writing4->vat = 5.5;
 		$writing4->source_id = 2;
-		$writing4->delay = strtotime('-1 months', time());
+		$writing4->delay = strtotime('-1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing4->save();
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
+		$writings->filter = "month";
 		$writings->select();
 		
-		$html = $writings->show();
-		$this->assertPattern("/<div class=\"split\"/", $html);
-		$this->assertPattern("/<th /", $html);
-		$this->assertPattern("/<td>10.5<\/td>/", $html);
-		$this->assertPattern("/<td>19.60<\/td>/", $html);
-		$this->assertPattern("/class=\"grid_header\"/", $html);
-		$this->assertPattern("/class=\"draggable\"/", $html);
-		$this->assertNoPattern("/<td>250<\/td>/", $html);
-		$this->assertNoPattern("/279/", $html);
+		$table = $writings->show();
+		$this->assertPattern("/<td>19.60<\/td>/", $table);
+		$this->assertPattern("/<td>190.5<\/td>/", $table);
+		$this->assertPattern("/Bank 1/", $table);
+		$this->assertPattern("/Source 1/", $table);
+		$this->assertPattern("/Type 1/", $table);
+		$this->assertPattern("/Account 1/", $table);
+		$this->assertPattern("/Ceci est un test/", $table);
+		$this->assertPattern("/Autre complément d'infos/", $table);
+		$this->assertNoPattern("/e50b79ffaccc6b50d018aad432711418/", $table);
+		$this->assertPattern("/class=\"draggable\"/", $table);
+		$this->assertNoPattern("/<td>250.00<\/td>/", $table);
+		$this->assertNoPattern("/279/", $table);
 		
 		$this->truncateTable("writings");
+		$this->truncateTable("sources");
+		$this->truncateTable("types");
+		$this->truncateTable("accounts");
+		$this->truncateTable("banks");
 	}
 	
 	function test_show_timeline() {
@@ -139,6 +180,62 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/".strtotime('+8 months', 1375308000)."/", $writings->show_timeline());
 		$this->assertPattern("/".strtotime('+9 months', 1375308000)."/", $writings->show_timeline());
 		$this->assertPattern("/".strtotime('+10 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/08\/2013/", $writings->show_timeline());
+		$this->assertPattern("/timeline_month_encours/", $writings->show_timeline());
+		$this->assertPattern("/timeline_month_navigation/", $writings->show_timeline());
+	}
+	
+	function test_get_where() {
+		$_SESSION['month_encours'] = 1375308000;
+		$writings = new Writings();
+		$writings->filter = "month";
+		$get_where = $writings->get_where();
+		$this->assertPattern("/writings.delay >= 1375308000/", $get_where[0]);
+		$this->assertPattern("/writings.delay < ".strtotime('+1 months', 1375308000)."/", $get_where[1]);
+		$writings->filter = "";
+		$get_where = $writings->get_where();
+		$this->assertTrue($get_where[0] == 1);
+		$this->assertFalse(isset($get_where[1]));
+	}
+	
+	function test_balance_on_date() {
+		$writing1 = new Writing();
+		$writing1->amount_inc_vat = 150.56;
+		$writing1->delay = mktime(10, 0, 0, 7, 20, 2013);
+		$writing1->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 29, 2013)), 150.56);
+		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 19, 2013)), 0);
+		
+		$writing2 = new Writing();
+		$writing2->amount_inc_vat = -2150.56;
+		$writing2->delay = mktime(10, 0, 0, 7, 18, 2013);
+		$writing2->save();
+		
+		$writings->select();
+		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 29, 2013)), -2000);
+		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 19, 2013)), -2150.56);
+		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 17, 2013)), 0);
+
+		$this->truncateTable("writings");
+	}
+	
+	function test_get_unique_key_in_array() {
+		$writing = new Writing();
+		$writing->unique_key = "unique 1";
+		$writing->save();
+		$writing2 = new Writing();
+		$writing2->unique_key = "unique 2";
+		$writing2->save();
+		$writing3 = new Writing();
+		$writing3->unique_key = "unique 3";
+		$writing3->save();
+		$writings = new Writings();
+		$writings->select();
+		$unique_keys = $writings->get_unique_key_in_array();
+		$this->assertTrue(in_array("unique 1", $unique_keys));
+		$this->assertTrue(in_array("unique 2", $unique_keys));
+		$this->assertTrue(in_array("unique 3", $unique_keys));
 	}
 }
