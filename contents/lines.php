@@ -57,15 +57,9 @@ if (isset($_POST) and count($_POST) > 0) {
 			$writing_form = $writing->form();
 			break;
 		case 'import':
-			if (isset($_POST['bank_id']) && isset($_FILES) && $_FILES['input_file']['type'] == "text/csv" && $_FILES['input_file']['error'] == 0) {
-				$import = new Import();
-				$bank = new Bank();
-				$bank->load((int)$_POST['bank_id']);
-				if (preg_match("/cic/", $bank->name)) {
-					$import->import_cic($_FILES['input_file']);
-				} elseif (preg_match("/coop/", $bank->name)) {
-					$import->import_coop($_FILES['input_file']);
-				}
+			if ($_POST['bank_id'] > 0 && isset($_FILES) && $_FILES['input_file']['type'] == "text/csv" && $_FILES['input_file']['error'] == 0) {
+				$data = new Writings_Data_File($_FILES['input_file']['tmp_name'], $_POST['bank_id']);
+				$data->import();
 			}
 			break;
 		default:

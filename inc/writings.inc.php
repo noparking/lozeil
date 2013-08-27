@@ -166,6 +166,7 @@ class Writings extends Collector  {
 			}
 			$grid[$writing->id] =  array(
 					'class' => "draggable",
+					'id' => $writing->id,
 					'cells' => array(
 						array(
 							'type' => "td",
@@ -239,14 +240,26 @@ class Writings extends Collector  {
 		$this->start = strtotime('-2 months', $encours);
 		$this->stop = strtotime('+10 months', $encours);
 		$start = $this->start;
+		$writings = new Writings();
+		$writings->select();
 		while ($start <= $this->stop) {
 			if ($this->month == $start) {
 				$grid['leaves'][$start]['class'] = "timeline_month_encours";
 			} else {
 				$grid['leaves'][$start]['class'] = "timeline_month_navigation";
 			}
-			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".date("Y", $start)."</a>";
-			$start = mktime(0, 0, 0, date("m", $start) + 1, 1, date("Y", $start));
+			$next_month = mktime(0, 0, 0, date("m", $start) + 1, 1, date("Y", $start));
+			$balance = $writings->balance_on_date($next_month);
+			if ($balance < 0) {
+				$class = "negative_balance";
+			} else {
+				$class = "positive_balance";
+			}
+			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".
+					utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".
+					date("Y", $start)."</a><br /><br />
+					<span class=\"".$class."\">".$balance."</spzn>";
+			$start = $next_month;
 		}
 		$timeline = "<span class=\"timeline\">";
 		$list = new Html_List($grid);
@@ -289,6 +302,7 @@ class Writings extends Collector  {
 	}
 	
 	function get_unique_key_in_array() {
+		$this->select();
 		$keys = array();
 		foreach ($this as $writing) {
 			if (!empty($writing->unique_key))

@@ -57,8 +57,8 @@ class Menu_Area {
 			$nom = array_keys($link);
 			$link = array_values($link);
 			if ($key == "import") {
-				$import = new Import();
-				$grid['leaves'][$nom[0]]['value'] = $import->form_import($nom[0]);
+				$data = new Writings_Data_File();
+				$grid['leaves'][$nom[0]]['value'] = $data->form_import($nom[0]);
 			} else {
 				$grid['leaves'][$nom[0]]['value'] = "<a href=\"".link_content("content=".$link[0])."\">".utf8_ucfirst($nom[0])."</a>";
 			}

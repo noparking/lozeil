@@ -10,7 +10,7 @@
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
-class tests_Import extends TableTestCase {
+class tests_Writings_Data_File extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
@@ -19,11 +19,100 @@ class tests_Import extends TableTestCase {
 		);
 	}
 	
-	function test_import_cic() {
+	function test_is_line_cic() {
+		$import = new Writings_Data_File();
+		$mydata =array(
+			'delay' => "01/07/2013",
+			'debit' => "",
+			'credit' => "152,20",
+			'comment' => "test de libellé"
+			);
+		$mydata2 =array(
+			'delay' => "01/07/2013",
+			'debit' => "",
+			'credit' => "",
+			'comment' => "test de libellé"
+			);
+		$mydata3 =array(
+			'delay' => "1275412300",
+			'debit' => "",
+			'credit' => "",
+			'comment' => "test de libellé"
+			);
+		$this->assertTrue($import->is_line_cic($mydata));
+		$this->assertFalse($import->is_line_cic($mydata2));
+		$this->assertFalse($import->is_line_cic($mydata3));
+	}
+	
+	
+	function test_is_line_coop() {
+		$import = new Writings_Data_File();
+		$mydata = array("1275412000", "" , "", "12.52","DEBIT");
+		$mydata2 = array("27/08/2013", "" , "", "12.52","DEBIT");
+		$mydata3 = array("1275412000", "" , "", "12.52","");
+		$this->assertTrue($import->is_line_coop($mydata));
+		$this->assertFalse($import->is_line_coop($mydata2));
+		$this->assertFalse($import->is_line_coop($mydata3));
+	}
+	
+	function test_is_cic() {
+		$mydata = array(
+			array("Date d'opération","Date de valeur","D�bit","Cr�dit","Libellé","Solde"),
+			array("02/07/2013", "01/07/2013", "", "152,20", "test de libellé", "1252,20"),
+			array("05/07/2013", "04/07/2013", "-120,50", "", "test de libellé 2", "1300,20"),
+			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")
+			);
+		$data = new Writings_Data_File();
+		$row = 0;
+		foreach ($mydata as $line) {
+				$data->csv_data[$row]['delay'] = trim($line[1]);
+                $data->csv_data[$row]['debit'] = trim($line[2]);
+                $data->csv_data[$row]['credit'] = trim($line[3]);
+                $data->csv_data[$row]['comment'] = trim($line[4]);
+                $row++;
+		}
+		$this->assertTrue($data->is_cic($data->csv_data));
+	}
+	
+	function test_is_coop() {
+		$mydata = array(
+			array("Date","Libellé","Libellé complémentaire","Montant","Sens","Numéro de chèque","Référence Interne de l'Opération",
+				"Nom de l'émetteur","Identifiant de l'émetteur","Nom du destinataire","Identifiant du destinataire",
+				"Nom du tiers débiteur","Identifiant du tiers débiteur","Nom du tiers créancier","Identifiant du tiers créancier",
+				"Libellé de Client à Client - Motif","Référence de Client à Client","Référence de la Remise","Référence de la Transaction",
+				"Référence Unique du Mandat","Séquence de Présentation"),
+			array("02/07/2013", "libellé 1", " libellé complémentaire 1", "152,20", "DEBIT", "Numéro de chèque 1","Référence Interne de l'Opération 1",
+				"Nom de l'émetteur 1","Identifiant de l'émetteur 1","Nom du destinataire 1","Identifiant du destinataire 1",
+				"Nom du tiers débiteur 1","Identifiant du tiers débiteur 1","Nom du tiers créancier 1","Identifiant du tiers créancier 1",
+				"Libellé de Client à Client - Motif 1","Référence de Client à Client 1","Référence de la Remise 1","Référence de la Transaction 1",
+				"Référence Unique du Mandat 1","Séquence de Présentation 1"),
+			array("03/07/2013", "", "", "152,20", "CREDIT")
+			);
+		$data = new Writings_Data_File();
+		$row = 0;
+		foreach ($mydata as $line) {
+			foreach ($line as $key => $value) {
+				if ($key == 0) {
+					$time = explode("/", $value);
+					if (isset($time[1]) && $time[2]) {
+						$value = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+					}
+				}
+				if ($key == 3 && $value!= "Montant") {
+					$value = (float)str_replace(",", ".", $value);
+				}
+				$data->csv_data[$row][$key] = trim($value);
+			}
+		  $row++;
+		}
+		$this->assertTrue($data->is_coop($data->csv_data));
+	}
+	
+	function test_import_as_cic() {
 		$name = tempnam('/tmp', 'csv');
 		
 		$mydata =array(
-			array("Date d'opération","Date de valeur","Débit","Crédit","Libellé","Solde"),
+			array("Date d'opération","Date de valeur","D�bit","Cr�dit","Libellé","Solde"),
 			array("02/07/2013", "01/07/2013", "", "152,20", "test de libellé", "1252,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "test de libellé 2", "1300,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")
@@ -35,10 +124,8 @@ class tests_Import extends TableTestCase {
 			fputcsv($handle, $data, ";");
 		}
 		
-		$import = new Import();
-		$file['tmp_name'] = $name;
-		$_POST['bank_id'] = 1;
-		$import->import_cic($file);
+		$data = new Writings_Data_File($name, 1);
+		$data->import_as_cic();
 		
 		$this->assertRecordExists(
 			"writings",
@@ -73,7 +160,7 @@ class tests_Import extends TableTestCase {
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
 			)
 		);
-		$import->import_cic($file);
+		$data->import_as_cic();
 		
 		fclose($handle);
 		unlink($name);
@@ -86,7 +173,7 @@ class tests_Import extends TableTestCase {
 	}
 	
 	
-	function test_import_coop() {
+	function test_import_as_coop() {
 		$name = tempnam('/tmp', 'csv');
 		
 		$mydata = array(
@@ -109,10 +196,9 @@ class tests_Import extends TableTestCase {
 			fputcsv($handle, $data, ";");
 		}
 		
-		$import = new Import();
-		$file['tmp_name'] = $name;
-		$_POST['bank_id'] = 2;
-		$import->import_coop($file);
+		$data = new Writings_Data_File($name, 2);
+		$data->import_as_coop();
+
 		fclose($handle);
 		unlink($name);
 		
@@ -155,6 +241,8 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				)
 		);
 		
+		$data->import_as_coop();
+		
 		$writings = new Writings();
 		$writings->select();
 		$unique_keys = $writings->get_unique_key_in_array();
@@ -172,8 +260,8 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$bank2->name = "Bank 2";
 		$bank2->save();
 		
-		$import = new Import();
-		$form_import = $import->form_import("label");
+		$data = new Writings_Data_File();
+		$form_import = $data->form_import("label");
 		$this->assertPattern("/class=\"import\"/", $form_import);
 		$this->assertPattern("/label/", $form_import);
 		$this->assertPattern("/import_writings/", $form_import);
