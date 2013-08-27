@@ -417,3 +417,19 @@ $(document).ready(function() {
 		}
 	})
 })
+
+$(document).keyup(function(e) {
+
+  if (e.keyCode == 27) {
+	  if ($(".more").hasClass("show")) {
+			$(".more").addClass("hide");
+			$(".more").removeClass("show");
+			$(".actions").slideUp(400, function() {
+				$("#menu_less").hide();
+				$("#menu_more").show();
+			});
+		}
+		$(".table_drag_drop input[type='text']").attr("type", "hidden");
+		$(".form_add_edit_writing").remove();
+  }   
+});

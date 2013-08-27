@@ -351,12 +351,9 @@ table {
 	border:1px solid #bebebe;  
 }
 
-.menu {
+.header, .more, .actions {
 	background-color: black;
 	color: white;
-}
-
-.header, .more {
 	border: solid black thin;
 }
 .summary {
@@ -399,7 +396,7 @@ table {
 }
 
 .content {
-	min-height: 900px;
+	min-height: 600px;
 }
 
 .actions li {
@@ -426,4 +423,14 @@ table {
 
 #menu_less {
 	display: none;
+}
+
+.menu {
+	position: absolute;
+	left: 50px;
+	right: 50px;;
+}
+
+.heading {
+	padding-top: 35px;
 }
