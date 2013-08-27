@@ -206,11 +206,13 @@ table {
 	width: 70px;
 	border: #000 solid thin;
 	margin: 2px;
+	margin-bottom: 30px;
 }
 
 .timeline_month_encours {
 	height: 40px;
 	font-weight: bold;
+	padding-top: 3px;
 }
 
 .timeline_month_navigation {
@@ -433,4 +435,12 @@ table {
 
 .heading {
 	padding-top: 35px;
+}
+
+.negative_balance {
+	color: #BF0000;
+}
+
+.positive_balance {
+	color: #016B01;
 }

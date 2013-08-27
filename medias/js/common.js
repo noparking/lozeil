@@ -431,5 +431,6 @@ $(document).keyup(function(e) {
 		}
 		$(".table_drag_drop input[type='text']").attr("type", "hidden");
 		$(".form_add_edit_writing").remove();
+		$(".further_information").slideUp();
   }   
 });
