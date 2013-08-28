@@ -448,9 +448,23 @@ table {
 	color: #016B01;
 }
 
-#hideform, #showform {
+#hideform, #showform, #newform {
+	border: black thin solid;
 	cursor: pointer;
-	margin: 10px;
+	padding: 5px;
+}
+
+#newform {
+	margin-left: 20px;
+}
+
+#newform a{
+	text-decoration: none;
+	color: black;
+}
+
+#hideform:hover, #showform:hover, #newform:hover {
+	background-color: #F6F6F6;
 }
 
 #hideform {
@@ -458,5 +472,14 @@ table {
 }
 
 .form_writing {
+	margin-top: 20px;
 	display: none;
+}
+
+input[type="file"] {
+	margin: 0 20px 0 20px;
+}
+
+.edit {
+	padding: 15px;
 }

@@ -61,10 +61,11 @@ function state_obj(id) {
 
 $(document).ready(function() {
 	if($(".form_writing #id").attr("value") > 0) {
-		$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 		$(".form_writing").show();
 		$("#hideform").show();
 		$("#showform").hide();
+		var height = $(document).height();
+		document.body.scrollTop = height;
 	}
 	$(".actions").hide();
 	$(".more").on("click", function() {

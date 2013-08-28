@@ -208,7 +208,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']."&writing_encours=".$writing->id)," ")."</div>".
+							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']."&writings_id=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),

@@ -12,8 +12,7 @@ $current_month = mktime(0,0,0,date("m"),1,date("Y"));
 $_SESSION['month_encours'] = $current_month;
 
 $selected_month = determine_integer_from_post_get_session(null, "month");
-$selected_writing = determine_integer_from_post_get_session(null, "writing_encours");
-
+$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
 if(isset($selected_month) and $selected_month > 0) {
 	$_SESSION['month_encours'] = $selected_month;
 }

@@ -31,6 +31,7 @@ $__['hide form'] = "masquer le formulaire";
 $__['id'] = "id";
 $__['less'] = "moins";
 $__['more'] = "plus";
+$__['new record'] = "nouvel enregistrement";
 $__['no'] = "non";
 $__['no name'] = "sans nom";
 $__['nothing to do'] = "rien à faire";
