@@ -23,10 +23,10 @@ class Menu_Area {
 	function show() {
 		$content = "<div class=\"menu\"><div class=\"header\">";
 		if (!empty($this->header)) {
-			$content .= "<div class=\"summary\">".$this->header."</div>";
+			$content .= "<div class=\"balance_summary\">".$this->header."</div>";
 		}
 		if (!empty($this->img_src)) {
-			$content .= "<div class=\"logo\"><img class=\"hand\"".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\"></div>";
+			$content .= "<div class=\"logo\"><img ".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\"></div>";
 		}
 		$content .= "</div>";
 		

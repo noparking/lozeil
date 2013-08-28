@@ -76,7 +76,7 @@ class Writings extends Collector  {
 	function grid_header() {
 		$grid = array(
 			'header' => array(
-				'class' => "grid_header",
+				'class' => "table_header",
 				'cells' => array(
 					array(
 						'type' => "th",
@@ -208,7 +208,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"modify\"><a href=".link_content("content=lines.php&month=".$_SESSION['month_encours']."&writing_encours=".$writing->id)."></a></div>".
+							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']."&writing_encours=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
@@ -228,7 +228,7 @@ class Writings extends Collector  {
 	function show() {
 		$html_table = new Html_table(array('lines' => $this->grid()));
 		if (empty($_REQUEST) or (isset($_REQUEST['content']) and $_REQUEST['content'] != "lines.ajax.php")) {
-			return "<div class=\"table_drag_drop\">".$html_table->show()."</div>";
+			return "<div class=\"table_accounting\">".$html_table->show()."</div>";
 		} else {
 			return $html_table->show();
 		}
@@ -257,16 +257,16 @@ class Writings extends Collector  {
 			} else {
 				$class = "positive_balance";
 			}
-			$grid['leaves'][$start]['value'] = "<a href=\"".link_content("content=".$content."&month=".$start)."\">".
+			$grid['leaves'][$start]['value'] = Html_Tag::a(link_content("content=".$content."&month=".$start),
 					utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".
-					date("Y", $start)."</a><br /><br />
+					date("Y", $start))."<br /><br />
 					<span class=\"".$class."\">".$balance."</spzn>";
 			$start = $next_month;
 		}
-		$timeline = "<span class=\"timeline\">";
+		$timeline = "<div class=\"timeline\">";
 		$list = new Html_List($grid);
 		$timeline .= $list->show();
-		$timeline .= "</span>";
+		$timeline .= "</div>";
 
 		return $timeline;
 	}

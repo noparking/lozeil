@@ -12,6 +12,12 @@ require dirname(__FILE__)."/inc/require.inc.php";
 
 session_start();
 
+if (isset($_GET['content']) and !empty($_GET['content'])) {
+	$content = $_GET['content'];
+} else {
+	$content = "lines.php";
+}
+
 if (!isset($_REQUEST['method']) || $_REQUEST['method'] != 'json') {
 	$theme = new Theme_Default();
 
@@ -26,19 +32,12 @@ if (!isset($_REQUEST['method']) || $_REQUEST['method'] != 'json') {
 
 	echo $theme->content_top();
 
-	if (isset($_GET['content']) and !empty($_GET['content'])) {
-		include("contents/".$_GET['content']);
-	} else {
-		include("contents/lines.php");
-	}
+	include("contents/".$content);
+	
 	echo $theme->content_bottom();
 
 	echo $theme->body_bottom();
 	echo $theme->html_bottom();
 } else {
-	if (isset($_GET['content']) and !empty($_GET['content'])) {
-		include("contents/".$_GET['content']);
-	} else {
-		include("contents/lines.php");
-	}
+	include("contents/".$content);
 }

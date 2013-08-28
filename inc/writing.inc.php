@@ -141,8 +141,8 @@ class Writing extends Record {
 	}
 	
 	function form() {
-		$form = "<div class=\"new\"><div id=\"form_show\">".__('show form')."</div><div id=\"form_hide\">".__('hide form')."</div></div>";
-		$form .= "<div class=\"form_add_edit_writing\">
+		$form = "<div class=\"edit\"><div id=\"showform\">".utf8_ucfirst(__('show form'))."</div><div id=\"hideform\">".utf8_ucfirst(__('hide form'))."</div>";
+		$form .= "<div class=\"form_writing\">
 			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
@@ -207,7 +207,7 @@ class Writing extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div>";
+		$form .= "</form></div></div>";
 
 		return $form;
 	}

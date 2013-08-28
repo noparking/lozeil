@@ -109,7 +109,7 @@ table {
 	clear: both;
 }
 
-.table_drag_drop {
+.table_accounting {
 	border-radius: 4px 4px 0 0;
 	background-color: #fff;
 }
@@ -156,7 +156,7 @@ table {
 	text-decoration: none;
 }
 
-#grid_header_dragged {
+#table_header_dragged {
 	visibility: collapse;
 }
 
@@ -177,7 +177,7 @@ table {
 	background: transparent;
 }
 
-.table_drag_drop input[type="text"] {
+.table_accounting input[type="text"] {
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
@@ -361,7 +361,7 @@ table {
 	color: white;
 	border: solid black thin;
 }
-.summary {
+.balance_summary {
 	margin-left: 20px;
 	margin-top: 3px;
 	position: relative;
@@ -448,15 +448,15 @@ table {
 	color: #016B01;
 }
 
-#form_hide, #form_show {
+#hideform, #showform {
 	cursor: pointer;
 	margin: 10px;
 }
 
-#form_hide {
+#hideform {
 	display: none;
 }
 
-.form_add_edit_writing {
+.form_writing {
 	display: none;
 }

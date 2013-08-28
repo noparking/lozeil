@@ -30,7 +30,7 @@ function make_droppable() {
 				"index.php?content=lines.ajax.php",
 				{ method: "json", action: "merge", toMerge: toMerge, destination: destination, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
-					$('.content table').html(data);
+					$('.table_accounting table').html(data);
 					$("#table_" + destination).addClass('over').delay('3000').queue(function(next){
 						$(this).removeClass('over');
 						next();
@@ -42,7 +42,7 @@ function make_droppable() {
 }
 
 function make_draggable() {
-	var grid_header = $(".grid_header").html();
+	var table_header = $(".table_header").html();
 	var html = "";
 	var id = 0;
 	$("tr.draggable").draggable({
@@ -51,7 +51,7 @@ function make_draggable() {
 		helper: function(event) {
 			html = $(this).html();
 			id = $(this).attr('id');
-			return "<div class=\"dragged\"><table><tr id=\""+id+"\">"+html+"</tr><tr id=\"grid_header_dragged\">"+grid_header+"</tr></table></div>";
+			return "<div class=\"dragged\"><table><tr id=\""+id+"\">"+html+"</tr><tr id=\"table_header_dragged\">"+table_header+"</tr></table></div>";
 		}
 	});
 }

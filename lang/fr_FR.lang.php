@@ -74,4 +74,4 @@ $array_week[5] = "Vendredi";
 $array_week[6] = "Samedi";
 $array_week[7] = "Dimanche";
 
-$txt_mask                    = "masquer";
+$txt_mask = "masquer";

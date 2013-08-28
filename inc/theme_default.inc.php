@@ -54,9 +54,11 @@ class Theme_Default {
 	function js_files() {
 		$js_files[] = "medias/js/jquery-1.9.1.js";
 		$js_files[] = "medias/js/jquery-drag_drop.js";
-		$js_files[] = "medias/js/drag_drop.js";
 		$js_files[] = "medias/js/calendar.js";
 		$js_files[] = "medias/js/common.js";
+		if ($GLOBALS['content'] == "lines.php") {
+			$js_files[] = "medias/js/lines.js";
+		}
 		
 		$html = "";
 
