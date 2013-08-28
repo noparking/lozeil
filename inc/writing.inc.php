@@ -67,22 +67,20 @@ class Writing extends Record {
 	}
 	
 	function update() {
-		$vat = is_null($this->vat) ? "vat = NULL" : "vat = ".$this->vat;
-		$amount_inc_vat = is_null($this->amount_inc_vat) ? "amount_inc_vat = NULL" : "amount_inc_vat = ".$this->amount_inc_vat;
-		$amount_excl_vat = is_null($this->amount_excl_vat) ? "amount_excl_vat = NULL" : "amount_excl_vat = ".$this->amount_excl_vat;
 		$query = "UPDATE ".$this->db->config['table_writings'].
 		" SET account_id = ".(int)$this->account_id.",
 		bank_id = ".(int)$this->bank_id.",
 		source_id = ".(int)$this->source_id.",
-		".$amount_inc_vat.",
+		amount_inc_vat = ".$this->amount_inc_vat.",
 		type_id  = ".(int)$this->type_id.",
-		".$vat.",
-		".$amount_excl_vat.",
+		vat = ".$this->vat.",
+		amount_excl_vat = ".$this->amount_excl_vat.",
 		comment = ".$this->db->quote($this->comment).",
 		information = ".$this->db->quote($this->information).",
 		paid = ".(int)$this->paid.",
 		delay = ".(int)$this->delay."
 		WHERE id = ".(int)$this->id;
+		
 		$result = $this->db->query($query);
 		$this->db->status($result[1], "u", __('writing'));
 
@@ -90,18 +88,15 @@ class Writing extends Record {
 	}
 	
 	function insert() {
-		$vat = is_null($this->vat) ? "vat = NULL" : "vat = ".$this->vat;
-		$amount_inc_vat = is_null($this->amount_inc_vat) ? "amount_inc_vat = NULL" : "amount_inc_vat = ".$this->amount_inc_vat;
-		$amount_excl_vat = is_null($this->amount_excl_vat) ? "amount_excl_vat = NULL" : "amount_excl_vat = ".$this->amount_excl_vat;
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_writings']."
 			SET account_id = ".(int)$this->account_id.",
 			bank_id = ".(int)$this->bank_id.",
 			source_id = ".(int)$this->source_id.",
-			".$amount_inc_vat.",
+			amount_inc_vat = ".$this->amount_inc_vat.",
 			type_id  = ".(int)$this->type_id.",
-			".$vat.",
-			".$amount_excl_vat.",
+			vat = ".$this->vat.",
+			amount_excl_vat = ".$this->amount_excl_vat.",
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			delay = ".(int)$this->delay.",
@@ -146,11 +141,12 @@ class Writing extends Record {
 	}
 	
 	function form() {
-		$form = "<div class=\"form_add_edit_writing\">
+		$form = "<div class=\"new\"><div id=\"form_show\">".__('show form')."</div><div id=\"form_hide\">".__('hide form')."</div></div>";
+		$form .= "<div class=\"form_add_edit_writing\">
 			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
-			$input_hidden = new Html_Input("action", "do_edit");
+			$input_hidden = new Html_Input("action", "edit");
 			$input_hidden->id = $this->id;
 		} else {
 			$input_hidden = new Html_Input("action", "insert");
@@ -216,16 +212,6 @@ class Writing extends Record {
 		return $form;
 	}
 	
-	function form_edit() {
-		$form = "<div class=\"modify\"><form method=\"post\" name=\"edit_writing\" id=\"edit_writing\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("id", $this->id);
-		$input_hidden_action = new Html_Input("action", "getid");
-		$submit = new Html_Input("edit_submit", "", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
-		$form .= "</form></div>";
-		return $form;
-	}
-	
 	function form_duplicate() {
 		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"duplicate_writing\" id=\"duplicate_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("id", $this->id);
@@ -263,7 +249,9 @@ class Writing extends Record {
 	
 	function fill($hash) {
 		$writing = parent::fill($hash);
-		$writing->delay = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
+		if (isset($hash['datepicker'])) {
+			$writing->delay = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
+		}
 		return $writing;
 	}
 	
@@ -277,15 +265,6 @@ class Writing extends Record {
 				$new_writing->save();
 			}
 		}
-	}
-	
-	function get_form_new() {
-		$form = "<div class=\"new\"><form method=\"post\" name=\"new_writing\" id=\"new_writing\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_action = new Html_Input("action", "getnew");
-		$submit = new Html_Input("new_submit", __('add new line') ,"submit");
-		$form .= $input_hidden_action->input_hidden().$submit->input();
-		$form .= "</form></div>";
-		return $form;
 	}
 	
 	function show_further_information() {

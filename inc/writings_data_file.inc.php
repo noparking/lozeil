@@ -32,29 +32,30 @@ class Writings_Data_File {
                 $row++;
             }
 			fclose($file_opened);
+			
 			if ($this->is_cic($this->csv_data)) {
 				unset($this->csv_data[0]);
+				
 				$writings = new Writings();
 				$writings_key = $writings->get_unique_key_in_array();
-				foreach ($this->csv_data as $data) {
-					if ($this->is_line_cic($data)) {
+				
+				foreach ($this->csv_data as $line) {
+					if ($this->is_line_cic($line)) {
 						$writing = new Writing();
-						$time = explode("/", $data['delay']);
+						$time = explode("/", $line['delay']);
 						$writing->delay = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-						$writing->comment = $data['comment'];
+						$writing->comment = $line['comment'];
 						$writing->bank_id = $this->bank_id;
-						if (!empty($data['debit'])) {
-							$writing->amount_inc_vat = (float)str_replace(",", ".", $data['debit']);
+						if (!empty($line['debit'])) {
+							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['debit']);
 						} else {
-							$writing->amount_inc_vat = (float)str_replace(",", ".", $data['credit']);
+							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['credit']);
 						}
 						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
 						}
-					} else {
-						
-					}
+					} 
 				}
 			}
 		}
@@ -63,49 +64,45 @@ class Writings_Data_File {
 	function import_as_coop() {
 		if ($file_opened = fopen( $this->file_name , 'r') ) {
 			$row = 0;
-			$csv = array();
 
             while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
 				foreach ($data as $key => $value) {
-					if ($key == 0) {
-						$time = explode("/", $value);
-						if (isset($time[1]) && $time[2]) {
-							$value = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-						}
-					}
-					if ($key == 3 && $value!= "Montant") {
-						$value = (float)str_replace(",", ".", $value);
-					}
-					$csv[$row][$key] = trim($value);
+					$this->csv_data[$row][$key] = trim($value);
 				}
 	              $row++;
             }
 			fclose($file_opened);
-			if ($this->is_coop($csv)) {
-				$row_names = $csv[0];
-				unset($csv[0]);
+			
+			if ($this->is_coop($this->csv_data)) {
+				$row_names = $this->csv_data[0];
+				unset($this->csv_data[0]);
+				
 				$writings = new Writings();
 				$writings->select();
 				$writings_key = $writings->get_unique_key_in_array();
-				foreach ($csv as $data) {
-					if ($this->is_line_coop($data)) {
+				
+				foreach ($this->csv_data as $line) {
+					
+					if ($this->is_line_coop($line)) {
 						$information = "";
-						for ($i = 0; $i < count($data); $i++) {
-							if (!empty($data[$i]) && $i != 0 && $i != 1 && $i != 3 && $i != 4) {
-								$information .= $row_names[$i]." : ".$data[$i]."\n";
+						for ($i = 0; $i < count($line); $i++) {
+							if (!empty($line[$i]) && $i != 0 && $i != 1 && $i != 3 && $i != 4) {
+								$information .= $row_names[$i]." : ".$line[$i]."\n";
 							}
 						}
+						
 						$writing = new Writing();
-						$writing->delay = $data[0];
-						$writing->comment = $data[1];
+						$time = explode("/", $line[0]);
+						$writing->delay = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+						$writing->comment = $line[1];
 						$writing->bank_id = $this->bank_id;
 						if (!empty($information)) {
 							$writing->information = utf8_encode($information);
 						}
-						if ($data[4] == "DEBIT") {
-							$data[3] = "-".$data[3];
+						if ($line[4] == "DEBIT") {
+							$line[3] = "-".$line[3];
 						}
-						$writing->amount_inc_vat = (float)$data[3];
+						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
@@ -116,16 +113,16 @@ class Writings_Data_File {
 		}
 	}
 	
-	function form_import($label) {
+	function form_import() {
 		$banks = new Banks();
 		$banks->select();
 		$banks_name = $banks->names();
-		$form = "<div class=\"import\"><form method=\"post\" name=\"import_writings\" id=\"import_writings\" action=\"\" enctype=\"multipart/form-data\">";
+		$form = "<div class=\"import\"><form method=\"post\" name=\"import_writings\" id=\"import_writings\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "import");
 		$input_file = new Html_Input("input_file", "", "file");
 		$bank = new Html_Select("bank_id", $banks_name);
 		$submit = new Html_Input("import_submit", "Ok", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_file->item(utf8_ucfirst($label)).$bank->item(__('bank')).$submit->input();
+		$form .= $input_hidden_action->input_hidden().$input_file->item(utf8_ucfirst(__("importer le journal de banque"))).$bank->item(__('bank')).$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}
@@ -177,7 +174,7 @@ class Writings_Data_File {
 	function is_line_coop($line) {
 		$delay = str_replace("/", "", $line[0]);
 		switch (true) {
-		case strlen($delay) != 10 :
+		case strlen($delay) != 8 :
 		case empty($line[3]) :
 		case ($line[4] != "DEBIT" AND $line[4] != "CREDIT") :
 			return false;

@@ -47,9 +47,9 @@ class tests_Writings_Data_File extends TableTestCase {
 	
 	function test_is_line_coop() {
 		$import = new Writings_Data_File();
-		$mydata = array("1275412000", "" , "", "12.52","DEBIT");
-		$mydata2 = array("27/08/2013", "" , "", "12.52","DEBIT");
-		$mydata3 = array("1275412000", "" , "", "12.52","");
+		$mydata = array("27/08/2013", "" , "", "12.52","DEBIT");
+		$mydata2 = array("1275212000", "" , "", "12.52","DEBIT");
+		$mydata3 = array("27/08/2013", "" , "", "12.52","");
 		$this->assertTrue($import->is_line_coop($mydata));
 		$this->assertFalse($import->is_line_coop($mydata2));
 		$this->assertFalse($import->is_line_coop($mydata3));

@@ -397,6 +397,13 @@ function addOnloadEvent(fnc){
 }
 
 $(document).ready(function() {
+	console.log($(".form_add_edit_writing #id").attr("value"));
+	if($(".form_add_edit_writing #id").attr("value") > 0) {
+		$(".form_add_edit_writing").show();
+		$("#form_hide").show();
+		$("#form_show").hide();
+	}
+	
 	$(".actions").hide();
 	$(".more").on("click", function() {
 		if ($(this).hasClass("hide")) {
@@ -416,6 +423,20 @@ $(document).ready(function() {
 			});
 		}
 	})
+	
+	$("#form_show").on("click", function() {
+		$(".form_add_edit_writing").slideDown(1, function() {
+			$("html, body").animate({ scrollTop: $(document).height() }, "slow");
+		});
+		$(this).hide();
+		$("#form_hide").show();
+	})
+	
+	$("#form_hide").on("click", function() {
+		$(".form_add_edit_writing").slideUp();
+		$(this).hide();
+		$("#form_show").show();
+	})
 })
 
 $(document).keyup(function(e) {
@@ -430,7 +451,9 @@ $(document).keyup(function(e) {
 			});
 		}
 		$(".table_drag_drop input[type='text']").attr("type", "hidden");
-		$(".form_add_edit_writing").remove();
+		$(".form_add_edit_writing").slideUp();
+		$("#form_hide").hide();
+		$("#form_show").show();
 		$(".further_information").slideUp();
   }   
 });

@@ -261,7 +261,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/".date('Y')."/", $form);
 		$this->assertPattern("/<option value=\"0\" selected=\"selected\">--<\/option>/", $form);
 		$this->assertPattern("/value=\"insert\"/", $form);
-		$this->assertNoPattern("/value=\"do_edit\"/", $form);
+		$this->assertNoPattern("/value=\"edit\"/", $form);
 		$account = new Account();
 		$account->name = "Account 1";
 		$account->save();
@@ -298,24 +298,13 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/value=\"19.60\"/", $form);
 		$this->assertPattern("/Ceci est un commentaire/", $form);
 		$this->assertNoPattern("/value=\"insert\"/", $form);
-		$this->assertPattern("/value=\"do_edit\"/", $form);
+		$this->assertPattern("/value=\"edit\"/", $form);
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
 		$this->truncateTable("types");
 		$this->truncateTable("accounts");
 		$this->truncateTable("banks");
-	}
-	
-	function test_form_edit() {
-		$writing = new Writing();
-		$writing->id = 40;
-		$form_edit = $writing->form_edit();
-		$this->assertPattern("/class=\"modify\"/", $form_edit);
-		$this->assertPattern("/edit_writing/", $form_edit);
-		$this->assertPattern("/value=\"getid\"/", $form_edit);
-		$this->assertPattern("/value=\"40\"/", $form_edit);
-		$this->assertPattern("/edit_submit/", $form_edit);
 	}
 	
 	function test_form_duplicate() {
@@ -385,15 +374,6 @@ class tests_Writing extends TableTestCase {
 		$writing->load(6);
 		$this->assertEqual(mktime(0, 0, 0, 1, 26, 2014), $writing->delay);
 		$this->truncateTable("writings");
-	}
-	
-	function test_get_form_new() {
-		$writing = new Writing();
-		$form_new = $writing->get_form_new();
-		$this->assertPattern("/class=\"new\"/", $form_new);
-		$this->assertPattern("/new_writing/", $form_new);
-		$this->assertPattern("/value=\"getnew\"/", $form_new);
-		$this->assertPattern("/new_submit/", $form_new);
 	}
 	
 	function test_show_further_information() {

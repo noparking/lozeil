@@ -166,7 +166,7 @@ class Writings extends Collector  {
 			}
 			$grid[$writing->id] =  array(
 					'class' => "draggable",
-					'id' => $writing->id,
+					'id' => "table_".$writing->id,
 					'cells' => array(
 						array(
 							'type' => "td",
@@ -174,15 +174,15 @@ class Writings extends Collector  {
 						),
 						array(
 							'type' => "td",
-							'value' => isset($writing->account_id) && $writing->account_id > 0 ? $accounts_names[$writing->account_id] : "",
+							'value' => (isset($writing->account_id) && $writing->account_id > 0) ? $accounts_names[$writing->account_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => isset($writing->source_id) && $writing->source_id > 0 ? $sources_name[$writing->source_id] : "",
+							'value' => (isset($writing->source_id) && $writing->source_id > 0) ? $sources_name[$writing->source_id] : "",
 							),
 						array(
 							'type' => "td",
-							'value' => isset($writing->type_id) && $writing->type_id > 0 ? $types_name[$writing->type_id] : "",
+							'value' => (isset($writing->type_id) && $writing->type_id > 0) ? $types_name[$writing->type_id] : "",
 						),
 						array(
 							'type' => "td",
@@ -203,11 +203,13 @@ class Writings extends Collector  {
 						),
 						array(
 							'type' => "td",
-							'value' => isset($writing->bank_id) && $writing->bank_id > 0 ? $banks_name[$writing->bank_id] : "",
+							'value' => (isset($writing->bank_id) && $writing->bank_id > 0) ? $banks_name[$writing->bank_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => $writing->form_split().$writing->form_edit().$writing->form_duplicate().$writing->form_delete(),
+							'value' => $writing->form_split().
+							"<div class=\"modify\"><a href=".link_content("content=lines.php&month=".$_SESSION['month_encours']."&writing_encours=".$writing->id)."></a></div>".
+							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
 			);

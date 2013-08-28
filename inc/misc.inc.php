@@ -275,3 +275,11 @@ function determine_integer_from_post_get_session() {
 
 	return 0;
 }
+
+function is_url($url) {
+	if (isset($GLOBALS['location'])) {
+		return (preg_match("/^[#|http|".$GLOBALS['location']."]/", $url));
+	} else {
+		return (preg_match("/^[#|http]/", $url));
+	}
+}

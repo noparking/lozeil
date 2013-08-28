@@ -23,15 +23,15 @@ function make_droppable() {
 			$(this).removeClass('over').addClass('out');
         },
         drop: function() {
-        	var toMerge = $(".ui-draggable-dragging tr").attr('id');
-			var destination = $(this).attr('id');
+        	var toMerge = $(".ui-draggable-dragging tr").attr('id').substr(6);
+			var destination = $(this).attr('id').substr(6);
 			$(this).removeClass('over').addClass('out');
 			$.post(
 				"index.php?content=lines.ajax.php",
 				{ method: "json", action: "merge", toMerge: toMerge, destination: destination, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
 					$('.content table').html(data);
-					$("#" + destination).addClass('over').delay('3000').queue(function(next){
+					$("#table_" + destination).addClass('over').delay('3000').queue(function(next){
 						$(this).removeClass('over');
 						next();
 					})
