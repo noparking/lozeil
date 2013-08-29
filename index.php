@@ -10,15 +10,13 @@
 
 require dirname(__FILE__)."/inc/require.inc.php";
 session_start();
-
 if (isset($_GET['content']) and !empty($_GET['content'])) {
 	$content = $_GET['content'];
 } else {
 	$content = "lines.php";
 }
 $location = clean_location($_SERVER['PHP_SELF']);
-
-if (!isset($_REQUEST['method']) || $_REQUEST['method'] != 'json') {
+if (!isset($_REQUEST['method']) && !preg_match("/ajax/", $content)) {
 	$theme = new Theme_Default();
 
 	header('Cache-control: private');

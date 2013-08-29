@@ -42,24 +42,9 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/accounts.name as account_name, sources.name as source_name, types.name as type_name, banks.name as bank_name/", $columns[1]);
 	}
 	
-	function test_determine_order() {
-		$writings = new Writings();
-		$_REQUEST['sort_by'] = "delay";
-		$_REQUEST['order_direction'] = 0;
-		$writings->determine_order();
-		$order = $writings->get_query();
-		$this->assertPattern("/ORDER BY delay ASC/", $order);
-		
-		$_REQUEST['order_direction'] = 1;
-		$_REQUEST['sort_by'] = "account_name";
-		$writings->determine_order();
-		$order2 = $writings->get_query();
-		$this->assertPattern("/ORDER BY account_name DESC/", $order2);
-	}
-	
 	function test_show() {
-		$_SESSION['month'] = mktime(0, 0, 0, 7, 1, 2013);
-		list($start, $stop) = determine_month($_SESSION['month']);
+		$_SESSION['timestamp'] = mktime(0, 0, 0, 7, 1, 2013);
+		list($start, $stop) = determine_month($_SESSION['timestamp']);
 		$account = new Account();
 		$account->name = "Account 1";
 		$account->save();
@@ -190,30 +175,30 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("banks");
 	}
 	
-	function test_show_timeline() {
-		$_SESSION['month'] = 1375308000;
+	function test_show_timeline_at() {
+		$_SESSION['timestamp'] = 1375308000;
 		$writings = new Writings();
 		
-		$this->assertPattern("/".strtotime('-2 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('-1 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/1375308000/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+1 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+2 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+3 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+4 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+5 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+6 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+7 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+8 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+9 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/".strtotime('+10 months', 1375308000)."/", $writings->show_timeline());
-		$this->assertPattern("/timeline_month_encours/", $writings->show_timeline());
-		$this->assertPattern("/timeline_month_navigation/", $writings->show_timeline());
+		$this->assertPattern("/".strtotime('-2 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('-1 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/1375308000/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+1 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+2 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+3 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+4 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+5 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+6 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+7 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+8 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+9 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/".strtotime('+10 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/timeline_month_encours/", $writings->show_timeline_at($_SESSION['timestamp']));
+		$this->assertPattern("/timeline_month_navigation/", $writings->show_timeline_at($_SESSION['timestamp']));
 	}
 	
 	function test_get_where() {
-		$_SESSION['month'] = 1375308000;
-		list($start, $stop) = determine_month($_SESSION['month']);
+		$_SESSION['timestamp'] = 1375308000;
+		list($start, $stop) = determine_month($_SESSION['timestamp']);
 		$writings = new Writings();
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$get_where = $writings->get_where();
@@ -225,7 +210,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertFalse(isset($get_where2[1]));
 	}
 	
-	function test_balance_on_date() {
+	function test_show_balance_at() {
 		$writing1 = new Writing();
 		$writing1->amount_inc_vat = 150.56;
 		$writing1->delay = mktime(10, 0, 0, 7, 20, 2013);
@@ -233,8 +218,8 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->select();
-		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 29, 2013)), 150.56);
-		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 19, 2013)), 0);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 29, 2013)), 150.56);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 19, 2013)), 0);
 		
 		$writing2 = new Writing();
 		$writing2->amount_inc_vat = -2150.56;
@@ -242,9 +227,9 @@ class tests_Writings extends TableTestCase {
 		$writing2->save();
 		
 		$writings->select();
-		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 29, 2013)), -2000);
-		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 19, 2013)), -2150.56);
-		$this->assertEqual($writings->balance_on_date(mktime(10, 0, 0, 7, 17, 2013)), 0);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 29, 2013)), -2000);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 19, 2013)), -2150.56);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 17, 2013)), 0);
 
 		$this->truncateTable("writings");
 	}

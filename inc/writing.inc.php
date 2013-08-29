@@ -124,7 +124,7 @@ class Writing extends Record {
 		return $this->id;
 	}
 	
-	function merge(Writing $to_merge) {
+	function merge_from(Writing $to_merge) {
 		$this->account_id = (isset($to_merge->account_id) and $to_merge->account_id > 0) ? (int)$to_merge->account_id : $this->account_id;
 		$this->bank_id = (isset($to_merge->bank_id) and $to_merge->bank_id > 0) ? (int)$to_merge->bank_id : $this->bank_id;
 		$this->source_id = (isset($to_merge->source_id) and $to_merge->source_id > 0) ? (int)$to_merge->source_id : $this->source_id;
@@ -160,7 +160,7 @@ class Writing extends Record {
 	
 	function form() {
 		$form = "<div class=\"edit\"><span id=\"showform\">".utf8_ucfirst(__('show form'))."</span><span id=\"hideform\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month']),utf8_ucfirst(__('cancel record')))."</span>";
+			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>";
 		$form .= "<div class=\"form_writing\">
 			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -178,7 +178,7 @@ class Writing extends Record {
 		if ($this->delay > 0) {
 			$date = (int)$this->delay;
 		} else {
-			$date = (int)$_SESSION['month'];
+			$date = (int)$_SESSION['timestamp'];
 		}
 		
 		$accounts = new Accounts();

@@ -55,22 +55,6 @@ class Writings extends Collector  {
 		return $columns;
 	}
 	
-	function show_in_determined_order() {
-		$this->determine_order();
-		$this->select();
-		return $this->show();
-	}
-	
-	function determine_order() {
-		if (!empty($_REQUEST['sort_by'])) {
-			if ($_REQUEST['order_direction'] == 0) {
-				$this->set_order($_REQUEST['sort_by'], 'ASC');
-			} else {
-				$this->set_order($_REQUEST['sort_by'], 'DESC');
-			}
-		}
-	}
-	
 	function grid_header() {
 		$grid = array(
 			'header' => array(
@@ -206,7 +190,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month']."&writings_id=".$writing->id)," ")."</div>".
+							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
@@ -232,9 +216,9 @@ class Writings extends Collector  {
 		}
 	}
 	
-	function show_timeline($content="lines.php") {
+	function show_timeline_at($timestamp) {
 		$grid = array();
-		$this->month = determine_first_day_of_month($_SESSION['month']);
+		$this->month = determine_first_day_of_month($timestamp);
 		
 		$timeline_iterator = strtotime('-2 months', $this->month);
 		$timeline_stop = strtotime('+10 months', $this->month);
@@ -249,13 +233,13 @@ class Writings extends Collector  {
 			} 
 			$grid['leaves'][$timeline_iterator]['class'] = "timeline_month_".$class;
 			$next_month = determine_first_day_of_next_month($timeline_iterator);
-			$balance = $writings->balance_on_date($next_month);
+			$balance = $writings->show_balance_at($next_month);
 			if ($balance < 0) {
 				$class = "negative_balance";
 			} else {
 				$class = "positive_balance";
 			}
-			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=".$content."&month=".$timeline_iterator),
+			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=lines.php&timestamp=".$timeline_iterator),
 					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
 					date("Y", $timeline_iterator))."<br /><br />
 					<span class=\"".$class."\">".$balance."</span>";
@@ -271,11 +255,12 @@ class Writings extends Collector  {
 	function get_where() {
 		$query_where = parent::get_where();
 		
-		if (isset($this->filter['start']) && isset($this->filter['stop'])) {
+		if (isset($this->filter['start'])) {
 			$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->filter['start'];
+		}
+		if (isset($this->filter['stop'])) {
 			$query_where[] = $this->db->config['table_writings'].".delay <= ".(int)$this->filter['stop'];
 		}
-		
 		if (isset($this->filter['*']) && !empty($this->filter['*'])) {
 			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filter['*']."%");
 		}
@@ -284,11 +269,11 @@ class Writings extends Collector  {
 	}
 	
 	function show_balance_on_current_date() {
-		$summary = utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->balance_on_date(time())." ".__("€");
+		$summary = utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€");
 		return $summary;
 	}
 	
-	function balance_on_date($timestamp) {
+	function show_balance_at($timestamp) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
 			if($writing->delay < $timestamp) {

@@ -48,8 +48,10 @@ class Writings_Data_File {
 						$writing->bank_id = $this->bank_id;
 						if (!empty($line['debit'])) {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['debit']);
+							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['debit']);
 						} else {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['credit']);
+							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['credit']);
 						}
 						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
@@ -103,6 +105,7 @@ class Writings_Data_File {
 							$line[3] = "-".$line[3];
 						}
 						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
+						$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();

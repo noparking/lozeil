@@ -8,15 +8,19 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-$month = mktime(0, 0, 0, date("m"), 1, date("Y"));
-$_SESSION['month'] = $month;
-
-$selected_month = determine_integer_from_post_get_session(null, "month");
-$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
-if(isset($selected_month) and $selected_month > 0) {
-	$_SESSION['month'] = $selected_month;
+$timestamp = mktime(0, 0, 0, date("m"), 1, date("Y"));
+$_SESSION['timestamp'] = $timestamp;
+if (!isset($_SESSION['order_col_name']) || !isset($_SESSION['order_direction'])) {
+	$_SESSION['order_col_name'] = 'delay';
+	$_SESSION['order_direction'] = 'ASC';
 }
-list($start, $stop) = determine_month($_SESSION['month']);
+
+$timestamp_selected = determine_integer_from_post_get_session(null, "timestamp");
+$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
+if (isset($timestamp_selected) and $timestamp_selected > 0) {
+	$_SESSION['timestamp'] = $timestamp_selected;
+}
+list($start, $stop) = determine_month($_SESSION['timestamp']);
 
 if (isset($_POST) and count($_POST) > 0) {
 	switch ($_POST['action']) {
@@ -60,17 +64,16 @@ if (isset($_POST) and count($_POST) > 0) {
 	}
 }
 
-
 $menu = new Menu_Area();
-$menu->prepare_navigation("lines.php");
+$menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
 $writings = new Writings();
-$writings->set_order('delay', 'ASC');
+$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 
-$heading = new Heading_Area(null, $writings->show_timeline(), $writings->form_filter());
+$heading = new Heading_Area(null, $writings->show_timeline_at($_SESSION['timestamp']), $writings->form_filter());
 echo $heading->show();
 
 echo $writings->show();

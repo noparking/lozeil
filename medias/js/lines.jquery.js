@@ -1,20 +1,20 @@
 var order_direction = 0;
 var sort_by = "delay";
 
-function refresh_balance_data() {
-	$.post(
-	"index.php?content=lines.ajax.php",
-	{ method: "json", action: "refresh_balance_data"},
-		function(data) {
-			var json_decode = jQuery.parseJSON(data);
-			$('.timeline').remove();
-			$('.heading').prepend(json_decode.timeline);
-			$('.balance_summary').html(json_decode.menu_balance);
-		}
-	);
-}
+//function refresh_balance() {
+//	$.post(
+//	"index.php?content=lines.ajax.php",
+//	{ method: "json", action: "refresh_balance_data"},
+//		function(data) {
+//			var json_decode = jQuery.parseJSON(data);
+//			$('.timeline').remove();
+//			$('.heading').prepend(json_decode.timeline);
+//			$('.balance_summary').html(json_decode.menu_balance);
+//		}
+//	);
+//}
 
-function show_further_information() {
+function toggle_line_information() {
 	$(".comment").on("click", function() {
 		$(".further_information").slideUp();
 		var cell = $(this).find(".further_information");
@@ -36,17 +36,16 @@ function make_droppable() {
 			$(this).removeClass('over').addClass('out');
         },
         drop: function() {
-        	var toMerge = $(".ui-draggable-dragging tr").attr('id').substr(6);
-			var destination = $(this).attr('id').substr(6);
+        	var writing_from = $(".ui-draggable-dragging tr").attr('id').substr(6);
+			var writing_into = $(this).attr('id').substr(6);
 			$(this).removeClass('over').addClass('out');
 			$.post(
 				"index.php?content=lines.ajax.php",
-				{ method: "json", action: "merge", toMerge: toMerge, destination: destination, sort_by: sort_by, order_direction: order_direction },
+				{ method: "json", action: "merge", writing_from: writing_from, writing_into: writing_into, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
-					refresh_balance_data();
-					var json_decode = jQuery.parseJSON(data);
-					$('.table_accounting table').html(json_decode.table);
-					$("#table_" + destination).addClass('over').delay('3000').queue(function(next){
+					refresh_balance();
+					$('.table_accounting table').html(data);
+					$("#table_" + writing_into).addClass('over').delay('3000').queue(function(next){
 						$(this).removeClass('over');
 					})
 				}
@@ -116,18 +115,23 @@ function make_split() {
 
 function sort_elements() {
 	$(".sort").bind("click", function() {
-		var currentlocation = document.location.search;
-		sort_by = $(this).attr('id');
-		order_direction = (order_direction == 0) ? 1 : 0;
+		order_col_name = $(this).attr('id');
+		if (order_direction) {
+			order_direction = 0;
+			var direction = 'DESC';
+		} else {
+			order_direction = 1;
+			var direction = 'ASC';
+		}
 		$.post(
 			"index.php?content=lines.ajax.php",
-			{ method: "json", action: "sort", sort_by: sort_by, order_direction: order_direction, currentlocation: currentlocation},
+			{ method: "json", action: "sort", order_col_name: order_col_name, direction: direction},
 			function(data) {
 				$('table').html(data);
 				if ( order_direction == 0 ) {
-					$("#"+sort_by).addClass("sorteddown");
+					$("#"+order_col_name).addClass("sorteddown");
 				} else {
-					$("#"+sort_by).addClass("sortedup");
+					$("#"+order_col_name).addClass("sortedup");
 				}
 			}
 		)
@@ -139,7 +143,7 @@ function jQuery_table() {
 	make_draggable();
 	make_split();
 	sort_elements();
-	show_further_information();
+	toggle_line_information();
 }
 
 $(function() {
@@ -162,3 +166,4 @@ $(document).ready(function() {
 		);
 	});
 });
+

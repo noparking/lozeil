@@ -114,7 +114,7 @@ class tests_Writing extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_merge() {
+	function test_merge_from() {
 		$writing = new Writing();
 		$writing->account_id = 1;
 		$writing->amount_excl_vat = 190.50;
@@ -143,7 +143,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->vat = 5.5;
 		$writing_to_merge->search_index = $writing_to_merge->search_index();
 		
-		$writing->merge($writing_to_merge);
+		$writing->merge_from($writing_to_merge);
 		
 		$this->assertIdentical($writing_to_merge, $writing);
 		
@@ -160,7 +160,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_2->type_id = NULL;
 		$writing_to_merge_2->vat = NULL;
 		
-		$writing->merge($writing_to_merge_2);
+		$writing->merge_from($writing_to_merge_2);
 		
 		$this->assertIdentical($writing_to_merge, $writing);
 		
@@ -189,7 +189,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->vat = 0;
 		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
-		$writing->merge($writing_to_merge_2);
+		$writing->merge_from($writing_to_merge_2);
 		
 		$this->assertIdentical($writing_to_merge_3, $writing);
 		$this->truncateTable("writings");

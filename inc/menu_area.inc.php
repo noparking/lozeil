@@ -44,8 +44,8 @@ class Menu_Area {
 		return $content;
 	}
 	
-	function prepare_navigation($content="") {
-		if (preg_match("/(^|_)lines/", $content)) {
+	function prepare_navigation($content = "") {
+		if (preg_match("/lines.php/", $content)) {
 			$writings = new Writings();
 			$writings->select();
 			$this->header = $writings->show_balance_on_current_date();
