@@ -1,6 +1,19 @@
 var order_direction = 0;
 var sort_by = "delay";
 
+function refresh_balance_data() {
+	$.post(
+	"index.php?content=lines.ajax.php",
+	{ method: "json", action: "refresh_balance_data"},
+		function(data) {
+			var json_decode = jQuery.parseJSON(data);
+			$('.timeline').remove();
+			$('.heading').prepend(json_decode.timeline);
+			$('.balance_summary').html(json_decode.menu_balance);
+		}
+	);
+}
+
 function show_further_information() {
 	$(".comment").on("click", function() {
 		$(".further_information").slideUp();
@@ -30,10 +43,11 @@ function make_droppable() {
 				"index.php?content=lines.ajax.php",
 				{ method: "json", action: "merge", toMerge: toMerge, destination: destination, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
-					$('.table_accounting table').html(data);
+					refresh_balance_data();
+					var json_decode = jQuery.parseJSON(data);
+					$('.table_accounting table').html(json_decode.table);
 					$("#table_" + destination).addClass('over').delay('3000').queue(function(next){
 						$(this).removeClass('over');
-						next();
 					})
 				}
 			);
@@ -132,7 +146,7 @@ $(function() {
 	jQuery_table();
 })
 
-$(document).ajaxComplete(function() {
+$(document).ajaxStop(function() {
 	jQuery_table();
 })
 

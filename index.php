@@ -9,7 +9,6 @@
 */
 
 require dirname(__FILE__)."/inc/require.inc.php";
-
 session_start();
 
 if (isset($_GET['content']) and !empty($_GET['content'])) {
@@ -17,11 +16,11 @@ if (isset($_GET['content']) and !empty($_GET['content'])) {
 } else {
 	$content = "lines.php";
 }
+$location = clean_location($_SERVER['PHP_SELF']);
 
 if (!isset($_REQUEST['method']) || $_REQUEST['method'] != 'json') {
 	$theme = new Theme_Default();
 
-	$location = clean_location($_SERVER['PHP_SELF']);
 	header('Cache-control: private');
 	header('Content-Type: text/html; charset=UTF-8');
 	header('X-UA-Compatible: IE=edge');

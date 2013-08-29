@@ -11,8 +11,6 @@
 class Writings extends Collector  {
 	public $filter = null;
 	
-	private $start = 0;
-	private $stop = 0;
 	private $month = 0;
 	
 	function __construct($class = null, $table = null, $db = null) {
@@ -208,7 +206,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']."&writings_id=".$writing->id)," ")."</div>".
+							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month']."&writings_id=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
@@ -236,37 +234,36 @@ class Writings extends Collector  {
 	
 	function show_timeline($content="lines.php") {
 		$grid = array();
-
-		$encours = $_SESSION['month_encours'];
-		$this->month = $encours;
-		$this->start = strtotime('-2 months', $encours);
-		$this->stop = strtotime('+10 months', $encours);
-		$start = $this->start;
+		$this->month = determine_first_day_of_month($_SESSION['month']);
+		
+		$timeline_iterator = strtotime('-2 months', $this->month);
+		$timeline_stop = strtotime('+10 months', $this->month);
+		
 		$writings = new Writings();
 		$writings->select();
-		while ($start <= $this->stop) {
-			if ($this->month == $start) {
-				$grid['leaves'][$start]['class'] = "timeline_month_encours";
-			} else {
-				$grid['leaves'][$start]['class'] = "timeline_month_navigation";
-			}
-			$next_month = mktime(0, 0, 0, date("m", $start) + 1, 1, date("Y", $start));
+		
+		while ($timeline_iterator <= $timeline_stop) {
+			$class = "navigation";
+			if ($timeline_iterator == $this->month) {
+				$class = "encours";
+			} 
+			$grid['leaves'][$timeline_iterator]['class'] = "timeline_month_".$class;
+			$next_month = determine_first_day_of_next_month($timeline_iterator);
 			$balance = $writings->balance_on_date($next_month);
 			if ($balance < 0) {
 				$class = "negative_balance";
 			} else {
 				$class = "positive_balance";
 			}
-			$grid['leaves'][$start]['value'] = Html_Tag::a(link_content("content=".$content."&month=".$start),
-					utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".
-					date("Y", $start))."<br /><br />
-					<span class=\"".$class."\">".$balance."</spzn>";
-			$start = $next_month;
+			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=".$content."&month=".$timeline_iterator),
+					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
+					date("Y", $timeline_iterator))."<br /><br />
+					<span class=\"".$class."\">".$balance."</span>";
+			$timeline_iterator = $next_month;
 		}
 		$timeline = "<div class=\"timeline\">";
 		$list = new Html_List($grid);
-		$timeline .= $list->show();
-		$timeline .= "</div>";
+		$timeline .= $list->show()."</div>";
 
 		return $timeline;
 	}
@@ -274,37 +271,20 @@ class Writings extends Collector  {
 	function get_where() {
 		$query_where = parent::get_where();
 		
-		if (isset($this->filter['month']) && $this->filter['month'] == 1) {
-			if ($this->month == 0) {
-				$this->month = $_SESSION['month_encours'];
-			}
-			$query_where[] = "(".$this->db->config['table_writings'].".delay >= ".(int)$this->month;
-			$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month).")";
+		if (isset($this->filter['start']) && isset($this->filter['stop'])) {
+			$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->filter['start'];
+			$query_where[] = $this->db->config['table_writings'].".delay <= ".(int)$this->filter['stop'];
 		}
 		
-		if (isset($this->filter['fullsearch']) && !empty($this->filter['fullsearch'])) {
-			$query_where[] = "(".$this->db->config['table_writings'].".comment LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
-		" OR SOUNDEX(".$this->db->config['table_writings'].".comment) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
-		" OR ".$this->db->config['table_accounts'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
-		" OR SOUNDEX(".$this->db->config['table_accounts'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
-		" OR ".$this->db->config['table_types'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
-		" OR SOUNDEX(".$this->db->config['table_types'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
-		" OR ".$this->db->config['table_banks'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
-		" OR SOUNDEX(".$this->db->config['table_banks'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
-		" OR ".$this->db->config['table_sources'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
-		" OR SOUNDEX(".$this->db->config['table_sources'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch'])."))";
+		if (isset($this->filter['*']) && !empty($this->filter['*'])) {
+			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filter['*']."%");
 		}
-		if(!empty($query_where)) {
-				return $query_where;
-		} else {
-			return array(1);
-		}
+		
+		return $query_where;
 	}
 	
 	function show_balance_on_current_date() {
-		$date = date("d", time())."/".date("m", time())."/".date("Y", time());
-		$balance = $this->balance_on_date(time());
-		$summary = utf8_ucfirst(__("accounting on"))." ".$date." : ".$balance." ".__("€");
+		$summary = utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->balance_on_date(time())." ".__("€");
 		return $summary;
 	}
 	
@@ -335,5 +315,14 @@ class Writings extends Collector  {
 		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "));
 		$form .= "</form></div>";
 		return $form;
+	}
+	
+	function filter_with() {
+		$elements = func_get_args();
+		foreach ($elements as  $element) {
+			foreach ($element as $key => $value) {
+			$this->filter[$key] = $value;
+			}
+		}
 	}
 }

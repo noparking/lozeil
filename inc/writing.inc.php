@@ -18,6 +18,7 @@ class Writing extends Record {
 	public $id = 0;
 	public $information = "";
 	public $paid = 0;
+	public $search_index = "";
 	public $source_id = 0;
 	public $type_id = 0;
 	public $unique_key = "";
@@ -32,6 +33,18 @@ class Writing extends Record {
 		if ($db instanceof db) {
 			$this->db = $db;
 		}
+	}
+	
+	function search_index() {
+		$bank = new Bank();
+		$bank->load($this->bank_id);
+		$source = new Source();
+		$source->load($this->source_id);
+		$type = new Type();
+		$type->load($this->type_id);
+		$account = new Account();
+		$account->load($this->account_id);
+		return $this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$account->name." ".$type->name;
 	}
 	
 	function load($id = null) {
@@ -78,7 +91,8 @@ class Writing extends Record {
 		comment = ".$this->db->quote($this->comment).",
 		information = ".$this->db->quote($this->information).",
 		paid = ".(int)$this->paid.",
-		delay = ".(int)$this->delay."
+		delay = ".(int)$this->delay.",
+		search_index = ".$this->db->quote($this->search_index())."
 		WHERE id = ".(int)$this->id;
 		
 		$result = $this->db->query($query);
@@ -100,6 +114,7 @@ class Writing extends Record {
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			delay = ".(int)$this->delay.",
+			search_index = ".$this->db->quote($this->search_index()).",
 			unique_key = ".$this->db->quote($this->unique_key).",
 			paid = ".(int)$this->paid
 		);
@@ -121,6 +136,7 @@ class Writing extends Record {
 		$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
 		$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
 		$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
+		$this->search_index = $this->search_index();
 		$this->save();
 		$to_merge->delete();
 	}
@@ -129,20 +145,22 @@ class Writing extends Record {
 		if (isset($this->amount_inc_vat)) {
 			$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
 			$this->amount_excl_vat = round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
+			$this->search_index = $this->search_index();
 			$this->save();
-			$new_writing = new Writing();
-			$new_writing->id = $this->id;
-			$new_writing->load();
-			$new_writing->id = 0;
-			$new_writing->amount_inc_vat = $amount;
-			$new_writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
-			$new_writing->save();
+			$writing = new Writing();
+			$writing->id = $this->id;
+			$writing->load();
+			$writing->id = 0;
+			$writing->amount_inc_vat = $amount;
+			$writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
+			$writing->search_index = $this->search_index();
+			$writing->save();
 		}
 	}
 	
 	function form() {
 		$form = "<div class=\"edit\"><span id=\"showform\">".utf8_ucfirst(__('show form'))."</span><span id=\"hideform\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']),utf8_ucfirst(__('cancel record')))."</span>";
+			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month']),utf8_ucfirst(__('cancel record')))."</span>";
 		$form .= "<div class=\"form_writing\">
 			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -160,7 +178,7 @@ class Writing extends Record {
 		if ($this->delay > 0) {
 			$date = (int)$this->delay;
 		} else {
-			$date = (int)$_SESSION['month_encours'];
+			$date = (int)$_SESSION['month'];
 		}
 		
 		$accounts = new Accounts();

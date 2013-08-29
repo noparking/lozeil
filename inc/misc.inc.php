@@ -237,7 +237,6 @@ function error_handling($type, $msg, $file, $line, $args) {
 
 function link_content($parameters="") {
 	$link_content = "";
-
 	if (isset($GLOBALS['config']['link_handling']) && $GLOBALS['config']['link_handling']) {
 		$link_content .= $GLOBALS['config']['name'];
 		if ($parameters) {
@@ -281,5 +280,35 @@ function is_url($url) {
 		return (preg_match("/^[#|http|".$GLOBALS['location']."]/", $url));
 	} else {
 		return (preg_match("/^[#|http]/", $url));
+	}
+}
+
+function determine_month($timestamp) {
+	$starttime = mktime(0, 0, 0, date("m", $timestamp), 1, date("Y",$timestamp));
+	$stoptime = mktime(23, 59, 59, date("m", $timestamp) + 1 , 0, date("Y", $timestamp));
+
+	return array($starttime, $stoptime);
+}
+
+function determine_first_day_of_month($timestamp) {
+	$starttime = mktime(0, 0, 0, date("m", $timestamp), 1, date("Y",$timestamp));
+
+	return $starttime;
+}
+
+function determine_first_day_of_next_month($timestamp) {
+	$starttime = mktime(0, 0, 0, date("m", $timestamp) + 1, 1, date("Y",$timestamp));
+
+	return $starttime;
+}
+
+function get_time($format,$act_time="") {
+	if (!$act_time || $act_time == "") {
+		$act_time = time();
+	}
+	if (!$format || $format == "") {
+		return date("d.m.Y, H:i:s", $act_time);
+	} else {
+		return date($format, $act_time);
 	}
 }

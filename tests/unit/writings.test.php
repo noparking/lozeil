@@ -58,7 +58,7 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_show() {
-		$_SESSION['month_encours'] = mktime(0, 0, 0, 7, 1, 2013);
+		$_SESSION['month'] = mktime(0, 0, 0, 7, 1, 2013);
 		
 		$account = new Account();
 		$account->name = "Account 1";
@@ -191,7 +191,7 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_show_timeline() {
-		$_SESSION['month_encours'] = 1375308000;
+		$_SESSION['month'] = 1375308000;
 		$writings = new Writings();
 		
 		$this->assertPattern("/".strtotime('-2 months', 1375308000)."/", $writings->show_timeline());
@@ -212,7 +212,7 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_get_where() {
-		$_SESSION['month_encours'] = 1375308000;
+		$_SESSION['month'] = 1375308000;
 		$writings = new Writings();
 		$writings->filter['month'] = 1;
 		$get_where = $writings->get_where();

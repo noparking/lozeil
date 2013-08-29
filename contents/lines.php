@@ -8,14 +8,15 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-$current_month = mktime(0,0,0,date("m"),1,date("Y"));
-$_SESSION['month_encours'] = $current_month;
+$month = mktime(0, 0, 0, date("m"), 1, date("Y"));
+$_SESSION['month'] = $month;
 
 $selected_month = determine_integer_from_post_get_session(null, "month");
 $selected_writing = determine_integer_from_post_get_session(null, "writings_id");
 if(isset($selected_month) and $selected_month > 0) {
-	$_SESSION['month_encours'] = $selected_month;
+	$_SESSION['month'] = $selected_month;
 }
+list($start, $stop) = determine_month($_SESSION['month']);
 
 if (isset($_POST) and count($_POST) > 0) {
 	switch ($_POST['action']) {
@@ -66,7 +67,7 @@ echo $menu->show();
 
 $writings = new Writings();
 $writings->set_order('delay', 'ASC');
-$writings->filter['month'] = 1;
+$writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 
 $heading = new Heading_Area(null, $writings->show_timeline(), $writings->form_filter());

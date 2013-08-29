@@ -22,11 +22,22 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 						$writing_destination->merge($writing_to_merge);
 					}
 				}
+				list($start, $stop) = determine_month($_SESSION['month']);
+				$writings->filter_with(array('start' => $start, 'stop' => $stop));
+				echo json_encode(array('table' => $writings->show_in_determined_order()));
 				break;
 			case "filter":
 				if (!empty($_REQUEST['value'])) {
-					$writings->filter['fullsearch'] = $_REQUEST['value'];
+					$writings->filter_with(array('*' => $_REQUEST['value']));
 				}
+				list($start, $stop) = determine_month($_SESSION['month']);
+				$writings->filter_with(array('start' => $start, 'stop' => $stop));
+				echo $writings->show_in_determined_order();
+				break;
+			case "refresh_balance_data":
+				$writings = new Writings();
+				$writings->select();
+				echo json_encode(array('timeline' => $writings->show_timeline(),'menu_balance' => $writings->show_balance_on_current_date()));
 				break;
 //			case "split":
 //				if (isset($_REQUEST['amount']) && isset($_REQUEST['tosplit']) && $_REQUEST['tosplit'] != 0) {
@@ -42,8 +53,7 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 				break;
 		}
 		
-		$writings->filter['month'] = 1;
-		echo $writings->show_in_determined_order();
+		
 	}
 	exit(0);
 }
