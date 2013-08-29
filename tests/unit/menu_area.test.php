@@ -19,9 +19,10 @@ class tests_Menu_area extends TableTestCase {
 	}
 	
 	function test_show() {
-		$area = new Menu_Area("Test de header");
-		$area_html = $area->show();
-		$this->assertPattern("/Test de header/", $area_html);
+		$menu = new Menu_Area();
+		$menu->prepare_navigation("lines.php");
+		$area_html = $menu->show();
+		$this->assertPattern("/header/", $area_html);
 		$this->assertPattern("/".$GLOBALS['config']['layout_mediaserver']."medias\/images\/logo.png/", $area_html);
 		$this->assertPattern("/summary/", $area_html);
 		$this->assertPattern("/content=lines.php/", $area_html);

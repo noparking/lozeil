@@ -114,7 +114,6 @@ class Collector implements iterator, countable, arrayAccess {
 
 	function select($raw = false) {
 		$this->reset();
-
 		list($records) = $this->db->query($this->get_query());
 		if ($this->limit_row_count or $this->calc_found_rows) {
 			$this->found_rows = !$this->calc_found_rows ? count($this) : $this->db->getValue("SELECT FOUND_ROWS()");

@@ -135,3 +135,16 @@ $(function() {
 $(document).ajaxComplete(function() {
 	jQuery_table();
 })
+
+$(document).ready(function() {
+	$("#filter_fullsearch").keyup(function() {
+		var word = $("#filter_fullsearch").val();
+		$.post(
+			"index.php?content=lines.ajax.php",
+			{ method: "json", action: "filter", value: word },
+			function(data){
+				$('.table_accounting table').html(data);
+			}
+		);
+	});
+});

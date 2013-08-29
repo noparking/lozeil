@@ -10,6 +10,7 @@
 
 if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 	if (isset($_REQUEST['action'])) {
+		$writings = new Writings();
 		switch ($_REQUEST['action']) {
 			case "merge":
 				if ($_REQUEST['toMerge'] != 0 && !empty($_REQUEST['toMerge'])) {
@@ -20,6 +21,11 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 						$writing_destination->load((int)$_REQUEST['destination']);
 						$writing_destination->merge($writing_to_merge);
 					}
+				}
+				break;
+			case "filter":
+				if (!empty($_REQUEST['value'])) {
+					$writings->filter['fullsearch'] = $_REQUEST['value'];
 				}
 				break;
 //			case "split":
@@ -36,8 +42,7 @@ if (isset($_REQUEST['method']) && $_REQUEST['method'] == 'json') {
 				break;
 		}
 		
-		$writings = new Writings();
-		$writings->filter = "month";
+		$writings->filter['month'] = 1;
 		echo $writings->show_in_determined_order();
 	}
 	exit(0);

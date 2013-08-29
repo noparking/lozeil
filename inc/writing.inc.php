@@ -142,7 +142,7 @@ class Writing extends Record {
 	
 	function form() {
 		$form = "<div class=\"edit\"><span id=\"showform\">".utf8_ucfirst(__('show form'))."</span><span id=\"hideform\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']),utf8_ucfirst(__('new record')))."</span>";
+			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&month=".$_SESSION['month_encours']),utf8_ucfirst(__('cancel record')))."</span>";
 		$form .= "<div class=\"form_writing\">
 			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
 		

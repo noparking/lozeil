@@ -139,7 +139,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
-		$writings->filter = "month";
+		$writings->filter['month'] = 1;
 		$writings->select();
 		
 		$table = $writings->show();
@@ -155,6 +155,33 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/class=\"draggable\"/", $table);
 		$this->assertNoPattern("/<td>250.00<\/td>/", $table);
 		$this->assertNoPattern("/279/", $table);
+		
+		$writings = new Writings();
+		$writings->set_order('delay', 'ASC');
+		$writings->filter['fullsearch'] = "élément";
+		$writings->select();
+		
+		$table = $writings->show();
+		$this->assertPattern("/Ceci est un autre élément du test/", $table);
+		$this->assertNoPattern("/Ceci est un test/", $table);
+		
+		$writings = new Writings();
+		$writings->set_order('delay', 'ASC');
+		$writings->filter['fullsearch'] = "Bank";
+		$writings->select();
+		
+		$table = $writings->show();
+		$this->assertPattern("/Bank 1/", $table);
+		$this->assertPattern("/Bank 2/", $table);
+		
+		$writings = new Writings();
+		$writings->set_order('delay', 'ASC');
+		$writings->filter['fullsearch'] = "Source 1";
+		$writings->select();
+		
+		$table = $writings->show();
+		$this->assertPattern("/Source 1/", $table);
+		$this->assertPattern("/Source 2/", $table);
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
@@ -187,11 +214,11 @@ class tests_Writing extends TableTestCase {
 	function test_get_where() {
 		$_SESSION['month_encours'] = 1375308000;
 		$writings = new Writings();
-		$writings->filter = "month";
+		$writings->filter['month'] = 1;
 		$get_where = $writings->get_where();
 		$this->assertPattern("/writings.delay >= 1375308000/", $get_where[0]);
 		$this->assertPattern("/writings.delay < ".strtotime('+1 months', 1375308000)."/", $get_where[1]);
-		$writings->filter = "";
+		$writings->filter['month'] = 0;
 		$get_where = $writings->get_where();
 		$this->assertTrue($get_where[0] == 1);
 		$this->assertFalse(isset($get_where[1]));

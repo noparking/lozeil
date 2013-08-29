@@ -66,10 +66,10 @@ echo $menu->show();
 
 $writings = new Writings();
 $writings->set_order('delay', 'ASC');
-$writings->filter = "month";
+$writings->filter['month'] = 1;
 $writings->select();
 
-$heading = new Heading_Area(null, $writings->show_timeline());
+$heading = new Heading_Area(null, $writings->show_timeline(), $writings->form_filter());
 echo $heading->show();
 
 echo $writings->show();

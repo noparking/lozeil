@@ -200,6 +200,7 @@ table {
 	display: block;
     width: 95%;
     margin: 0 auto;
+	margin-top: 10px;
 }
 
 .timeline li {
@@ -456,6 +457,7 @@ table {
 
 #newform {
 	margin-left: 20px;
+	display: none;
 }
 
 #newform a{
@@ -482,4 +484,8 @@ input[type="file"] {
 
 .edit {
 	padding: 15px;
+}
+
+.extra .hidden_field {
+	display: inline-block;
 }

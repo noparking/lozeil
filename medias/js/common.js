@@ -63,6 +63,7 @@ $(document).ready(function() {
 	if($(".form_writing #id").attr("value") > 0) {
 		$(".form_writing").show();
 		$("#hideform").show();
+		$("#newform").show();
 		$("#showform").hide();
 		var height = $(document).height();
 		document.body.scrollTop = height;
@@ -92,6 +93,7 @@ $(document).ready(function() {
 		});
 		$(this).hide();
 		$("#hideform").show();
+		$("#newform").show();
 	})
 	
 	$("#hideform").on("click", function() {
@@ -112,6 +114,7 @@ $(document).ready(function() {
 		$(".table_accounting input[type='text']").attr("type", "hidden");
 		$(".form_writing").slideUp();
 		$("#hideform").hide();
+		$("#newform").hide();
 		$("#showform").show();
 		$(".further_information").slideUp();
   }   

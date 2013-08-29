@@ -272,18 +272,33 @@ class Writings extends Collector  {
 	}
 	
 	function get_where() {
-		if ($this->filter == "month") {
+		$query_where = parent::get_where();
+		
+		if (isset($this->filter['month']) && $this->filter['month'] == 1) {
 			if ($this->month == 0) {
 				$this->month = $_SESSION['month_encours'];
 			}
-			$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->month;
-			$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month);
-			if(isset($query_where)) {
+			$query_where[] = "(".$this->db->config['table_writings'].".delay >= ".(int)$this->month;
+			$query_where[] = $this->db->config['table_writings'].".delay < ".(int)strtotime('+1 months', $this->month).")";
+		}
+		
+		if (isset($this->filter['fullsearch']) && !empty($this->filter['fullsearch'])) {
+			$query_where[] = "(".$this->db->config['table_writings'].".comment LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
+		" OR SOUNDEX(".$this->db->config['table_writings'].".comment) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
+		" OR ".$this->db->config['table_accounts'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
+		" OR SOUNDEX(".$this->db->config['table_accounts'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
+		" OR ".$this->db->config['table_types'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
+		" OR SOUNDEX(".$this->db->config['table_types'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
+		" OR ".$this->db->config['table_banks'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
+		" OR SOUNDEX(".$this->db->config['table_banks'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch']).")".
+		" OR ".$this->db->config['table_sources'].".name LIKE ".$this->db->quote("%".$this->filter['fullsearch']."%").
+		" OR SOUNDEX(".$this->db->config['table_sources'].".name) LIKE SOUNDEX(".$this->db->quote($this->filter['fullsearch'])."))";
+		}
+		if(!empty($query_where)) {
 				return $query_where;
-			} else {
-				return array(1);
-			}
-		} else return array(1);
+		} else {
+			return array(1);
+		}
 	}
 	
 	function show_balance_on_current_date() {
@@ -311,5 +326,14 @@ class Writings extends Collector  {
 			$keys[] = $writing->unique_key;
 		}
 		return $keys;
+	}
+	
+	function form_filter() {
+		$form = "<div class=\"form_filter\"><form method=\"post\" name=\"duplicate_writing\" id=\"duplicate_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_action = new Html_Input("action", "filter");
+		$input = new Html_Input("filter_fullsearch","");
+		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "));
+		$form .= "</form></div>";
+		return $form;
 	}
 }
