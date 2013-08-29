@@ -10,7 +10,7 @@
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
-class tests_Writing extends TableTestCase {
+class tests_Writings extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
@@ -59,7 +59,7 @@ class tests_Writing extends TableTestCase {
 	
 	function test_show() {
 		$_SESSION['month'] = mktime(0, 0, 0, 7, 1, 2013);
-		
+		list($start, $stop) = determine_month($_SESSION['month']);
 		$account = new Account();
 		$account->name = "Account 1";
 		$account->save();
@@ -139,7 +139,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
-		$writings->filter['month'] = 1;
+		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -158,7 +158,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
-		$writings->filter['fullsearch'] = "élément";
+		$writings->filter_with(array('*' => "élément"));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -167,7 +167,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
-		$writings->filter['fullsearch'] = "Bank";
+		$writings->filter_with(array('*' => "Bank"));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -176,12 +176,12 @@ class tests_Writing extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->set_order('delay', 'ASC');
-		$writings->filter['fullsearch'] = "Source 1";
+		$writings->filter_with(array('*' => "Source 1"));
 		$writings->select();
 		
 		$table = $writings->show();
 		$this->assertPattern("/Source 1/", $table);
-		$this->assertPattern("/Source 2/", $table);
+		$this->assertNoPattern("/Source 2/", $table);
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
@@ -213,15 +213,16 @@ class tests_Writing extends TableTestCase {
 	
 	function test_get_where() {
 		$_SESSION['month'] = 1375308000;
+		list($start, $stop) = determine_month($_SESSION['month']);
 		$writings = new Writings();
-		$writings->filter['month'] = 1;
+		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$get_where = $writings->get_where();
 		$this->assertPattern("/writings.delay >= 1375308000/", $get_where[0]);
-		$this->assertPattern("/writings.delay < ".strtotime('+1 months', 1375308000)."/", $get_where[1]);
-		$writings->filter['month'] = 0;
-		$get_where = $writings->get_where();
-		$this->assertTrue($get_where[0] == 1);
-		$this->assertFalse(isset($get_where[1]));
+		$this->assertPattern("/writings.delay <= 1377986399/", $get_where[1]);
+		$writings2 = new Writings();
+		$get_where2 = $writings2->get_where();
+		$this->assertTrue(!isset($get_where2[0]));
+		$this->assertFalse(isset($get_where2[1]));
 	}
 	
 	function test_balance_on_date() {

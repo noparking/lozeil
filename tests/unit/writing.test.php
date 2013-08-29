@@ -141,6 +141,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->source_id = 1;
 		$writing_to_merge->type_id = 2;
 		$writing_to_merge->vat = 5.5;
+		$writing_to_merge->search_index = $writing_to_merge->search_index();
 		
 		$writing->merge($writing_to_merge);
 		
@@ -186,6 +187,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->source_id = 1;
 		$writing_to_merge_3->type_id = 2;
 		$writing_to_merge_3->vat = 0;
+		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
 		$writing->merge($writing_to_merge_2);
 		
