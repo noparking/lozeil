@@ -71,7 +71,7 @@ function refresh_balance() {
 		type: "POST",
 		url : "index.php?content=balance.ajax.php"		
 	}).done(function (data) {
-			$('#balance').html(data);
+			$('#menu_header_balance').html(data);
 		}
 	);
 }

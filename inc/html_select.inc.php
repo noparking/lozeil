@@ -93,7 +93,7 @@ class Html_Select {
 		}
 		if (!empty($picker)) {
 			$picker = "<br /><div id=\"picker_".$this->id."\" class=\"mask picker\">".$picker;
-			$picker .= "<p class=\"right\"><a data-target=\"picker_".$this->id."\" class=\"maskable\">".@$GLOBALS['txt_mask']."</a></p>\n";
+			$picker .= "<p class=\"right\"><a data-target=\"picker_".$this->id."\" class=\"maskable\">".@__('mask')."</a></p>\n";
 			$picker .= "</div>";
 		}
 

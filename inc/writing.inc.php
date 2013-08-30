@@ -92,6 +92,7 @@ class Writing extends Record {
 		information = ".$this->db->quote($this->information).",
 		paid = ".(int)$this->paid.",
 		delay = ".(int)$this->delay.",
+		unique_key = ".$this->db->quote($this->unique_key).",	
 		search_index = ".$this->db->quote($this->search_index())."
 		WHERE id = ".(int)$this->id;
 		
@@ -137,6 +138,7 @@ class Writing extends Record {
 		$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
 		$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
 		$this->search_index = $this->search_index();
+		$this->unique_key = "";
 		$this->save();
 		$to_merge->delete();
 	}

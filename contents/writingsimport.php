@@ -12,5 +12,6 @@ if (isset($_FILES) && $_FILES['menu_actions_import_file']['type'] == "text/csv" 
 	$data = new Writings_Data_File($_FILES['menu_actions_import_file']['tmp_name'], $_POST['menu_actions_import_bank_id']);
 	$data->import();
 }
+
 header("Location: ".link_content("content=writings.php"));
 exit;

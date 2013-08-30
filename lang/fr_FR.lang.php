@@ -32,6 +32,7 @@ $__['filter'] = "filtre";
 $__['hide form'] = "masquer le formulaire";
 $__['id'] = "id";
 $__['less'] = "moins";
+$__['mask'] = "masquer";
 $__['more'] = "plus";
 $__['no'] = "non";
 $__['no name'] = "sans nom";
@@ -75,5 +76,3 @@ $array_week[4] = "Jeudi";
 $array_week[5] = "Vendredi";
 $array_week[6] = "Samedi";
 $array_week[7] = "Dimanche";
-
-$txt_mask = "masquer";

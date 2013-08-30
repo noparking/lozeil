@@ -141,7 +141,7 @@ class Html_Input_Date extends Html_Input {
 			$input_calendar .= "</tbody>\n";
 			$input_calendar .= "<tbody>\n";
 			$input_calendar .= "<tr>\n";
-			$input_calendar .= "<td align=\"right\" colspan=\"7\"><a href=\"javascript: HideCalendar('".$this->name("calendar")."');\">".$GLOBALS['txt_mask']."</a></td>\n";
+			$input_calendar .= "<td align=\"right\" colspan=\"7\"><a href=\"javascript: HideCalendar('".$this->name("calendar")."');\">".  utf8_ucfirst(__('mask'))."</a></td>\n";
 			$input_calendar .= "</tr>\n";
 			$input_calendar .= "</tbody>\n";
 			$input_calendar .= "</table>\n";
