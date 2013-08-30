@@ -142,8 +142,6 @@ class Writings_Data_File {
 	function is_cic($data) {
 		switch (true) {
 			case $data[0]['day'] != "Date de valeur":
-			case $data[0]['debit'] != "D�bit":
-			case $data[0]['credit'] != "Cr�dit":
 				return false;
 			default :
 				return true;
