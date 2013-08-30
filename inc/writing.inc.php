@@ -14,7 +14,7 @@ class Writing extends Record {
 	public $amount_inc_vat = 0;
 	public $bank_id = 0;
 	public $comment = "";
-	public $delay = 0;
+	public $day = 0;
 	public $id = 0;
 	public $information = "";
 	public $paid = 0;
@@ -91,7 +91,7 @@ class Writing extends Record {
 		comment = ".$this->db->quote($this->comment).",
 		information = ".$this->db->quote($this->information).",
 		paid = ".(int)$this->paid.",
-		delay = ".(int)$this->delay.",
+		day = ".(int)$this->day.",
 		unique_key = ".$this->db->quote($this->unique_key).",	
 		search_index = ".$this->db->quote($this->search_index())."
 		WHERE id = ".(int)$this->id;
@@ -114,7 +114,7 @@ class Writing extends Record {
 			amount_excl_vat = ".$this->amount_excl_vat.",
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
-			delay = ".(int)$this->delay.",
+			day = ".(int)$this->day.",
 			search_index = ".$this->db->quote($this->search_index()).",
 			unique_key = ".$this->db->quote($this->unique_key).",
 			paid = ".(int)$this->paid
@@ -132,7 +132,7 @@ class Writing extends Record {
 		$this->amount_excl_vat = isset($to_merge->amount_excl_vat) ? $to_merge->amount_excl_vat : $this->amount_excl_vat;
 		$this->amount_inc_vat = isset($to_merge->amount_inc_vat) ? $to_merge->amount_inc_vat : $this->amount_inc_vat;
 		$this->comment = isset($to_merge->comment) ? $to_merge->comment : $this->comment;
-		$this->delay = isset($to_merge->delay) ? $to_merge->delay : $this->delay;
+		$this->day = isset($to_merge->day) ? $to_merge->day : $this->day;
 		$this->information = isset($to_merge->information) ? $to_merge->information : $this->information;
 		$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
 		$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
@@ -177,8 +177,8 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$form .= $input_hidden_id->input_hidden();
 		
-		if ($this->delay > 0) {
-			$date = (int)$this->delay;
+		if ($this->day > 0) {
+			$date = (int)$this->day;
 		} else {
 			$date = (int)$_SESSION['timestamp'];
 		}
@@ -210,21 +210,48 @@ class Writing extends Record {
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
-		$grid = array();
-		$grid['class'] = "itemsform";
-		$grid['leaves']['date']['value'] = $datepicker->item(__('delay'));
-		$grid['leaves']['account']['value'] = $account->item(__('account'));
-		$grid['leaves']['source']['value'] = $source->item(__('source'));
-		$grid['leaves']['type']['value'] = $type->item(__('type'));
-		$grid['leaves']['bank']['value'] = $bank->item(__('bank'));
-		$grid['leaves']['amount_excl_vat']['value'] = $amount_excl_vat->item(__('amount excluding tax'));
-		$grid['leaves']['vat']['value'] = $vat->item(__('VAT'));
-		$grid['leaves']['amount_inc_vat']['value'] = $amount_inc_vat->item(__('amount including tax'));
-		$grid['leaves']['comment']['value'] = $comment->item(__('comment'));
-		$grid['leaves']['paid']['value'] = $paid->item(__('paid'));
-		$grid['leaves']['submit']['value'] = $submit->item("");
-		
-		
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'date' => array(
+					'value' => $datepicker->item(__('day')),
+				),
+				'account' => array(
+					'value' => $account->item(__('account')),
+				),
+				'source' => array(
+					'value' => $source->item(__('source')),
+				),
+				'type' => array(
+					'value' => $type->item(__('type')),
+				),
+				'bank' => array(
+					'value' => $bank->item(__('bank')),
+				),
+				'amount_excl_vat' => array(
+					'value' => $amount_excl_vat->item(__('amount excluding tax')),
+				),
+				'vat' => array(
+					'value' => $vat->item(__('VAT')),
+				),
+				'amount_inc_vat' => array(
+					'value' => $amount_inc_vat->item(__('amount including tax')),
+				),
+				'comment' => array(
+					'value' => $comment->item(__('comment')),
+				),
+				'paid' => array(
+					'value' => $paid->item(__('paid')),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+				'account' => array(
+					'value' => $account->item(__('account')),
+				),
+			)
+		);
+				
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
@@ -268,21 +295,27 @@ class Writing extends Record {
 		return $form;
 	}
 	
+	function form_modify() {
+		return "<div class=\"table_writings_modify\">".
+			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
+			"</div>";
+	}
+	
 	function fill($hash) {
 		$writing = parent::fill($hash);
 		if (isset($hash['datepicker'])) {
-			$writing->delay = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
+			$writing->day = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
 		}
 		return $writing;
 	}
 	
 	function duplicate($amount) {
 		if ($amount > 0) {
-			$new_writing->delay = $this->delay;
+			$new_writing->day = $this->day;
 			for ( $i=1; $i<=$amount; $i++) {
 				$new_writing = $this;
 				$new_writing->id = 0;
-				$new_writing->delay = strtotime('+1 months', $new_writing->delay);
+				$new_writing->day = strtotime('+1 months', $new_writing->day);
 				$new_writing->save();
 			}
 		}
@@ -294,5 +327,9 @@ class Writing extends Record {
 		} else {
 			return "";
 		}
+	}
+	
+	function show_operations() {
+		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_delete();
 	}
 }

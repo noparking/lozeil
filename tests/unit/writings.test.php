@@ -76,7 +76,7 @@ class tests_Writings extends TableTestCase {
 		$writing->amount_inc_vat = 250;
 		$writing->bank_id = 1;
 		$writing->comment = "Ceci est un test";
-		$writing->delay = mktime(10, 0, 0, 7, 29, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->source_id = 1;
@@ -91,7 +91,7 @@ class tests_Writings extends TableTestCase {
 		$writing2->amount_inc_vat = 100;
 		$writing2->bank_id = 2;
 		$writing2->comment = "Ceci est un autre élément du test";
-		$writing2->delay = mktime(10, 0, 0, 7, 10, 2013);
+		$writing2->day = mktime(10, 0, 0, 7, 10, 2013);
 		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
 		$writing2->source_id = 2;
@@ -108,7 +108,7 @@ class tests_Writings extends TableTestCase {
 		$writing3->type_id = 2;
 		$writing3->vat = 5.5;
 		$writing3->source_id = 2;
-		$writing3->delay = strtotime('+1 months', mktime(10, 0, 0, 7, 29, 2013));
+		$writing3->day = strtotime('+1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing3->save();
 		
 		$writing4 = new Writing();
@@ -119,11 +119,11 @@ class tests_Writings extends TableTestCase {
 		$writing4->type_id = 1;
 		$writing4->vat = 5.5;
 		$writing4->source_id = 2;
-		$writing4->delay = strtotime('-1 months', mktime(10, 0, 0, 7, 29, 2013));
+		$writing4->day = strtotime('-1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing4->save();
 		
 		$writings = new Writings();
-		$writings->set_order('delay', 'ASC');
+		$writings->set_order('day', 'ASC');
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$writings->select();
 		
@@ -142,7 +142,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/279/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('delay', 'ASC');
+		$writings->set_order('day', 'ASC');
 		$writings->filter_with(array('*' => "élément"));
 		$writings->select();
 		
@@ -151,7 +151,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/Ceci est un test/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('delay', 'ASC');
+		$writings->set_order('day', 'ASC');
 		$writings->filter_with(array('*' => "Bank"));
 		$writings->select();
 		
@@ -160,7 +160,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Bank 2/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('delay', 'ASC');
+		$writings->set_order('day', 'ASC');
 		$writings->filter_with(array('*' => "Source 1"));
 		$writings->select();
 		
@@ -202,8 +202,8 @@ class tests_Writings extends TableTestCase {
 		$writings = new Writings();
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$get_where = $writings->get_where();
-		$this->assertPattern("/writings.delay >= 1375308000/", $get_where[0]);
-		$this->assertPattern("/writings.delay <= 1377986399/", $get_where[1]);
+		$this->assertPattern("/writings.day >= 1375308000/", $get_where[0]);
+		$this->assertPattern("/writings.day <= 1377986399/", $get_where[1]);
 		$writings2 = new Writings();
 		$get_where2 = $writings2->get_where();
 		$this->assertTrue(!isset($get_where2[0]));
@@ -213,7 +213,7 @@ class tests_Writings extends TableTestCase {
 	function test_show_balance_at() {
 		$writing1 = new Writing();
 		$writing1->amount_inc_vat = 150.56;
-		$writing1->delay = mktime(10, 0, 0, 7, 20, 2013);
+		$writing1->day = mktime(10, 0, 0, 7, 20, 2013);
 		$writing1->save();
 		
 		$writings = new Writings();
@@ -223,7 +223,7 @@ class tests_Writings extends TableTestCase {
 		
 		$writing2 = new Writing();
 		$writing2->amount_inc_vat = -2150.56;
-		$writing2->delay = mktime(10, 0, 0, 7, 18, 2013);
+		$writing2->day = mktime(10, 0, 0, 7, 18, 2013);
 		$writing2->save();
 		
 		$writings->select();

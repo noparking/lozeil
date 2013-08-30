@@ -29,7 +29,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 250;
 		$writing->bank_id = 2;
 		$writing->comment = "Ceci est un test";
-		$writing->delay = mktime(10, 0, 0, 7, 29, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->source_id = 2;
@@ -45,7 +45,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->amount_inc_vat, $writing->amount_inc_vat);
 		$this->assertEqual($writing_loaded->bank_id, $writing->bank_id);
 		$this->assertEqual($writing_loaded->comment, $writing->comment);
-		$this->assertEqual($writing_loaded->delay, $writing->delay);
+		$this->assertEqual($writing_loaded->day, $writing->day);
 		$this->assertEqual($writing_loaded->id, $writing->id);
 		$this->assertEqual($writing_loaded->information, $writing->information);
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
@@ -63,7 +63,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 250;
 		$writing->bank_id = 2;
 		$writing->comment = "Ceci est un test";
-		$writing->delay = mktime(10, 0, 0, 7, 29, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->source_id = 2;
@@ -79,7 +79,7 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->amount_inc_vat = 25;
 		$writing_loaded->bank_id = 3;
 		$writing_loaded->comment = "Ceci est un autre test";
-		$writing_loaded->delay = mktime(10, 30, 0, 7, 29, 2013);
+		$writing_loaded->day = mktime(10, 30, 0, 7, 29, 2013);
 		$writing_loaded->information = "Autre complément d'infos";
 		$writing_loaded->paid = 1;
 		$writing_loaded->source_id = 1;
@@ -91,7 +91,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->amount_inc_vat, 25);
 		$this->assertEqual($writing_loaded->bank_id, 3);
 		$this->assertEqual($writing_loaded->comment, "Ceci est un autre test");
-		$this->assertEqual($writing_loaded->delay, mktime(10, 30, 0, 7, 29, 2013));
+		$this->assertEqual($writing_loaded->day, mktime(10, 30, 0, 7, 29, 2013));
 		$this->assertEqual($writing_loaded->id, 1);
 		$this->assertEqual($writing_loaded->information, "Autre complément d'infos");
 		$this->assertEqual($writing_loaded->paid, 1);
@@ -121,7 +121,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 250;
 		$writing->bank_id = 2;
 		$writing->comment = "Ceci est un test";
-		$writing->delay = mktime(10, 0, 0, 7, 29, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->source_id = 2;
@@ -135,7 +135,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->amount_inc_vat = 25;
 		$writing_to_merge->bank_id = 3;
 		$writing_to_merge->comment = "Ceci est un autre test";
-		$writing_to_merge->delay = mktime(10, 0, 0, 8, 26, 2013);
+		$writing_to_merge->day = mktime(10, 0, 0, 8, 26, 2013);
 		$writing_to_merge->information = "Autre complément d'infos";
 		$writing_to_merge->paid = 1;
 		$writing_to_merge->source_id = 1;
@@ -153,7 +153,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_2->amount_inc_vat = NULL;
 		$writing_to_merge_2->bank_id = NULL;
 		$writing_to_merge_2->comment = NULL;
-		$writing_to_merge_2->delay = NULL;
+		$writing_to_merge_2->day = NULL;
 		$writing_to_merge_2->information = NULL;
 		$writing_to_merge_2->paid = NULL;
 		$writing_to_merge_2->source_id = NULL;
@@ -169,7 +169,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_2->amount_inc_vat = 0;
 		$writing_to_merge_2->bank_id = 0;
 		$writing_to_merge_2->comment = "";
-		$writing_to_merge_2->delay = 0;
+		$writing_to_merge_2->day = 0;
 		$writing_to_merge_2->information = "";
 		$writing_to_merge_2->paid = 0;
 		$writing_to_merge_2->source_id = 0;
@@ -182,7 +182,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->amount_excl_vat = 0;
 		$writing_to_merge_3->amount_inc_vat = 0;
 		$writing_to_merge_3->bank_id = 3;
-		$writing_to_merge_3->delay = 0;
+		$writing_to_merge_3->day = 0;
 		$writing_to_merge_3->paid = 0;
 		$writing_to_merge_3->source_id = 1;
 		$writing_to_merge_3->type_id = 2;
@@ -202,7 +202,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 200;
 		$writing->bank_id = 2;
 		$writing->comment = "Ceci est un commentaire";
-		$writing->delay = mktime(10, 0, 0, 7, 31, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->information = "Informations";
 		$writing->paid = 0;
 		$writing->source_id = 2;
@@ -220,7 +220,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->amount_inc_vat, 250);
 		$this->assertEqual($writing_splited->bank_id, 2);
 		$this->assertEqual($writing_splited->comment, "Ceci est un commentaire");
-		$this->assertEqual($writing_splited->delay, mktime(10, 0, 0, 7, 31, 2013));
+		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		$this->assertEqual($writing_splited->paid, 0);
 		$this->assertEqual($writing_splited->source_id, 2);
 		$this->assertEqual($writing_splited->type_id, 1);
@@ -236,7 +236,7 @@ class tests_Writing extends TableTestCase {
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
 		$writing->source_id = 2;
-		$writing->delay = mktime(10, 0, 0, 7, 31, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->save();
 		
 		$writing->split(225);
@@ -251,7 +251,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->type_id, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
 		$this->assertEqual($writing_splited->source_id, 2);
-		$this->assertEqual($writing_splited->delay, mktime(10, 0, 0, 7, 31, 2013));
+		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		
 		$this->truncateTable("writings");
 	}
@@ -282,7 +282,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 200;
 		$writing->bank_id = 1;
 		$writing->comment = "Ceci est un commentaire";
-		$writing->delay = mktime(10, 0, 0, 7, 31, 2013);
+		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->source_id = 1;
 		$writing->type_id = 1;
 		$writing->vat = 19.6;
@@ -346,29 +346,29 @@ class tests_Writing extends TableTestCase {
 		$hash['datepicker']['d'] = 26;
 		$hash['datepicker']['Y'] = 2013;
 		$writing->fill($hash);
-		$this->assertEqual($writing->delay, 1377468000);
+		$this->assertEqual($writing->day, 1377468000);
 	}
 	
 	function test_duplicate() {
 		$writing = new Writing();
-		$writing->delay = mktime(0, 0, 0, 8, 26, 2013);
+		$writing->day = mktime(0, 0, 0, 8, 26, 2013);
 		$writing->save();
 		$writing->duplicate(5);
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 6);
 		$writing->load(1);
-		$this->assertEqual(mktime(0, 0, 0, 8, 26, 2013), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 8, 26, 2013), $writing->day);
 		$writing->load(2);
-		$this->assertEqual(mktime(0, 0, 0, 9, 26, 2013), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 9, 26, 2013), $writing->day);
 		$writing->load(3);
-		$this->assertEqual(mktime(0, 0, 0, 10, 26, 2013), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 10, 26, 2013), $writing->day);
 		$writing->load(4);
-		$this->assertEqual(mktime(0, 0, 0, 11, 26, 2013), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 11, 26, 2013), $writing->day);
 		$writing->load(5);
-		$this->assertEqual(mktime(0, 0, 0, 12, 26, 2013), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 12, 26, 2013), $writing->day);
 		$writing->load(6);
-		$this->assertEqual(mktime(0, 0, 0, 1, 26, 2014), $writing->delay);
+		$this->assertEqual(mktime(0, 0, 0, 1, 26, 2014), $writing->day);
 		$this->truncateTable("writings");
 	}
 	

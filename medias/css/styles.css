@@ -493,3 +493,7 @@ input[type="file"] {
 .extra {
 	margin-bottom: 10px;
 }
+
+.table_writings #comment {
+	width: 600px;
+}

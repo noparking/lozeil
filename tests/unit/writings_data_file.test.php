@@ -22,19 +22,19 @@ class tests_Writings_Data_File extends TableTestCase {
 	function test_is_line_cic() {
 		$import = new Writings_Data_File();
 		$mydata =array(
-			'delay' => "01/07/2013",
+			'day' => "01/07/2013",
 			'debit' => "",
 			'credit' => "152,20",
 			'comment' => "test de libellé"
 			);
 		$mydata2 =array(
-			'delay' => "01/07/2013",
+			'day' => "01/07/2013",
 			'debit' => "",
 			'credit' => "",
 			'comment' => "test de libellé"
 			);
 		$mydata3 =array(
-			'delay' => "1275412300",
+			'day' => "1275412300",
 			'debit' => "",
 			'credit' => "",
 			'comment' => "test de libellé"
@@ -65,7 +65,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		$data = new Writings_Data_File();
 		$row = 0;
 		foreach ($mydata as $line) {
-				$data->csv_data[$row]['delay'] = trim($line[1]);
+				$data->csv_data[$row]['day'] = trim($line[1]);
                 $data->csv_data[$row]['debit'] = trim($line[2]);
                 $data->csv_data[$row]['credit'] = trim($line[3]);
                 $data->csv_data[$row]['comment'] = trim($line[4]);
@@ -134,7 +134,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "152.2000000",
 				'bank_id' => 1,
 				'comment' => "test de libellé",
-				'delay' => mktime(0, 0, 0, 7, 1, 2013),
+				'day' => mktime(0, 0, 0, 7, 1, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 1, 2013)."test de libellé"."1"."152.2")
 			)
 		);
@@ -145,7 +145,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-120.5000000",
 				'bank_id' => 1,
 				'comment' => "test de libellé 2",
-				'delay' => mktime(0, 0, 0, 7, 4, 2013),
+				'day' => mktime(0, 0, 0, 7, 4, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."test de libellé 2"."1"."-120.5")
 			)
 		);
@@ -156,7 +156,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-120.5000000",
 				'bank_id' => 1,
 				'comment' => "",
-				'delay' => mktime(0, 0, 0, 7, 4, 2013),
+				'day' => mktime(0, 0, 0, 7, 4, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
 			)
 		);
@@ -209,7 +209,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-152.200000",
 				'bank_id' => 2,
 				'comment' => "libellé 1",
-				'delay' => mktime(0, 0, 0, 7, 2, 2013),
+				'day' => mktime(0, 0, 0, 7, 2, 2013),
 				'information' => "LibellÃ© complÃ©mentaire : libellÃ© complÃ©mentaire 1
 NumÃ©ro de chÃ¨que : NumÃ©ro de chÃ¨que 1
 RÃ©fÃ©rence Interne de l'OpÃ©ration : RÃ©fÃ©rence Interne de l'OpÃ©ration 1
@@ -237,7 +237,7 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				'id' => 2,
 				'amount_inc_vat' => "152.200000",
 				'bank_id' => 2,
-				'delay' => mktime(0, 0, 0, 7, 3, 2013),
+				'day' => mktime(0, 0, 0, 7, 3, 2013),
 				)
 		);
 		

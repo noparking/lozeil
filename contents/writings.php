@@ -11,7 +11,7 @@
 $timestamp = mktime(0, 0, 0, date("m"), 1, date("Y"));
 $_SESSION['timestamp'] = $timestamp;
 if (!isset($_SESSION['order_col_name']) || !isset($_SESSION['order_direction'])) {
-	$_SESSION['order_col_name'] = 'delay';
+	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
 }
 

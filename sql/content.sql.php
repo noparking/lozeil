@@ -40,7 +40,7 @@ $queries = array(
 		  amount_inc_vat DECIMAL(12,6),
 		  bank_id INT(11),
 		  comment TEXT NOT NULL,
-		  delay int(10) NOT NULL DEFAULT '0',
+		  day int(10) NOT NULL DEFAULT '0',
 		  information TEXT NOT NULL,
 		  paid tinyint(1) NOT NULL DEFAULT '0',
 		  search_index TEXT NOT NULL,

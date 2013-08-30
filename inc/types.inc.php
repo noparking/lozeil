@@ -9,7 +9,7 @@
 */
 
 class Types extends Collector  {
-	public $filter = null;
+	public $filters = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {

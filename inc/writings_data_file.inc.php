@@ -24,7 +24,7 @@ class Writings_Data_File {
 
             while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
 
-                $this->csv_data[$row]['delay'] = trim($data[1]);
+                $this->csv_data[$row]['day'] = trim($data[1]);
                 $this->csv_data[$row]['debit'] = trim($data[2]);
                 $this->csv_data[$row]['credit'] = trim($data[3]);
                 $this->csv_data[$row]['comment'] = trim($data[4]);
@@ -42,8 +42,8 @@ class Writings_Data_File {
 				foreach ($this->csv_data as $line) {
 					if ($this->is_line_cic($line)) {
 						$writing = new Writing();
-						$time = explode("/", $line['delay']);
-						$writing->delay = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+						$time = explode("/", $line['day']);
+						$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 						$writing->comment = $line['comment'];
 						$writing->bank_id = $this->bank_id;
 						if (!empty($line['debit'])) {
@@ -53,7 +53,7 @@ class Writings_Data_File {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['credit']);
 							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['credit']);
 						}
-						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
 						}
@@ -95,7 +95,7 @@ class Writings_Data_File {
 						
 						$writing = new Writing();
 						$time = explode("/", $line[0]);
-						$writing->delay = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+						$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 						$writing->comment = $line[1];
 						$writing->bank_id = $this->bank_id;
 						if (!empty($information)) {
@@ -106,7 +106,7 @@ class Writings_Data_File {
 						}
 						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
-						$writing->unique_key = hash('md5', $writing->delay.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
 						}
@@ -141,7 +141,7 @@ class Writings_Data_File {
 	
 	function is_cic($data) {
 		switch (true) {
-			case $data[0]['delay'] != "Date de valeur":
+			case $data[0]['day'] != "Date de valeur":
 			case $data[0]['debit'] != "D�bit":
 			case $data[0]['credit'] != "Cr�dit":
 				return false;
@@ -162,7 +162,7 @@ class Writings_Data_File {
 	}
 	
 	function is_line_cic($line) {
-		$time = explode("/", $line['delay']);
+		$time = explode("/", $line['day']);
 		
 		switch (true) {
 			case (!isset($time[1]) OR !isset($time[2])) :
@@ -174,9 +174,9 @@ class Writings_Data_File {
 	}
 	
 	function is_line_coop($line) {
-		$delay = str_replace("/", "", $line[0]);
+		$day = str_replace("/", "", $line[0]);
 		switch (true) {
-		case strlen($delay) != 8 :
+		case strlen($day) != 8 :
 		case empty($line[3]) :
 		case ($line[4] != "DEBIT" AND $line[4] != "CREDIT") :
 			return false;

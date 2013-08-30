@@ -55,4 +55,54 @@ class Bot {
 		}
 		return $help;
 	}
+	
+	function update() {
+		$this->log(__("Start updating Lozeil"));
+		$this->update_svn();
+		$this->update_lozeil();
+		$this->log(__("Finish updating Lozeil"));
+		return true;
+	}
+	
+	function update_svn() {
+		$this->log(__("Start updating SVN"));
+		$result = exec("svn up ".realpath(dirname(__FILE__)."/../../../"));
+		$this->log(__("Finish updating SVN"));
+		return $result;
+	}
+	
+	function update_lozeil() {
+		$this->log(__("Start updating application"));
+		$update = new Update();
+		$current = $update->current() + 1;
+		$last = $update->last();
+
+		for ($i = $current; $i <= $last; $i++) {
+			if (method_exists($update, "to_".$i)) {
+				$update->{"to_".$i}();
+				$update->config("version", $i);
+			}
+		}
+		$this->log(__("Finish updating application"));
+	}
+
+	function update_plugin() {
+		$this->log(__("Start updating plugin"));
+		$update = new Accounts_Update();
+		$current = $update->current() + 1;
+		$last = $update->last();
+
+		for ($i = $current; $i <= $last; $i++) {
+			if (method_exists($update, "to_".$i)) {
+				$update->{"to_".$i}();
+				$update->config("accounts_version", $i);
+			}
+		}
+		$this->log(__("Finish updating application"));
+	}
+	
+	function log($message) {
+		Message::log($message);
+		return $this;
+	}
 }

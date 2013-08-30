@@ -9,7 +9,7 @@
 */
 
 class Writings extends Collector  {
-	public $filter = null;
+	public $filters = null;
 	
 	private $month = 0;
 	
@@ -62,9 +62,9 @@ class Writings extends Collector  {
 				'cells' => array(
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("delay"),
-						'id' => "delay",
-						'value' => utf8_ucfirst(__("delay")),
+						'class' => $this->determine_table_header_class("day"),
+						'id' => "day",
+						'value' => utf8_ucfirst(__("day")),
 					),
 					array(
 						'type' => "th",
@@ -164,19 +164,19 @@ class Writings extends Collector  {
 					'cells' => array(
 						array(
 							'type' => "td",
-							'value' => date("d", $writing->delay)."/".date("m", $writing->delay)."/".date("Y", $writing->delay),
+							'value' => date("d/m/Y", $writing->day),
 						),
 						array(
 							'type' => "td",
-							'value' => (isset($writing->account_id) && $writing->account_id > 0) ? $accounts_names[$writing->account_id] : "",
+							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => (isset($writing->source_id) && $writing->source_id > 0) ? $sources_name[$writing->source_id] : "",
-							),
+							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
+						),
 						array(
 							'type' => "td",
-							'value' => (isset($writing->type_id) && $writing->type_id > 0) ? $types_name[$writing->type_id] : "",
+							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
 						),
 						array(
 							'type' => "td",
@@ -197,13 +197,11 @@ class Writings extends Collector  {
 						),
 						array(
 							'type' => "td",
-							'value' => (isset($writing->bank_id) && $writing->bank_id > 0) ? $banks_name[$writing->bank_id] : "",
+							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => $writing->form_split().
-							"<div class=\"table_writings_modify\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
-							$writing->form_duplicate().$writing->form_delete(),
+							'value' => $writing->show_operations(),
 						),
 					),
 			);
@@ -225,8 +223,7 @@ class Writings extends Collector  {
 	}
 	
 	function display() {
-		$html_table = new Html_table(array('lines' => $this->grid()));
-		return "<div id=\"table_writings\">".$html_table->show()."</div>";
+		return "<div id=\"table_writings\">".$this->show()."</div>";
 	}
 	
 	function show_timeline_at($timestamp) {
@@ -271,14 +268,14 @@ class Writings extends Collector  {
 	function get_where() {
 		$query_where = parent::get_where();
 		
-		if (isset($this->filter['start'])) {
-			$query_where[] = $this->db->config['table_writings'].".delay >= ".(int)$this->filter['start'];
+		if (isset($this->filters['start'])) {
+			$query_where[] = $this->db->config['table_writings'].".day >= ".(int)$this->filters['start'];
 		}
-		if (isset($this->filter['stop'])) {
-			$query_where[] = $this->db->config['table_writings'].".delay <= ".(int)$this->filter['stop'];
+		if (isset($this->filters['stop'])) {
+			$query_where[] = $this->db->config['table_writings'].".day <= ".(int)$this->filters['stop'];
 		}
-		if (isset($this->filter['*']) && !empty($this->filter['*'])) {
-			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filter['*']."%");
+		if (isset($this->filters['*']) && !empty($this->filters['*'])) {
+			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
 		}
 		
 		return $query_where;
@@ -292,7 +289,7 @@ class Writings extends Collector  {
 	function show_balance_at($timestamp) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
-			if($writing->delay < $timestamp) {
+			if($writing->day < $timestamp) {
 				$amount = $amount + $writing->amount_inc_vat;
 			}
 		}
@@ -322,7 +319,7 @@ class Writings extends Collector  {
 		$elements = func_get_args();
 		foreach ($elements as  $element) {
 			foreach ($element as $key => $value) {
-			$this->filter[$key] = $value;
+				$this->filters[$key] = $value;
 			}
 		}
 	}
