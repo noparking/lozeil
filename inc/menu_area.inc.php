@@ -53,11 +53,8 @@ class Menu_Area {
 			$data = new Writings_Data_File();
 			$grid = array();
 			
-			$grid['leaves'][0]['value'] = Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consulter le tableau de trésorerie")));
-			$grid['leaves'][1]['value'] = utf8_ucfirst(__("faire le suivi des factures d'achat (non implémenté)"));
-			$grid['leaves'][2]['value'] = utf8_ucfirst(__("faire le suivi des factures de ventes (non implémenté)"));
-			$grid['leaves'][3]['value'] = $data->form_import();
-			$grid['leaves'][4]['value'] = utf8_ucfirst(__("effectuer un export (non implémenté)"));			
+			$grid['leaves'][0]['value'] = Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")));
+			$grid['leaves'][1]['value'] = $data->form_import();			
 			
 			$list = new Html_List($grid);
 			$this->actions = $list->show();

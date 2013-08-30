@@ -10,7 +10,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "1";
+$config['version'] = "2";
 
 $config['root_url'] = "";		// adresse - de type URL - de l'application. Note : ne pas mettre de slash à la fin.
 

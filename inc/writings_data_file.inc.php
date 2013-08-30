@@ -124,7 +124,7 @@ class Writings_Data_File {
 		$import_file = new Html_Input("menu_actions_import_file", "", "file");
 		$bank = new Html_Select("menu_actions_import_bank_id", $banks_name);
 		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
-		$form .= $import_file->item(utf8_ucfirst(__("importer le journal de banque"))).$bank->item(__('bank')).$submit->input();
+		$form .= $import_file->item(utf8_ucfirst(__("import bank statement"))).$bank->item(__('bank')).$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}
