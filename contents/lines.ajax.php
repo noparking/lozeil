@@ -28,6 +28,7 @@ if (isset($_REQUEST['method'])) {
 					$writings_filter_value = $_SESSION['filter_value_*'];
 					$writings->filter_with(array('*' => $writings_filter_value));
 				}
+				$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 				$writings->filter_with(array('start' => $start, 'stop' => $stop));
 				$writings->select();
 				echo $writings->show();
@@ -37,6 +38,7 @@ if (isset($_REQUEST['method'])) {
 				if (!empty($_REQUEST['value'])) {
 					$writings->filter_with(array('*' => $_REQUEST['value']));
 				}
+				$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 				$writings->filter_with(array('start' => $start, 'stop' => $stop));
 				$writings->select();
 				echo $writings->show();

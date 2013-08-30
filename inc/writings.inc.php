@@ -62,55 +62,55 @@ class Writings extends Collector  {
 				'cells' => array(
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("delay"),
 						'id' => "delay",
 						'value' => utf8_ucfirst(__("delay")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("account_name"),
 						'id' => "account_name",
 						'value' => utf8_ucfirst(__("account")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("source_name"),
 						'id' => "source_name",
 						'value' => utf8_ucfirst(__("source")),
 						),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("type_name"),
 						'id' => "type_name",
 						'value' => utf8_ucfirst(__("type")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("amount_excl_vat"),
 						'id' => "amount_excl_vat",
 						'value' => utf8_ucfirst(__("amount excluding tax")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("vat"),
 						'id' => "vat",
 						'value' => __("VAT"),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("amount_inc_vat"),
 						'id' => "amount_inc_vat",
 						'value' => utf8_ucfirst(__("amount including tax")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("comment"),
 						'id' => "comment",
 						'value' => utf8_ucfirst(__("comment")),
 					),
 					array(
 						'type' => "th",
-						'class' => "sort",
+						'class' => $this->determine_table_header_class("bank_name"),
 						'id' => "bank_name",
 						'value' => utf8_ucfirst(__("bank")),
 					),
@@ -123,6 +123,18 @@ class Writings extends Collector  {
 			),
 		);		
 		return $grid;
+	}
+	
+	function determine_table_header_class($header_column_name) {
+		$class = "sort";
+		if ($_SESSION['order_col_name'] == $header_column_name) {
+			if ($_SESSION['order_direction'] == "ASC") {
+				$class .= " sortedup";
+			} else {
+				$class .= " sorteddown";
+			}
+		}
+		return $class;
 	}
 
 	function grid_body() {
