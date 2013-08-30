@@ -116,8 +116,8 @@ class Writings extends Collector  {
 					),
 					array(
 						'type' => "th",
-						'id' => "split",
-						'value' => utf8_ucfirst(__("split")),
+						'id' => "operations",
+						'value' => utf8_ucfirst(__("operations")),
 					),
 				),
 			),

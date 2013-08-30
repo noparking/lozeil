@@ -42,6 +42,7 @@ $__['more'] = "plus";
 $__['no'] = "non";
 $__['no name'] = "sans nom";
 $__['nothing to do'] = "rien à faire";
+$__['operations'] = "opérations";
 $__['paid'] = "payé";
 $__['record'] = "enregistrement";
 $__['save'] = "sauvegarder";
