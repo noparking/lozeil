@@ -13,7 +13,7 @@ session_start();
 if (isset($_GET['content']) and !empty($_GET['content'])) {
 	$content = $_GET['content'];
 } else {
-	$content = "lines.php";
+	$content = "writings.php";
 }
 $location = clean_location($_SERVER['PHP_SELF']);
 if (!isset($_REQUEST['method']) && !preg_match("/ajax/", $content)) {

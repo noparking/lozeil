@@ -27,7 +27,7 @@ function make_droppable() {
 			var writing_into = $(this).attr('id').substr(6);
 			$(this).removeClass('over').addClass('out');
 			$.post(
-				"index.php?content=lines.ajax.php",
+				"index.php?content=writings.ajax.php",
 				{ method: "json", action: "merge", writing_from: writing_from, writing_into: writing_into, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
 					refresh_balance();
@@ -111,7 +111,7 @@ function sort_elements() {
 			var direction = 'ASC';
 		}
 		$.post(
-			"index.php?content=lines.ajax.php",
+			"index.php?content=writings.ajax.php",
 			{ method: "json", action: "sort", order_col_name: order_col_name, direction: direction},
 			function(data) {
 				$('table').html(data);
@@ -145,7 +145,7 @@ $(document).ready(function() {
 	$("#extra_filter_writings_value").keyup(function() {
 		var word = $("#extra_filter_writings_value").val();
 		$.post(
-			"index.php?content=lines.ajax.php",
+			"index.php?content=writings.ajax.php",
 			{ method: "json", action: "filter", value: word },
 			function(data){
 				$('#table_writings table').html(data);

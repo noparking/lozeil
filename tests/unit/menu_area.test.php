@@ -20,11 +20,11 @@ class tests_Menu_area extends TableTestCase {
 	
 	function test_show() {
 		$menu = new Menu_Area();
-		$menu->prepare_navigation("lines.php");
+		$menu->prepare_navigation("writings.php");
 		$area_html = $menu->show();
 		$this->assertPattern("/header/", $area_html);
 		$this->assertPattern("/".$GLOBALS['config']['layout_mediaserver']."medias\/images\/logo.png/", $area_html);
-		$this->assertPattern("/content=lines.php/", $area_html);
+		$this->assertPattern("/content=writings.php/", $area_html);
 		$this->assertPattern("/menu_actions_import/", $area_html);
 		$this->assertPattern("/file/", $area_html);
 	}

@@ -45,7 +45,7 @@ class Menu_Area {
 	}
 	
 	function prepare_navigation($content = "") {
-		if (preg_match("/lines.php/", $content)) {
+		if (preg_match("/writings.php/", $content)) {
 			$writings = new Writings();
 			$writings->select();
 			$this->header = $writings->show_balance_on_current_date();
@@ -53,7 +53,7 @@ class Menu_Area {
 			$data = new Writings_Data_File();
 			$grid = array();
 			
-			$grid['leaves'][0]['value'] = Html_tag::a(link_content("content=lines.php"), utf8_ucfirst(__("consulter le tableau de trésorerie")));
+			$grid['leaves'][0]['value'] = Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consulter le tableau de trésorerie")));
 			$grid['leaves'][1]['value'] = utf8_ucfirst(__("faire le suivi des factures d'achat (non implémenté)"));
 			$grid['leaves'][2]['value'] = utf8_ucfirst(__("faire le suivi des factures de ventes (non implémenté)"));
 			$grid['leaves'][3]['value'] = $data->form_import();

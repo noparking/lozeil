@@ -489,3 +489,7 @@ input[type="file"] {
 .extra .hidden_field {
 	display: inline-block;
 }
+
+.extra {
+	margin-bottom: 10px;
+}

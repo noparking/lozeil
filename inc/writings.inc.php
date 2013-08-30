@@ -202,7 +202,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"table_writings_modify\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
+							"<div class=\"table_writings_modify\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
@@ -252,7 +252,7 @@ class Writings extends Collector  {
 			} else {
 				$class = "positive_balance";
 			}
-			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=lines.php&timestamp=".$timeline_iterator),
+			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=writings.php&timestamp=".$timeline_iterator),
 					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
 					date("Y", $timeline_iterator))."<br /><br />
 					<span class=\"".$class."\">".$balance."</span>";
