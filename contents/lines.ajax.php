@@ -24,11 +24,16 @@ if (isset($_REQUEST['method'])) {
 					}
 				}
 				$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
+				if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
+					$writings_filter_value = $_SESSION['filter_value_*'];
+					$writings->filter_with(array('*' => $writings_filter_value));
+				}
 				$writings->filter_with(array('start' => $start, 'stop' => $stop));
 				$writings->select();
 				echo $writings->show();
 				break;
 			case "filter":
+				$_SESSION['filter_value_*'] = $_REQUEST['value'];
 				if (!empty($_REQUEST['value'])) {
 					$writings->filter_with(array('*' => $_REQUEST['value']));
 				}
@@ -40,6 +45,10 @@ if (isset($_REQUEST['method'])) {
 				$_SESSION['order_col_name'] = $_REQUEST['order_col_name'];
 				$_SESSION['order_direction'] = $_REQUEST['direction'];
 				$writings->filter_with(array('start' => $start, 'stop' => $stop));
+				if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
+					$writings_filter_value = $_SESSION['filter_value_*'];
+					$writings->filter_with(array('*' => $writings_filter_value));
+				}
 				$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 				$writings->select();
 				echo $writings->show();

@@ -144,7 +144,7 @@ class Writings extends Collector  {
 			$class = "";
 			$informations = $writing->show_further_information();
 			if (!empty($informations)) {
-				$class = "comment";
+				$class = "table_writings_comment";
 			}
 			$grid[$writing->id] =  array(
 					'class' => "draggable",
@@ -190,7 +190,7 @@ class Writings extends Collector  {
 						array(
 							'type' => "td",
 							'value' => $writing->form_split().
-							"<div class=\"modify\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
+							"<div class=\"table_writings_modify\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$writing->id)," ")."</div>".
 							$writing->form_duplicate().$writing->form_delete(),
 						),
 					),
@@ -209,11 +209,12 @@ class Writings extends Collector  {
 	
 	function show() {
 		$html_table = new Html_table(array('lines' => $this->grid()));
-		if (empty($_REQUEST) or (isset($_REQUEST['content']) and $_REQUEST['content'] != "lines.ajax.php")) {
-			return "<div class=\"table_accounting\">".$html_table->show()."</div>";
-		} else {
-			return $html_table->show();
-		}
+		return $html_table->show();
+	}
+	
+	function display() {
+		$html_table = new Html_table(array('lines' => $this->grid()));
+		return "<div id=\"table_writings\">".$html_table->show()."</div>";
 	}
 	
 	function show_timeline_at($timestamp) {
@@ -231,7 +232,7 @@ class Writings extends Collector  {
 			if ($timeline_iterator == $this->month) {
 				$class = "encours";
 			} 
-			$grid['leaves'][$timeline_iterator]['class'] = "timeline_month_".$class;
+			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
 			$next_month = determine_first_day_of_next_month($timeline_iterator);
 			$balance = $writings->show_balance_at($next_month);
 			if ($balance < 0) {
@@ -245,11 +246,14 @@ class Writings extends Collector  {
 					<span class=\"".$class."\">".$balance."</span>";
 			$timeline_iterator = $next_month;
 		}
-		$timeline = "<div class=\"timeline\">";
 		$list = new Html_List($grid);
-		$timeline .= $list->show()."</div>";
+		$timeline = $list->show();
 
 		return $timeline;
+	}
+	
+	function display_timeline_at($timestamp) {
+		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
 	
 	function get_where() {
@@ -293,10 +297,10 @@ class Writings extends Collector  {
 		return $keys;
 	}
 	
-	function form_filter() {
-		$form = "<div class=\"form_filter\"><form method=\"post\" name=\"duplicate_writing\" id=\"duplicate_writing\" action=\"\" enctype=\"multipart/form-data\">";
+	function form_filter($value = "") {
+		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
-		$input = new Html_Input("filter_fullsearch","");
+		$input = new Html_Input("extra_filter_writings_value",$value);
 		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "));
 		$form .= "</form></div>";
 		return $form;

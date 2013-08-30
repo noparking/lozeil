@@ -159,10 +159,10 @@ class Writing extends Record {
 	}
 	
 	function form() {
-		$form = "<div class=\"edit\"><span id=\"showform\">".utf8_ucfirst(__('show form'))."</span><span id=\"hideform\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"newform\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>";
-		$form .= "<div class=\"form_writing\">
-			<form method=\"post\" name=\"form_writing\" id=\"form_writing\" action=\"\" enctype=\"multipart/form-data\">";
+		$form = "<div id=\"edit_writings\"><span id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span><span id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
+			<span id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=lines.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>";
+		$form .= "<div class=\"edit_writings_form\">
+			<form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
 			$input_hidden = new Html_Input("action", "edit");
@@ -232,21 +232,21 @@ class Writing extends Record {
 	}
 	
 	function form_duplicate() {
-		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"duplicate_writing\" id=\"duplicate_writing\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("id", $this->id);
+		$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
-		$submit = new Html_Input("duplicate_submit", "", "submit");
-		$input_hidden_value = new Html_Input("duplicate_amount", "");
+		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
+		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
 		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
 		return $form;
 	}
 	
 	function form_delete() {
-		$form = "<div class=\"delete\"><form method=\"post\" name=\"delete_writing\" id=\"delete_writing\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("id", $this->id);
+		$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "delete");
-		$submit = new Html_Input("delete_submit", "", "submit");
+		$submit = new Html_Input("table_writings_delete_submit", "", "submit");
 		$submit->properties = array(
 			'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
 		);
@@ -256,11 +256,11 @@ class Writing extends Record {
 	}
 	
 	function form_split() {
-		$form = "<div class=\"split\"><form method=\"post\" name=\"split_writing\" id=\"split_writing\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("id", $this->id);
+		$form = "<div class=\"table_writings_split\"><form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("table_writings_split_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "split");
-		$submit = new Html_Input("split_submit", "", "submit");
-		$input_hidden_value = new Html_Input("split_amount", "");
+		$submit = new Html_Input("table_writings_split_submit", "", "submit");
+		$input_hidden_value = new Html_Input("table_writings_split_amount", "");
 		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
 		return $form;
@@ -288,7 +288,7 @@ class Writing extends Record {
 	
 	function show_further_information() {
 		if (!empty($this->information)) {
-			return "<div class=\"further_information\">".nl2br($this->information)."</div>";
+			return "<div class=\"table_writings_comment_further_information\">".nl2br($this->information)."</div>";
 		} else {
 			return "";
 		}

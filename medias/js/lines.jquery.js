@@ -1,23 +1,10 @@
 var order_direction = 0;
 var sort_by = "delay";
 
-//function refresh_balance() {
-//	$.post(
-//	"index.php?content=lines.ajax.php",
-//	{ method: "json", action: "refresh_balance_data"},
-//		function(data) {
-//			var json_decode = jQuery.parseJSON(data);
-//			$('.timeline').remove();
-//			$('.heading').prepend(json_decode.timeline);
-//			$('.balance_summary').html(json_decode.menu_balance);
-//		}
-//	);
-//}
-
 function toggle_line_information() {
-	$(".comment").on("click", function() {
-		$(".further_information").slideUp();
-		var cell = $(this).find(".further_information");
+	$(".table_writings_comment").on("click", function() {
+		$(".table_writings_comment_further_information").slideUp();
+		var cell = $(this).find(".table_writings_comment_further_information");
 		if (cell.css("display") == "none") {
 			cell.slideDown();
 		} else {
@@ -44,7 +31,7 @@ function make_droppable() {
 				{ method: "json", action: "merge", writing_from: writing_from, writing_into: writing_into, sort_by: sort_by, order_direction: order_direction },
 				function(data) {
 					refresh_balance();
-					$('.table_accounting table').html(data);
+					$('#table_writings table').html(data);
 					$("#table_" + writing_into).addClass('over').delay('3000').queue(function(next){
 						$(this).removeClass('over');
 					})
@@ -98,7 +85,7 @@ function make_draggable() {
 //
 //
 function make_split() {
-	$("input#split_submit, input#duplicate_submit").on("click", function() {
+	$("input#table_writings_split_submit, input#table_writings_duplicate_submit").on("click", function() {
 		var next = "";
 		if ($(this).next().val() == "") {
 			event.preventDefault();
@@ -107,7 +94,7 @@ function make_split() {
 			} else {
 				next = "hidden";
 			}
-		$("input#split_submit, input#duplicate_submit").next().attr("type", "hidden");
+		$("input#table_writings_split_submit, input#table_writings_duplicate_submit").next().attr("type", "hidden");
 				$(this).next().attr("type", next);
 		}
 	})
@@ -155,13 +142,13 @@ $(document).ajaxStop(function() {
 })
 
 $(document).ready(function() {
-	$("#filter_fullsearch").keyup(function() {
-		var word = $("#filter_fullsearch").val();
+	$("#extra_filter_writings_value").keyup(function() {
+		var word = $("#extra_filter_writings_value").val();
 		$.post(
 			"index.php?content=lines.ajax.php",
 			{ method: "json", action: "filter", value: word },
 			function(data){
-				$('.table_accounting table').html(data);
+				$('#table_writings table').html(data);
 			}
 		);
 	});

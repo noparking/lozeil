@@ -37,26 +37,26 @@ if (isset($_POST) and count($_POST) > 0) {
 			$writing->save();
 			break;
 		case 'delete':
-			if (isset($_POST['id'])) {
-				$writing = new Writing($_POST['id']);
+			if (isset($_POST['table_writings_delete_id'])) {
+				$writing = new Writing($_POST['table_writings_delete_id']);
 				$writing->delete();
 			}
 			break;
 		case 'split':
-			if (isset($_POST['split_amount'])) {
-				$amount = str_replace(",", ".", $_POST['split_amount']);
+			if (isset($_POST['table_writings_split_amount'])) {
+				$amount = str_replace(",", ".", $_POST['table_writings_split_amount']);
 				if (is_numeric($amount)) {
 					$writing = new Writing();
-					$writing->load((int)$_POST['id']);
+					$writing->load((int)$_POST['table_writings_split_id']);
 					$writing->split($amount);
 				}
 			}
 			break;
 		case 'duplicate':
-			if (isset($_POST['id']) and isset($_POST['duplicate_amount'])) {
+			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
 				$writing = new Writing();
-				$writing->load((int)$_POST['id']);
-				$writing->duplicate((int)$_POST['duplicate_amount']);
+				$writing->load((int)$_POST['table_writings_duplicate_id']);
+				$writing->duplicate((int)$_POST['table_writings_duplicate_amount']);
 			}
 			break;
 		default:
@@ -70,13 +70,18 @@ echo $menu->show();
 
 $writings = new Writings();
 $writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
+$writings_filter_value = "";
+if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
+	$writings_filter_value = $_SESSION['filter_value_*'];
+	$writings->filter_with(array('*' => $writings_filter_value));
+}
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 
-$heading = new Heading_Area(null, $writings->show_timeline_at($_SESSION['timestamp']), $writings->form_filter());
+$heading = new Heading_Area(null, $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value));
 echo $heading->show();
 
-echo $writings->show();
+echo $writings->display();
 
 $writing = new Writing();
 if ($selected_writing > 0) {

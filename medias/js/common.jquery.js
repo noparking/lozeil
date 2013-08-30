@@ -1,61 +1,61 @@
 $(document).ready(function() {
-	if($(".form_writing #id").attr("value") > 0) {
-		$(".form_writing").show();
-		$("#hideform").show();
-		$("#newform").show();
-		$("#showform").hide();
+	if($(".edit_writings_form #id").attr("value") > 0) {
+		$(".edit_writings_form").show();
+		$("#edit_writings_hide").show();
+		$("#edit_writings_cancel").show();
+		$("#edit_writings_show").hide();
 		var height = $(document).height();
 		document.body.scrollTop = height;
 	}
-	$(".actions").hide();
-	$(".more").on("click", function() {
+	$(".menu_actions").hide();
+	$(".menu_handle").on("click", function() {
 		if ($(this).hasClass("hide")) {
 			$(this).addClass("show");
 			$(this).removeClass("hide");
-			$(".actions").slideDown(400, function() {
-				$("#menu_more").hide();
-				$("#menu_less").show();
+			$(".menu_actions").slideDown(400, function() {
+				$("#menu_handle_hide").hide();
+				$("#menu_handle_show").show();
 			});
 		} else {
 			$(this).addClass("hide");
 			$(this).removeClass("show");
-			$(".actions").slideUp(400, function() {
-				$("#menu_less").hide();
-				$("#menu_more").show();
+			$(".menu_actions").slideUp(400, function() {
+				$("#menu_handle_show").hide();
+				$("#menu_handle_hide").show();
 			});
 		}
 	})
 	
-	$("#showform").on("click", function() {
-		$(".form_writing").slideDown(1, function() {
+	$("#edit_writings_show").on("click", function() {
+		$(".edit_writings_form").slideDown(1, function() {
 			$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 		});
 		$(this).hide();
-		$("#hideform").show();
-		$("#newform").show();
+		$("#edit_writings_hide").show();
+		$("#edit_writings_cancel").show();
 	})
 	
-	$("#hideform").on("click", function() {
-		$(".form_writing").slideUp();
+	$("#edit_writings_hide").on("click", function() {
+		$(".edit_writings_form").slideUp();
 		$(this).hide();
-		$("#showform").show();
+		$("#edit_writings_show").show();
 	})
 }).keyup(function(e) {
   if (e.keyCode == 27) {
-	  if ($(".more").hasClass("show")) {
+	  if ($(".menu_handle").hasClass("show")) {
 			$(".more").addClass("hide");
 			$(".more").removeClass("show");
-			$(".actions").slideUp(400, function() {
-				$("#menu_less").hide();
-				$("#menu_more").show();
+			$(".menu_actions").slideUp(400, function() {
+				$("#menu_handle_show").hide();
+				$("#menu_handle_hide").show();
 			});
 		}
 		$(".table_accounting input[type='text']").attr("type", "hidden");
-		$(".form_writing").slideUp();
-		$("#hideform").hide();
-		$("#newform").hide();
-		$("#showform").show();
-		$(".further_information").slideUp();
+		$(".edit_writings_form").slideUp();
+		$("#edit_writings_hide").hide();
+		$("#edit_writings_cancel").hide();
+		$("#edit_writings_show").show();
+		$(".table_writings_comment_further_information").slideUp();
   }   
 });
 
@@ -64,14 +64,14 @@ function refresh_balance() {
 		type: "POST",
 		url : "index.php?content=timeline.ajax.php"		
 	}).done(function (data) {
-		$(".timeline").remove();
-		$(".heading").prepend(data);
+		$("#heading_timeline").html(data);
 	});
 	
-	$.post(
-	"index.php?content=balance.ajax.php",
-		function(data) {
-			$('.balance_summary').html(data);
+	$.ajax({
+		type: "POST",
+		url : "index.php?content=balance.ajax.php"		
+	}).done(function (data) {
+			$('#balance').html(data);
 		}
 	);
 }

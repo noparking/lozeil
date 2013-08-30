@@ -109,7 +109,7 @@ table {
 	clear: both;
 }
 
-.table_accounting {
+#table_accounting {
 	border-radius: 4px 4px 0 0;
 	background-color: #fff;
 }
@@ -131,7 +131,7 @@ table {
 	min-width: 120px;
 }
 
-.form-split {
+.table_writings_split_amount {
 	display: inline-block;
 	margin-left: 9px;
 }
@@ -160,7 +160,7 @@ table {
 	visibility: collapse;
 }
 
-.split{
+.table_writings_split{
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
@@ -171,52 +171,52 @@ table {
 	background-position: left center;
 }
 
-.split input[type="submit"] {
+.table_writings_split input[type="submit"] {
 	cursor: pointer;
 	border: 0;
 	background: transparent;
 }
 
-.table_accounting input[type="text"] {
+#table_writings input[type="text"] {
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
 }
 
-.timeline a,
-.timeline a {
+#heading_timeline a,
+#heading_timeline a {
     color:#000;
     font-size:0.9em;
 }
 
-.timeline, .timeline ul, .timeline li, .timeline form, .timeline strong {
+#heading_timeline, #heading_timeline ul, #heading_timeline li, #heading_timeline form, #heading_timeline strong {
     float: none;
     display: inline-block;
 	vertical-align: middle;
 	text-align: center;
 }
 
-.timeline {
+#heading_timeline {
 	display: block;
     width: 95%;
     margin: 0 auto;
 	margin-top: 10px;
 }
 
-.timeline li {
+#heading_timeline li {
 	width: 70px;
 	border: #000 solid thin;
 	margin: 2px;
 	margin-bottom: 30px;
 }
 
-.timeline_month_encours {
+.heading_timeline_month_encours {
 	height: 40px;
 	font-weight: bold;
 	padding-top: 3px;
 }
 
-.timeline_month_navigation {
+.heading_timeline_month_navigation {
 	height: 37px;
 	padding-top: 3px;
 }
@@ -226,7 +226,7 @@ table {
 	width: 80px;
 }
 
-.modify, .delete, .duplicate {
+.table_writings_modify, .table_writings_delete, .table_writings_duplicate {
 	vertical-align: middle;
 	display: inline-block;
 }
@@ -251,7 +251,7 @@ table {
 	float: left;
 }
 
-.modify a {
+.table_writings_modify a {
 	display: inline-block;
 	margin-left: 5px;
 	border: 0;
@@ -263,7 +263,7 @@ table {
 	cursor: pointer;
 }
 
-.delete input[type='submit'] {
+.table_writings_delete input[type='submit'] {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
@@ -273,7 +273,7 @@ table {
 	cursor: pointer;
 }
 
-.duplicate input[type='submit'] {
+.table_writings_duplicate input[type='submit'] {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
@@ -357,19 +357,19 @@ table {
 	border:1px solid #bebebe;  
 }
 
-.header, .more, .actions {
+.menu_header, .menu_handle, .menu_actions {
 	background-color: black;
 	color: white;
 	border: solid black thin;
 }
-.balance_summary {
+#menu_header_balance {
 	margin-left: 20px;
 	margin-top: 3px;
 	position: relative;
 	display: inline-block;
 }
 
-.logo {
+#menu_header_logo {
 	margin-right: 20px;
 	position: relative;
 	display: inline-block;
@@ -377,7 +377,7 @@ table {
 	height: 17px;
 }
 
-.more {
+.menu_handle {
 	background-color: black;
 	cursor: pointer;
 	display: block;
@@ -387,16 +387,16 @@ table {
 	width: 100px;
 }
 
-.actions {
+.menu_actions {
 	display: none;
 	border: solid black thin;
 }
 
-.actions ul li {
+.menu_actions ul li {
 	list-style: circle;
 }
 
-.actions ul li a {
+.menu_actions ul li a {
 	color: white;
 	list-style: circle;
 }
@@ -405,29 +405,29 @@ table {
 	min-height: 600px;
 }
 
-.actions li {
+.menu_actions li {
 	margin-top: 12px;
 	margin-bottom: 12px;
 	list-style: circle;
 }
 
-.import .hidden_field {
+#menu_actions_import .hidden_field {
 	display: inline-block;
 }
 
-.further_information {
+.table_writings_comment_further_information {
 	font-size: 90%;
 	display: none;
 }
 
-.comment {
+.table_writings_comment {
 	background-image :  url(../images/more.png);
 	background-repeat: no-repeat;
 	background-position: right;
 	cursor: pointer;
 }
 
-#menu_less {
+#menu_handle_show {
 	display: none;
 }
 
@@ -449,31 +449,31 @@ table {
 	color: #016B01;
 }
 
-#hideform, #showform, #newform {
+#edit_writings_hide, #edit_writings_show, #edit_writings_cancel {
 	border: black thin solid;
 	cursor: pointer;
 	padding: 5px;
 }
 
-#newform {
+#edit_writings_cancel {
 	margin-left: 20px;
 	display: none;
 }
 
-#newform a{
+#edit_writings_cancel a{
 	text-decoration: none;
 	color: black;
 }
 
-#hideform:hover, #showform:hover, #newform:hover {
+#edit_writings_hide:hover, #edit_writings_show:hover, #edit_writings_cancel:hover {
 	background-color: #F6F6F6;
 }
 
-#hideform {
+#edit_writings_hide {
 	display: none;
 }
 
-.form_writing {
+.edit_writings_form {
 	margin-top: 20px;
 	display: none;
 }
@@ -482,7 +482,7 @@ input[type="file"] {
 	margin: 0 20px 0 20px;
 }
 
-.edit {
+#edit_writings {
 	padding: 15px;
 }
 

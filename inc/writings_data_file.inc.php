@@ -120,12 +120,11 @@ class Writings_Data_File {
 		$banks = new Banks();
 		$banks->select();
 		$banks_name = $banks->names();
-		$form = "<div class=\"import\"><form method=\"post\" name=\"import_writings\" id=\"import_writings\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
-		$input_hidden_action = new Html_Input("action", "import");
-		$input_file = new Html_Input("input_file", "", "file");
-		$bank = new Html_Select("bank_id", $banks_name);
-		$submit = new Html_Input("import_submit", "Ok", "submit");
-		$form .= $input_hidden_action->input_hidden().$input_file->item(utf8_ucfirst(__("importer le journal de banque"))).$bank->item(__('bank')).$submit->input();
+		$form = "<div id=\"menu_actions_import\"><form method=\"post\" name=\"menu_actions_import_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
+		$import_file = new Html_Input("menu_actions_import_file", "", "file");
+		$bank = new Html_Select("menu_actions_import_bank_id", $banks_name);
+		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
+		$form .= $import_file->item(utf8_ucfirst(__("importer le journal de banque"))).$bank->item(__('bank')).$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}

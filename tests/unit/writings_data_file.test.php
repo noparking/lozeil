@@ -262,12 +262,11 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		
 		$data = new Writings_Data_File();
 		$form_import = $data->form_import("label");
-		$this->assertPattern("/class=\"import\"/", $form_import);
+		$this->assertPattern("/id=\"menu_actions_import\"/", $form_import);
 		$this->assertPattern("/label/", $form_import);
-		$this->assertPattern("/import_writings/", $form_import);
-		$this->assertPattern("/input_file/", $form_import);
+		$this->assertPattern("/menu_actions_import_file/", $form_import);
 		$this->assertPattern("/bank_id/", $form_import);
-		$this->assertPattern("/import_submit/", $form_import);
+		$this->assertPattern("/menu_actions_import_submit/", $form_import);
 		$this->assertPattern("/Bank 1/", $form_import);
 		$this->assertPattern("/Bank 2/", $form_import);
 		
