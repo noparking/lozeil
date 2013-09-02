@@ -10,17 +10,20 @@
 
 class Writings_Data_File {
 	public $file_name = "";
+	public $tmp_name = "";
 	public $bank_id = 0;
 	public $csv_data = array();
 	
-	function __construct($file_name ="", $bank_id = null) {
+	function __construct($tmp_name ="", $bank_id = null, $file_name = "") {
+		$this->tmp_name = $tmp_name;
 		$this->file_name = $file_name;
 		$this->bank_id = $bank_id;
 		$this->csv_data = array();
 	}
 	function import_as_cic() {
-		if ($file_opened = fopen($this->file_name , 'r') ) {
+		if ($file_opened = fopen($this->tmp_name , 'r') ) {
 			$row = 0;
+			$nb_records = 0;
 
             while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
 
@@ -56,16 +59,25 @@ class Writings_Data_File {
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
+							$nb_records++;
 						}
-					} 
+					} else {
+						log_status(__('line %s of file %s is not in cic format', array(implode(' - ', $line), $this->file_name)));
+					}
 				}
+				log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+			} else {
+				log_status(__('file %s is not in cic format', array($this->file_name)));
 			}
+		} else {
+			log_status(__('can not open file')." : ".$this->file_name);
 		}
 	}
 	
 	function import_as_coop() {
-		if ($file_opened = fopen( $this->file_name , 'r') ) {
+		if ($file_opened = fopen( $this->tmp_name , 'r') ) {
 			$row = 0;
+			$nb_records = 0;
 
             while(($data = fgetcsv($file_opened, 1000, ';')) !== FALSE) {
 				foreach ($data as $key => $value) {
@@ -109,10 +121,18 @@ class Writings_Data_File {
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
+							$nb_records++;
 						}
+					} else {
+						log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
 					}
 				}
+				log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+			} else {
+				log_status(__('file %s is not in coop format', array($this->file_name)));
 			}
+		} else {
+			log_status(__('can not open file')." : ".$this->file_name);
 		}
 	}
 	

@@ -25,12 +25,9 @@ class Message {
 	static function log($message) {
 		if (isset($GLOBALS['config']['message_log']) && $GLOBALS['config']['message_log']) {
 			if (!isset($GLOBALS['content'])) {
-				$GLOBALS['content'] = "login.php";
+				$GLOBALS['content'] = "index.php";
 			}
-			if (!isset($_SESSION['username'])) {
-				$_SESSION['username'] = "";
-			}
-			$message = "[".date("d/m/Y H:i", time())."]\t".$message." (content : ".$GLOBALS['content'].") (user : ".$_SESSION['username'].")\n";
+			$message = "[".date("d/m/Y H:i:s", time())."]\t".$message." (content : ".$GLOBALS['content'].")\n";
 			$file = Message::file();
 
 			if (is_file($file) and is_writable($file)) {

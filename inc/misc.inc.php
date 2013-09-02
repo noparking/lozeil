@@ -312,3 +312,8 @@ function get_time($format,$act_time="") {
 		return date($format, $act_time);
 	}
 }
+
+function log_status($status) {
+	Message::log($status);
+	return true;
+}
