@@ -29,20 +29,20 @@ class Writings extends Collector  {
 	function get_join() {
 		$join = parent::get_join();
 		$join[] = "
-			LEFT JOIN ".$this->db->config['table_accounts']."
-			ON ".$this->db->config['table_accounts'].".id = ".$this->db->config['table_writings'].".account_id
+			LEFT JOIN ".$this->db->config['table_categories']."
+			ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id
 		";
 		$join[] = "
 			LEFT JOIN ".$this->db->config['table_sources']."
-			ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".source_id
+			ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".sources_id
 		";
 		$join[] = "
 			LEFT JOIN ".$this->db->config['table_types']."
-			ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".type_id
+			ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".types_id
 		";
 		$join[] = "
 			LEFT JOIN ".$this->db->config['table_banks']."
-			ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".bank_id
+			ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".banks_id
 		";
 		
 		return $join;
@@ -50,7 +50,7 @@ class Writings extends Collector  {
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		$columns[] = $this->db->config['table_accounts'].".name as account_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name, ".$this->db->config['table_banks'].".name as bank_name";
+		$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name, ".$this->db->config['table_banks'].".name as bank_name";
 
 		return $columns;
 	}
@@ -68,9 +68,9 @@ class Writings extends Collector  {
 					),
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("account_name"),
-						'id' => "account_name",
-						'value' => utf8_ucfirst(__("account")),
+						'class' => $this->determine_table_header_class("category_name"),
+						'id' => "category_name",
+						'value' => utf8_ucfirst(__("category")),
 					),
 					array(
 						'type' => "th",
@@ -138,9 +138,9 @@ class Writings extends Collector  {
 	}
 	
 	function grid_body() {
-		$accounts = new Accounts();
-		$accounts->select();
-		$accounts_names = $accounts->names();
+		$categories = new Categories();
+		$categories->select();
+		$categories_names = $categories->names();
 		$types = new Types();
 		$types->select();
 		$types_name = $types->names();
@@ -168,15 +168,15 @@ class Writings extends Collector  {
 						),
 						array(
 							'type' => "td",
-							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
+							'value' => isset($categories_names[$writing->categories_id]) ? $categories_names[$writing->categories_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
+							'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
 						),
 						array(
 							'type' => "td",
-							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
+							'value' => isset($types_name[$writing->types_id]) ? $types_name[$writing->types_id] : "",
 						),
 						array(
 							'type' => "td",
@@ -197,7 +197,7 @@ class Writings extends Collector  {
 						),
 						array(
 							'type' => "td",
-							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
+							'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
 						),
 						array(
 							'type' => "td",

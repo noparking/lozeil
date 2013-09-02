@@ -15,39 +15,40 @@ class tests_Writings extends TableTestCase {
 		parent::__construct();
 		$this->initializeTables(
 			"writings",
-			"accounts",
+			"categories",
 			"types",
-			"sources"
+			"sources",
+			"banks"
 		);
 	}
 	
 	function test_get_join() {
 		$writings = new Writings();
 		$join = $writings->get_join();
-		$this->assertPattern("/LEFT JOIN accounts/", $join[0]);
-		$this->assertPattern("/ON accounts.id = writings.account_id/", $join[0]);
+		$this->assertPattern("/LEFT JOIN categories/", $join[0]);
+		$this->assertPattern("/ON categories.id = writings.categories_id/", $join[0]);
 		$this->assertPattern("/LEFT JOIN sources/", $join[1]);
-		$this->assertPattern("/ON sources.id = writings.source_id/", $join[1]);
+		$this->assertPattern("/ON sources.id = writings.sources_id/", $join[1]);
 		$this->assertPattern("/LEFT JOIN types/", $join[2]);
-		$this->assertPattern("/ON types.id = writings.type_id/", $join[2]);
-		$this->assertPattern("/ON sources.id = writings.source_id/", $join[1]);
+		$this->assertPattern("/ON types.id = writings.types_id/", $join[2]);
+		$this->assertPattern("/ON sources.id = writings.sources_id/", $join[1]);
 		$this->assertPattern("/LEFT JOIN banks/", $join[3]);
-		$this->assertPattern("/ON banks.id = writings.bank_id/", $join[3]);
+		$this->assertPattern("/ON banks.id = writings.banks_id/", $join[3]);
 	}
 	
 	function test_get_columns() {
 		$writings = new Writings();
 		$columns = $writings->get_columns();
 		$this->assertPattern("/`writings`.*/", $columns[0]);
-		$this->assertPattern("/accounts.name as account_name, sources.name as source_name, types.name as type_name, banks.name as bank_name/", $columns[1]);
+		$this->assertPattern("/categories.name as category_name, sources.name as source_name, types.name as type_name, banks.name as bank_name/", $columns[1]);
 	}
 	
 	function test_show() {
 		$_SESSION['timestamp'] = mktime(0, 0, 0, 7, 1, 2013);
 		list($start, $stop) = determine_month($_SESSION['timestamp']);
-		$account = new Account();
-		$account->name = "Account 1";
-		$account->save();
+		$category = new Category();
+		$category->name = "Category 1";
+		$category->save();
 		$bank = new Bank();
 		$bank->name = "Bank 1";
 		$bank->save();
@@ -57,9 +58,9 @@ class tests_Writings extends TableTestCase {
 		$type = new Type();
 		$type->name = "Type 1";
 		$type->save();
-		$account2 = new Account();
-		$account2->name = "Account 2";
-		$account2->save();
+		$category2 = new Category();
+		$category2->name = "Category 2";
+		$category2->save();
 		$bank2 = new Bank();
 		$bank2->name = "Bank 2";
 		$bank2->save();
@@ -71,54 +72,54 @@ class tests_Writings extends TableTestCase {
 		$type2->save();
 		
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
-		$writing->bank_id = 1;
+		$writing->banks_id = 1;
 		$writing->comment = "Ceci est un test";
 		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->source_id = 1;
-		$writing->type_id = 1;
+		$writing->sources_id = 1;
+		$writing->types_id = 1;
 		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		
 		$writing2 = new Writing();
-		$writing2->account_id = 2;
+		$writing2->categories_id = 2;
 		$writing2->amount_excl_vat = 90.50;
 		$writing2->amount_inc_vat = 100;
-		$writing2->bank_id = 2;
+		$writing2->banks_id = 2;
 		$writing2->comment = "Ceci est un autre élément du test";
 		$writing2->day = mktime(10, 0, 0, 7, 10, 2013);
 		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
-		$writing2->source_id = 2;
-		$writing2->type_id = 2;
+		$writing2->sources_id = 2;
+		$writing2->types_id = 2;
 		$writing2->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing2->vat = 5.5;
 		$writing2->save();
 		
 		$writing3 = new Writing();
-		$writing3->account_id = 1;
+		$writing3->categories_id = 1;
 		$writing3->amount_excl_vat = 190.50;
 		$writing3->amount_inc_vat = 250;
 		$writing3->paid = 0;
-		$writing3->type_id = 2;
+		$writing3->types_id = 2;
 		$writing3->vat = 5.5;
-		$writing3->source_id = 2;
+		$writing3->sources_id = 2;
 		$writing3->day = strtotime('+1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing3->save();
 		
 		$writing4 = new Writing();
-		$writing4->account_id = 1;
+		$writing4->categories_id = 1;
 		$writing4->amount_excl_vat = 250;
 		$writing4->amount_inc_vat = 279;
 		$writing4->paid = 0;
-		$writing4->type_id = 1;
+		$writing4->types_id = 1;
 		$writing4->vat = 5.5;
-		$writing4->source_id = 2;
+		$writing4->sources_id = 2;
 		$writing4->day = strtotime('-1 months', mktime(10, 0, 0, 7, 29, 2013));
 		$writing4->save();
 		
@@ -133,7 +134,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);
 		$this->assertPattern("/Type 1/", $table);
-		$this->assertPattern("/Account 1/", $table);
+		$this->assertPattern("/Category 1/", $table);
 		$this->assertPattern("/Ceci est un test/", $table);
 		$this->assertPattern("/Autre complément d'infos/", $table);
 		$this->assertNoPattern("/e50b79ffaccc6b50d018aad432711418/", $table);
@@ -171,7 +172,7 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
 		$this->truncateTable("types");
-		$this->truncateTable("accounts");
+		$this->truncateTable("categories");
 		$this->truncateTable("banks");
 	}
 	

@@ -8,15 +8,13 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-class Accounts extends Collector  {
+class Categories extends Collector  {
 	public $filters = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
-		if ($class === null) {
-			$class = substr(__CLASS__, 0, -1);
-		}
+		$class = "Category";
 		if ($table === null) {
-			$table = $GLOBALS['dbconfig']['table_accounts'];
+			$table = $GLOBALS['dbconfig']['table_categories'];
 		}
 		if ($db === null) {
 			$db = new db();
@@ -27,8 +25,8 @@ class Accounts extends Collector  {
 	function names() {
 		$names = array();
 		$names[0] = "--";
-		foreach ($this as $account) {
-			$names[$account->id] = $account->name();
+		foreach ($this as $category) {
+			$names[$category->id] = $category->name();
 		}
 		return $names;
 	}

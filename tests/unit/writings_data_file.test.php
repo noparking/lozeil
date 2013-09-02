@@ -132,7 +132,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array(
 				'id' => 1,
 				'amount_inc_vat' => "152.2000000",
-				'bank_id' => 1,
+				'banks_id' => 1,
 				'comment' => "test de libellé",
 				'day' => mktime(0, 0, 0, 7, 1, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 1, 2013)."test de libellé"."1"."152.2")
@@ -143,7 +143,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array(
 				'id' => 2,
 				'amount_inc_vat' => "-120.5000000",
-				'bank_id' => 1,
+				'banks_id' => 1,
 				'comment' => "test de libellé 2",
 				'day' => mktime(0, 0, 0, 7, 4, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."test de libellé 2"."1"."-120.5")
@@ -154,7 +154,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array(
 				'id' => 3,
 				'amount_inc_vat' => "-120.5000000",
-				'bank_id' => 1,
+				'banks_id' => 1,
 				'comment' => "",
 				'day' => mktime(0, 0, 0, 7, 4, 2013),
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
@@ -204,7 +204,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array(
 				'id' => 1,
 				'amount_inc_vat' => "-152.200000",
-				'bank_id' => 2,
+				'banks_id' => 2,
 				'comment' => "libellé 1",
 				'day' => mktime(0, 0, 0, 7, 2, 2013),
 				'information' => "LibellÃ© complÃ©mentaire : libellÃ© complÃ©mentaire 1
@@ -233,7 +233,7 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 			array(
 				'id' => 2,
 				'amount_inc_vat' => "152.200000",
-				'bank_id' => 2,
+				'banks_id' => 2,
 				'day' => mktime(0, 0, 0, 7, 3, 2013),
 				)
 		);

@@ -14,7 +14,7 @@ class tests_Writing extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"accounts",
+			"categories",
 			"sources",
 			"types",
 			"writings",
@@ -24,33 +24,33 @@ class tests_Writing extends TableTestCase {
 	
 	function test_save_load() {
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
-		$writing->bank_id = 2;
+		$writing->banks_id = 2;
 		$writing->comment = "Ceci est un test";
 		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->source_id = 2;
-		$writing->type_id = 1;
+		$writing->sources_id = 2;
+		$writing->types_id = 1;
 		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
 		$writing_loaded->id = 1;
 		$writing_loaded->load();
-		$this->assertEqual($writing_loaded->account_id, $writing->account_id);
+		$this->assertEqual($writing_loaded->categories_id, $writing->categories_id);
 		$this->assertEqual($writing_loaded->amount_excl_vat, $writing->amount_excl_vat);
 		$this->assertEqual($writing_loaded->amount_inc_vat, $writing->amount_inc_vat);
-		$this->assertEqual($writing_loaded->bank_id, $writing->bank_id);
+		$this->assertEqual($writing_loaded->banks_id, $writing->banks_id);
 		$this->assertEqual($writing_loaded->comment, $writing->comment);
 		$this->assertEqual($writing_loaded->day, $writing->day);
 		$this->assertEqual($writing_loaded->id, $writing->id);
 		$this->assertEqual($writing_loaded->information, $writing->information);
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
-		$this->assertEqual($writing_loaded->source_id, $writing->source_id);
-		$this->assertEqual($writing_loaded->type_id, $writing->type_id);
+		$this->assertEqual($writing_loaded->sources_id, $writing->sources_id);
+		$this->assertEqual($writing_loaded->types_id, $writing->types_id);
 		$this->assertEqual($writing_loaded->unique_key, $writing->unique_key);
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
 		$this->truncateTable("writings");
@@ -58,52 +58,52 @@ class tests_Writing extends TableTestCase {
 	
 	function test_update() {
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
-		$writing->bank_id = 2;
+		$writing->banks_id = 2;
 		$writing->comment = "Ceci est un test";
 		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->source_id = 2;
-		$writing->type_id = 1;
+		$writing->sources_id = 2;
+		$writing->types_id = 1;
 		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
 		$writing_loaded->id = 1;
 		$writing_loaded->load();
-		$writing_loaded->account_id = 2;
+		$writing_loaded->categories_id = 2;
 		$writing_loaded->amount_excl_vat = 19.50;
 		$writing_loaded->amount_inc_vat = 25;
-		$writing_loaded->bank_id = 3;
+		$writing_loaded->banks_id = 3;
 		$writing_loaded->comment = "Ceci est un autre test";
 		$writing_loaded->day = mktime(10, 30, 0, 7, 29, 2013);
 		$writing_loaded->information = "Autre complément d'infos";
 		$writing_loaded->paid = 1;
-		$writing_loaded->source_id = 1;
-		$writing_loaded->type_id = 2;
+		$writing_loaded->sources_id = 1;
+		$writing_loaded->types_id = 2;
 		$writing_loaded->vat = 5.5;
 		$writing_loaded->save();
-		$this->assertEqual($writing_loaded->account_id, 2);
+		$this->assertEqual($writing_loaded->categories_id, 2);
 		$this->assertEqual($writing_loaded->amount_excl_vat, 19.5);
 		$this->assertEqual($writing_loaded->amount_inc_vat, 25);
-		$this->assertEqual($writing_loaded->bank_id, 3);
+		$this->assertEqual($writing_loaded->banks_id, 3);
 		$this->assertEqual($writing_loaded->comment, "Ceci est un autre test");
 		$this->assertEqual($writing_loaded->day, mktime(10, 30, 0, 7, 29, 2013));
 		$this->assertEqual($writing_loaded->id, 1);
 		$this->assertEqual($writing_loaded->information, "Autre complément d'infos");
 		$this->assertEqual($writing_loaded->paid, 1);
-		$this->assertEqual($writing_loaded->source_id, 1);
-		$this->assertEqual($writing_loaded->type_id, 2);
+		$this->assertEqual($writing_loaded->sources_id, 1);
+		$this->assertEqual($writing_loaded->types_id, 2);
 		$this->assertEqual($writing_loaded->vat, 5.5);
 		$this->truncateTable("writings");
 	}
 	
 	function test_delete() {
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->save();
 		
 		$this->assertTrue($writing->load());
@@ -116,28 +116,28 @@ class tests_Writing extends TableTestCase {
 	
 	function test_merge_from() {
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
 		$writing->comment = "Ceci est un test";
 		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->source_id = 2;
-		$writing->type_id = 1;
+		$writing->sources_id = 2;
+		$writing->types_id = 1;
 		$writing->vat = 19.6;
 		
 		$writing_to_merge = new Writing();
 		$writing_to_merge->id = 1;
-		$writing_to_merge->account_id = 2;
+		$writing_to_merge->categories_id = 2;
 		$writing_to_merge->amount_excl_vat = 19.50;
 		$writing_to_merge->amount_inc_vat = 25;
 		$writing_to_merge->comment = "Ceci est un autre test";
 		$writing_to_merge->day = mktime(10, 0, 0, 8, 26, 2013);
 		$writing_to_merge->information = "Autre complément d'infos";
 		$writing_to_merge->paid = 1;
-		$writing_to_merge->source_id = 1;
-		$writing_to_merge->type_id = 2;
+		$writing_to_merge->sources_id = 1;
+		$writing_to_merge->types_id = 2;
 		$writing_to_merge->vat = 5.5;
 		$writing_to_merge->search_index = $writing_to_merge->search_index();
 		
@@ -146,41 +146,41 @@ class tests_Writing extends TableTestCase {
 		$this->assertIdentical($writing_to_merge, $writing);
 		
 		$writing_to_merge_2 = new Writing();
-		$writing_to_merge_2->account_id = NULL;
+		$writing_to_merge_2->categories_id = NULL;
 		$writing_to_merge_2->amount_excl_vat = NULL;
 		$writing_to_merge_2->amount_inc_vat = NULL;
 		$writing_to_merge_2->comment = NULL;
 		$writing_to_merge_2->day = NULL;
 		$writing_to_merge_2->information = NULL;
 		$writing_to_merge_2->paid = NULL;
-		$writing_to_merge_2->source_id = NULL;
-		$writing_to_merge_2->type_id = NULL;
+		$writing_to_merge_2->sources_id = NULL;
+		$writing_to_merge_2->types_id = NULL;
 		$writing_to_merge_2->vat = NULL;
 		
 		$writing->merge_from($writing_to_merge_2);
 		
 		$this->assertIdentical($writing_to_merge, $writing);
 		
-		$writing_to_merge_2->account_id = 0;
+		$writing_to_merge_2->categories_id = 0;
 		$writing_to_merge_2->amount_excl_vat = 0;
 		$writing_to_merge_2->amount_inc_vat = 0;
 		$writing_to_merge_2->comment = "";
 		$writing_to_merge_2->day = 0;
 		$writing_to_merge_2->information = "";
 		$writing_to_merge_2->paid = 0;
-		$writing_to_merge_2->source_id = 0;
-		$writing_to_merge_2->type_id = 0;
+		$writing_to_merge_2->sources_id = 0;
+		$writing_to_merge_2->types_id = 0;
 		$writing_to_merge_2->vat = 0;
 		
 		$writing_to_merge_3 = new Writing();
 		$writing_to_merge_3->id = 1;
-		$writing_to_merge_3->account_id = 2;
+		$writing_to_merge_3->categories_id = 2;
 		$writing_to_merge_3->amount_excl_vat = 0;
 		$writing_to_merge_3->amount_inc_vat = 0;
 		$writing_to_merge_3->day = 0;
 		$writing_to_merge_3->paid = 0;
-		$writing_to_merge_3->source_id = 1;
-		$writing_to_merge_3->type_id = 2;
+		$writing_to_merge_3->sources_id = 1;
+		$writing_to_merge_3->types_id = 2;
 		$writing_to_merge_3->vat = 0;
 		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
@@ -190,13 +190,13 @@ class tests_Writing extends TableTestCase {
 		$this->truncateTable("writings");
 		
 		$writing = new Writing();
-		$writing->account_id = "1";
-		$writing->bank_id = 1;
+		$writing->categories_id = "1";
+		$writing->banks_id = 1;
 		$writing->save();
 		
 		$writing2 = new Writing();
-		$writing2->account_id = "2";
-		$writing2->bank_id = 2;
+		$writing2->categories_id = "2";
+		$writing2->banks_id = 2;
 		$writing2->save();
 		
 		$writing->merge_from($writing2);
@@ -205,37 +205,37 @@ class tests_Writing extends TableTestCase {
 		$writing2_loaded = new Writing();
 		$this->assertTrue($writing2_loaded->load(2));
 		$this->assertTrue($writing_loaded->load(1));
-		$this->assertTrue($writing2_loaded->account_id == $writing2->account_id);
-		$this->assertTrue($writing2_loaded->bank_id == $writing2->bank_id);
-		$this->assertTrue($writing_loaded->account_id == $writing->account_id);
-		$this->assertTrue($writing_loaded->bank_id == $writing->bank_id);
+		$this->assertTrue($writing2_loaded->categories_id == $writing2->categories_id);
+		$this->assertTrue($writing2_loaded->banks_id == $writing2->banks_id);
+		$this->assertTrue($writing_loaded->categories_id == $writing->categories_id);
+		$this->assertTrue($writing_loaded->banks_id == $writing->banks_id);
 		
 		$this->truncateTable("writings");
 		
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
-		$writing->bank_id = 4;
+		$writing->banks_id = 4;
 		$writing->comment = "Ceci est un test";
 		$writing->day = mktime(10, 0, 0, 7, 29, 2013);
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
-		$writing->source_id = 2;
-		$writing->type_id = 1;
+		$writing->sources_id = 2;
+		$writing->types_id = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		
 		$writing2 = new Writing();
-		$writing2->account_id = 2;
+		$writing2->categories_id = 2;
 		$writing2->amount_excl_vat = 19.50;
 		$writing2->amount_inc_vat = 25;
 		$writing2->comment = "Ceci est un autre test";
 		$writing2->day = mktime(10, 0, 0, 8, 26, 2013);
 		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
-		$writing2->source_id = 1;
-		$writing2->type_id = 2;
+		$writing2->sources_id = 1;
+		$writing2->types_id = 2;
 		$writing2->vat = 5.5;
 		$writing2->save();
 		
@@ -245,16 +245,16 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing2_loaded->load(1));
 		$this->assertFalse($writing_loaded->load(2));
 		
-		$this->assertEqual($writing2_loaded->account_id, 1);
+		$this->assertEqual($writing2_loaded->categories_id, 1);
 		$this->assertEqual($writing2_loaded->amount_excl_vat, 190.50);
 		$this->assertEqual($writing2_loaded->amount_inc_vat, 250);
-		$this->assertEqual($writing2_loaded->bank_id, 4);
+		$this->assertEqual($writing2_loaded->banks_id, 4);
 		$this->assertEqual($writing2_loaded->comment, "Ceci est un test");
 		$this->assertEqual($writing2_loaded->day, mktime(10, 0, 0, 7, 29, 2013));
 		$this->assertEqual($writing2_loaded->information, "Complément d'infos");
 		$this->assertEqual($writing2_loaded->paid, 0);
-		$this->assertEqual($writing2_loaded->source_id, 2);
-		$this->assertEqual($writing2_loaded->type_id, 1);
+		$this->assertEqual($writing2_loaded->sources_id, 2);
+		$this->assertEqual($writing2_loaded->types_id, 1);
 		$this->assertEqual($writing2_loaded->vat, 19.6);
 		
 		$this->truncateTable("writings");
@@ -262,16 +262,16 @@ class tests_Writing extends TableTestCase {
 	
 	function test_split() {
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 167.22;
 		$writing->amount_inc_vat = 200;
-		$writing->bank_id = 2;
+		$writing->banks_id = 2;
 		$writing->comment = "Ceci est un commentaire";
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->information = "Informations";
 		$writing->paid = 0;
-		$writing->source_id = 2;
-		$writing->type_id = 1;
+		$writing->sources_id = 2;
+		$writing->types_id = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -280,27 +280,27 @@ class tests_Writing extends TableTestCase {
 		$writing_splited->load(2);
 		$this->assertEqual($writing->amount_inc_vat, -50);
 		$this->assertEqual($writing->amount_excl_vat, -41.806020);
-		$this->assertEqual($writing_splited->account_id, 1);
+		$this->assertEqual($writing_splited->categories_id, 1);
 		$this->assertEqual($writing_splited->amount_excl_vat, 209.030100);
 		$this->assertEqual($writing_splited->amount_inc_vat, 250);
-		$this->assertEqual($writing_splited->bank_id, 2);
+		$this->assertEqual($writing_splited->banks_id, 2);
 		$this->assertEqual($writing_splited->comment, "Ceci est un commentaire");
 		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		$this->assertEqual($writing_splited->paid, 0);
-		$this->assertEqual($writing_splited->source_id, 2);
-		$this->assertEqual($writing_splited->type_id, 1);
+		$this->assertEqual($writing_splited->sources_id, 2);
+		$this->assertEqual($writing_splited->types_id, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
 		
 		$this->truncateTable("writings");
 		
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 188.13;
 		$writing->amount_inc_vat = 225;
 		$writing->paid = 0;
-		$writing->type_id = 1;
+		$writing->types_id = 1;
 		$writing->vat = 19.6;
-		$writing->source_id = 2;
+		$writing->sources_id = 2;
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->save();
 		
@@ -309,13 +309,13 @@ class tests_Writing extends TableTestCase {
 		$writing_splited->load(2);
 		$this->assertEqual($writing->amount_inc_vat, 0);
 		$this->assertEqual($writing->amount_excl_vat, 0);
-		$this->assertEqual($writing_splited->account_id, 1);
+		$this->assertEqual($writing_splited->categories_id, 1);
 		$this->assertEqual($writing_splited->amount_excl_vat, 188.127090);
 		$this->assertEqual($writing_splited->amount_inc_vat, 225);
 		$this->assertEqual($writing_splited->paid, 0);
-		$this->assertEqual($writing_splited->type_id, 1);
+		$this->assertEqual($writing_splited->types_id, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
-		$this->assertEqual($writing_splited->source_id, 2);
+		$this->assertEqual($writing_splited->sources_id, 2);
 		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		
 		$this->truncateTable("writings");
@@ -329,9 +329,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/<option value=\"0\" selected=\"selected\">--<\/option>/", $form);
 		$this->assertPattern("/value=\"insert\"/", $form);
 		$this->assertNoPattern("/value=\"edit\"/", $form);
-		$account = new Account();
-		$account->name = "Account 1";
-		$account->save();
+		$category = new Category();
+		$category->name = "Category 1";
+		$category->save();
 		$bank = new Bank();
 		$bank->name = "Bank 1";
 		$bank->save();
@@ -342,14 +342,14 @@ class tests_Writing extends TableTestCase {
 		$type->name = "Type 1";
 		$type->save();
 		$writing = new Writing();
-		$writing->account_id = 1;
+		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 167.22;
 		$writing->amount_inc_vat = 200;
-		$writing->bank_id = 1;
+		$writing->banks_id = 1;
 		$writing->comment = "Ceci est un commentaire";
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
-		$writing->source_id = 1;
-		$writing->type_id = 1;
+		$writing->sources_id = 1;
+		$writing->types_id = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing->load(1);
@@ -359,7 +359,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Type 1<\/option>/", $form);
 		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Source 1<\/option>/", $form);
 		$this->assertNoPattern("/<option value=\"1\" selected=\"selected\">Bank 1<\/option>/", $form);
-		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Account 1<\/option>/", $form);
+		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Category 1<\/option>/", $form);
 		$this->assertPattern("/value=\"167.220000\"/", $form);
 		$this->assertPattern("/value=\"200.000000\"/", $form);
 		$this->assertPattern("/value=\"19.60\"/", $form);
@@ -370,7 +370,7 @@ class tests_Writing extends TableTestCase {
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
 		$this->truncateTable("types");
-		$this->truncateTable("accounts");
+		$this->truncateTable("categories");
 		$this->truncateTable("banks");
 	}
 	

@@ -10,7 +10,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "2";
+$config['version'] = "3";
 
 $config['root_url'] = "";		// adresse - de type URL - de l'application. Note : ne pas mettre de slash à la fin.
 
@@ -30,3 +30,4 @@ $dbconfig['table_sources'] = "sources";
 $dbconfig['table_types'] = "types";
 $dbconfig['table_writings'] = "writings";
 $dbconfig['table_banks'] = "banks";
+$dbconfig['table_categories'] = "categories";

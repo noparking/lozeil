@@ -9,18 +9,18 @@
 */
 
 class Writing extends Record {
-	public $account_id = 0;
+	public $categories_id = 0;
 	public $amount_excl_vat = 0;
 	public $amount_inc_vat = 0;
-	public $bank_id = 0;
+	public $banks_id = 0;
 	public $comment = "";
 	public $day = 0;
 	public $id = 0;
 	public $information = "";
 	public $paid = 0;
 	public $search_index = "";
-	public $source_id = 0;
-	public $type_id = 0;
+	public $sources_id = 0;
+	public $types_id = 0;
 	public $unique_key = "";
 	public $vat = 0;
 	
@@ -37,14 +37,14 @@ class Writing extends Record {
 	
 	function search_index() {
 		$bank = new Bank();
-		$bank->load($this->bank_id);
+		$bank->load($this->banks_id);
 		$source = new Source();
-		$source->load($this->source_id);
+		$source->load($this->sources_id);
 		$type = new Type();
-		$type->load($this->type_id);
-		$account = new Account();
-		$account->load($this->account_id);
-		return $this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$account->name." ".$type->name;
+		$type->load($this->types_id);
+		$category = new Category();
+		$category->load($this->categories_id);
+		return $this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name." ".$type->name;
 	}
 	
 	function load($id = null) {
@@ -81,11 +81,11 @@ class Writing extends Record {
 	
 	function update() {
 		$query = "UPDATE ".$this->db->config['table_writings'].
-		" SET account_id = ".(int)$this->account_id.",
-		bank_id = ".(int)$this->bank_id.",
-		source_id = ".(int)$this->source_id.",
+		" SET categories_id = ".(int)$this->categories_id.",
+		banks_id = ".(int)$this->banks_id.",
+		sources_id = ".(int)$this->sources_id.",
 		amount_inc_vat = ".$this->amount_inc_vat.",
-		type_id  = ".(int)$this->type_id.",
+		types_id  = ".(int)$this->types_id.",
 		vat = ".$this->vat.",
 		amount_excl_vat = ".$this->amount_excl_vat.",
 		comment = ".$this->db->quote($this->comment).",
@@ -105,11 +105,11 @@ class Writing extends Record {
 	function insert() {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_writings']."
-			SET account_id = ".(int)$this->account_id.",
-			bank_id = ".(int)$this->bank_id.",
-			source_id = ".(int)$this->source_id.",
+			SET categories_id = ".(int)$this->categories_id.",
+			banks_id = ".(int)$this->banks_id.",
+			sources_id = ".(int)$this->sources_id.",
 			amount_inc_vat = ".$this->amount_inc_vat.",
-			type_id  = ".(int)$this->type_id.",
+			types_id  = ".(int)$this->types_id.",
 			vat = ".$this->vat.",
 			amount_excl_vat = ".$this->amount_excl_vat.",
 			comment = ".$this->db->quote($this->comment).",
@@ -126,34 +126,34 @@ class Writing extends Record {
 	}
 	
 	function merge_from(Writing $to_merge) {
-		if ( $this->bank_id == 0 or $to_merge->bank_id == 0 ) {
-			if ($this->bank_id != 0) {
-				$this->account_id = (isset($this->account_id) and $this->account_id > 0) ? (int)$this->account_id : $to_merge->account_id;
-				$this->bank_id = (isset($this->bank_id) and $this->bank_id > 0) ? (int)$this->bank_id : $to_merge->bank_id;
-				$this->source_id = (isset($this->source_id) and $this->source_id > 0) ? (int)$this->source_id : $to_merge->source_id;
+		if ( $this->banks_id == 0 or $to_merge->banks_id == 0 ) {
+			if ($this->banks_id != 0) {
+				$this->categories_id = (isset($this->categories_id) and $this->categories_id > 0) ? (int)$this->categories_id : $to_merge->categories_id;
+				$this->banks_id = (isset($this->banks_id) and $this->banks_id > 0) ? (int)$this->banks_id : $to_merge->banks_id;
+				$this->sources_id = (isset($this->sources_id) and $this->sources_id > 0) ? (int)$this->sources_id : $to_merge->sources_id;
 				$this->amount_excl_vat = isset($this->amount_excl_vat) ? $this->amount_excl_vat : $to_merge->amount_excl_vat;
 				$this->amount_inc_vat = isset($this->amount_inc_vat) ? $this->amount_inc_vat : $to_merge->amount_inc_vat;
 				$this->comment = isset($this->comment) ? $this->comment : $to_merge->comment;
 				$this->day = isset($this->day) ? $this->day : $to_merge->day;
 				$this->information = isset($this->information) ? $this->information : $to_merge->information;
 				$this->vat = isset($this->vat) ? $this->vat : $to_merge->vat;
-				$this->type_id = (isset($this->type_id) and $this->type_id > 0) ? $this->type_id : $to_merge->type_id;
+				$this->types_id = (isset($this->types_id) and $this->types_id > 0) ? $this->types_id : $to_merge->types_id;
 				$this->paid = isset($this->paid) ? $this->paid : $to_merge->paid;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
 				$this->save();
 				$to_merge->delete();
 			} else {
-				$this->account_id = (isset($to_merge->account_id) and $to_merge->account_id > 0) ? (int)$to_merge->account_id : $this->account_id;
-				$this->bank_id = (isset($to_merge->bank_id) and $to_merge->bank_id > 0) ? (int)$to_merge->bank_id : $this->bank_id;
-				$this->source_id = (isset($to_merge->source_id) and $to_merge->source_id > 0) ? (int)$to_merge->source_id : $this->source_id;
+				$this->categories_id = (isset($to_merge->categories_id) and $to_merge->categories_id > 0) ? (int)$to_merge->categories_id : $this->categories_id;
+				$this->banks_id = (isset($to_merge->banks_id) and $to_merge->banks_id > 0) ? (int)$to_merge->banks_id : $this->banks_id;
+				$this->sources_id = (isset($to_merge->sources_id) and $to_merge->sources_id > 0) ? (int)$to_merge->sources_id : $this->sources_id;
 				$this->amount_excl_vat = isset($to_merge->amount_excl_vat) ? $to_merge->amount_excl_vat : $this->amount_excl_vat;
 				$this->amount_inc_vat = isset($to_merge->amount_inc_vat) ? $to_merge->amount_inc_vat : $this->amount_inc_vat;
 				$this->comment = isset($to_merge->comment) ? $to_merge->comment : $this->comment;
 				$this->day = isset($to_merge->day) ? $to_merge->day : $this->day;
 				$this->information = isset($to_merge->information) ? $to_merge->information : $this->information;
 				$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
-				$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
+				$this->types_id = (isset($to_merge->types_id) and $to_merge->types_id > 0) ? $to_merge->types_id : $this->types_id;
 				$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
@@ -205,9 +205,9 @@ class Writing extends Record {
 			$date = (int)$_SESSION['timestamp'];
 		}
 		
-		$accounts = new Accounts();
-		$accounts->select();
-		$accounts_name = $accounts->names();
+		$categories = new Categories();
+		$categories->select();
+		$categories_name = $categories->names();
 		$types = new Types();
 		$types->select();
 		$types_name = $types->names();
@@ -217,9 +217,9 @@ class Writing extends Record {
 		
 		$datepicker = new Html_Input_Date("datepicker");
 		$datepicker->value = $date;
-		$account = new Html_Select("account_id", $accounts_name, $this->account_id);
-		$source = new Html_Select("source_id", $sources_name, $this->source_id);
-		$type = new Html_Select("type_id", $types_name, $this->type_id);
+		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
+		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
+		$type = new Html_Select("types_id", $types_name, $this->types_id);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
@@ -234,8 +234,8 @@ class Writing extends Record {
 				'date' => array(
 					'value' => $datepicker->item(__('day')),
 				),
-				'account' => array(
-					'value' => $account->item(__('account')),
+				'category' => array(
+					'value' => $category->item(__('category')),
 				),
 				'source' => array(
 					'value' => $source->item(__('source')),
@@ -261,8 +261,8 @@ class Writing extends Record {
 				'submit' => array(
 					'value' => $submit->item(""),
 				),
-				'account' => array(
-					'value' => $account->item(__('account')),
+				'category' => array(
+					'value' => $category->item(__('category')),
 				),
 			)
 		);
@@ -276,7 +276,7 @@ class Writing extends Record {
 	}
 	
 	function form_duplicate() {
-		if ($this->bank_id > 0) {
+		if ($this->banks_id > 0) {
 			return "<div class=\"table_writings_duplicate disabled\"></div>";
 		} else {
 			$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
@@ -291,7 +291,7 @@ class Writing extends Record {
 	}
 	
 	function form_delete() {
-		if ($this->bank_id > 0) {
+		if ($this->banks_id > 0) {
 			return "<div class=\"table_writings_delete disabled\"></div>";
 		} else {
 			$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
@@ -319,7 +319,7 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		if ($this->bank_id > 0) {
+		if ($this->banks_id > 0) {
 			return "<div class=\"table_writings_modify disabled\"></div>";
 		} else {
 			return "<div class=\"table_writings_modify\">".

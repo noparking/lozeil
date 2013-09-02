@@ -18,12 +18,12 @@ require $current_directory."/collector.inc.php";
 require $current_directory."/db.inc.php";
 require $current_directory."/record.inc.php";
 
-require $current_directory."/account.inc.php";
-require $current_directory."/accounts.inc.php";
 require $current_directory."/adodb-time.inc.php";
 require $current_directory."/bank.inc.php";
 require $current_directory."/banks.inc.php";
 require $current_directory."/bot.inc.php";
+require $current_directory."/categories.inc.php";
+require $current_directory."/category.inc.php";
 require $current_directory."/config_file.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/heading_area.inc.php";

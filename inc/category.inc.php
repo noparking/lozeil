@@ -8,7 +8,7 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-class Account extends Record {
+class Category extends Record {
 	public $id = 0;
 	public $name = "";
 	
@@ -31,7 +31,7 @@ class Account extends Record {
 			if ($id === null) {
 				$id = $this->id;
 			}
-			return parent::load($this->db->config['table_accounts'], array('id' => (int)$id));
+			return parent::load($this->db->config['table_categories'], array('id' => (int)$id));
 		}
 	}
 	
@@ -48,31 +48,31 @@ class Account extends Record {
 	
 	function insert() {
 		$result = $this->db->id("
-			INSERT INTO ".$this->db->config['table_accounts']."
+			INSERT INTO ".$this->db->config['table_categories']."
 			SET name = ".$this->db->quote($this->name)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('account'));
+		$this->db->status($result[1], "u", __('category'));
 
 		return $this->id;
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_accounts'].
+		$query = "UPDATE ".$this->db->config['table_categories'].
 		" SET name = ".$this->db->quote($this->name)."
 		WHERE id = ".(int)$this->id;
 		$result = $this->db->query($query);
-		$this->db->status($result[1], "u", __('account'));
+		$this->db->status($result[1], "u", __('category'));
 
 		return $this->id;
 	}
 
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_accounts'].
+		$query = "DELETE FROM ".$this->db->config['table_categories'].
 		" WHERE id = '".$this->id."'";
 		$result = $this->db->query($query);
-		$this->db->status($result[1], "u", __('account'));
+		$this->db->status($result[1], "u", __('category'));
 
 		return $this->id;
 	}

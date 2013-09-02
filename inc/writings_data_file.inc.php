@@ -11,13 +11,13 @@
 class Writings_Data_File {
 	public $file_name = "";
 	public $tmp_name = "";
-	public $bank_id = 0;
+	public $banks_id = 0;
 	public $csv_data = array();
 	
-	function __construct($tmp_name ="", $bank_id = null, $file_name = "") {
+	function __construct($tmp_name ="", $banks_id = null, $file_name = "") {
 		$this->tmp_name = $tmp_name;
 		$this->file_name = $file_name;
-		$this->bank_id = $bank_id;
+		$this->banks_id = $banks_id;
 		$this->csv_data = array();
 	}
 	function import_as_cic() {
@@ -48,7 +48,7 @@ class Writings_Data_File {
 						$time = explode("/", $line['day']);
 						$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 						$writing->comment = $line['comment'];
-						$writing->bank_id = $this->bank_id;
+						$writing->banks_id = $this->banks_id;
 						if (!empty($line['debit'])) {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['debit']);
 							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['debit']);
@@ -56,7 +56,7 @@ class Writings_Data_File {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['credit']);
 							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['credit']);
 						}
-						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
 							$nb_records++;
@@ -109,7 +109,7 @@ class Writings_Data_File {
 						$time = explode("/", $line[0]);
 						$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 						$writing->comment = $line[1];
-						$writing->bank_id = $this->bank_id;
+						$writing->banks_id = $this->banks_id;
 						if (!empty($information)) {
 							$writing->information = utf8_encode($information);
 						}
@@ -118,7 +118,7 @@ class Writings_Data_File {
 						}
 						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
-						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->bank_id.$writing->amount_inc_vat);
+						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 						if (!in_array($writing->unique_key, $writings_key)) {
 							$writing->save();
 							$nb_records++;
@@ -151,7 +151,7 @@ class Writings_Data_File {
 	
 	function import() {
 		$bank = new Bank();
-		$bank->load($this->bank_id);
+		$bank->load($this->banks_id);
 		if (preg_match("/cic/", $bank->name)) {
 			$this->import_as_cic();
 		} elseif (preg_match("/coop/", $bank->name)) {

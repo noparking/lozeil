@@ -21,6 +21,7 @@ $__['are you sure?'] = "êtes vous sure?";
 $__['bank'] = "banque";
 $__['can not open file'] = "impossible d'ouvrir le fichier";
 $__['cancel record'] = "annuler l'enregistrement";
+$__['category'] = "catégorie";
 $__['comment'] = "commentaire";
 $__['consult balance sheet'] = "consulter le tableau de trésorerie";
 $__['day'] = "date";
