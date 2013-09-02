@@ -276,8 +276,8 @@ class Writings extends Collector  {
 		$timeline_stop = strtotime('+10 months', $this->month);
 
 		$writings = new Writings();
-		$writings->filter_with(array('stop' => $timeline_stop));
-		$writings->select_columns('amount_inc_vat');
+		$writings->filter_with(array('stop' => strtotime('+11 months', $this->month)));
+		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 
 		while ($timeline_iterator <= $timeline_stop) {
