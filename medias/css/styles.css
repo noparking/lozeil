@@ -263,6 +263,17 @@ table {
 	cursor: pointer;
 }
 
+.table_writings_modify.disabled {
+	display: inline-block;
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/bullet-wrench-disabled.png);
+	background-repeat: no-repeat;
+}
+
 .table_writings_delete input[type='submit'] {
 	margin-left: 5px;
 	border: 0;
@@ -270,7 +281,18 @@ table {
 	width: 16px;
 	height: 16px;
 	background-image :  url(../images/delete.png);
+	background-repeat: no-repeat;
 	cursor: pointer;
+}
+
+.table_writings_delete.disabled {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/delete-disabled.png);
+	background-repeat: no-repeat;
 }
 
 .table_writings_duplicate input[type='submit'] {
@@ -282,6 +304,16 @@ table {
 	background-image :  url(../images/more.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
+}
+
+.table_writings_duplicate.disabled {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/more-disabled.png);
+	background-repeat: no-repeat;
 }
 
 .input-date-calendar {

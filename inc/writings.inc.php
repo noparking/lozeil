@@ -136,7 +136,7 @@ class Writings extends Collector  {
 		}
 		return $class;
 	}
-
+	
 	function grid_body() {
 		$accounts = new Accounts();
 		$accounts->select();
@@ -158,98 +158,56 @@ class Writings extends Collector  {
 			if (!empty($informations)) {
 				$class = "table_writings_comment";
 			}
-			$grid[] =  array(
-					'class' => 'draggable',
-					'id' => 'table_'.$writing->id,
+			$grid[$writing->id] =  array(
+					'class' => "draggable",
+					'id' => "table_".$writing->id,
 					'cells' => array(
-							date("d/m/Y", $writing->day),
-							isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
-							isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
-							isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
-							round($writing->amount_excl_vat, 2),
-							$writing->vat,
-							round($writing->amount_inc_vat, 2),
-							$writing->show_comment($class),
-							isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
-							$writing->show_operations(),
+						array(
+							'type' => "td",
+							'value' => date("d/m/Y", $writing->day),
+						),
+						array(
+							'type' => "td",
+							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => round($writing->amount_excl_vat, 2),
+						),
+						array(
+							'type' => "td",
+							'value' => $writing->vat,
+						),
+						array(
+							'type' => "td",
+							'value' => round($writing->amount_inc_vat, 2),
+						),
+						array(
+							'type' => "td",
+							'class' => $class,
+							'value' => $writing->comment.$writing->show_further_information(),
+						),
+						array(
+							'type' => "td",
+							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
+						),
+						array(
+							'type' => "td",
+							'value' => $writing->show_operations(),
+						),
 					),
 			);
 		}
-		
 		return $grid;
 	}
-	
-//	function grid_body() {
-//		$accounts = new Accounts();
-//		$accounts->select();
-//		$accounts_names = $accounts->names();
-//		$types = new Types();
-//		$types->select();
-//		$types_name = $types->names();
-//		$sources = new Sources();
-//		$sources->select();
-//		$sources_name = $sources->names();
-//		$banks = new Banks();
-//		$banks->select();
-//		$banks_name = $banks->names();
-//		$grid = array();
-//		
-//		foreach ($this as $writing) {
-//			$class = "";
-//			$informations = $writing->show_further_information();
-//			if (!empty($informations)) {
-//				$class = "table_writings_comment";
-//			}
-//			$grid[$writing->id] =  array(
-//					'class' => "draggable",
-//					'id' => "table_".$writing->id,
-//					'cells' => array(
-//						array(
-//							'type' => "td",
-//							'value' => date("d/m/Y", $writing->day),
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => round($writing->amount_excl_vat, 2),
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => $writing->vat,
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => round($writing->amount_inc_vat, 2),
-//						),
-//						array(
-//							'type' => "td",
-//							'class' => $class,
-//							'value' => $writing->comment.$writing->show_further_information(),
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
-//						),
-//						array(
-//							'type' => "td",
-//							'value' => $writing->show_operations(),
-//						),
-//					),
-//			);
-//		}
-//		return $grid;
-//	}
 
 	function grid_footer() {
 		return array();

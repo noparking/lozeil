@@ -40,6 +40,7 @@ $__['hide form'] = "masquer le formulaire";
 $__['id'] = "id";
 $__['import bank statement'] = "importer le journal de banque";
 $__['less'] = "moins";
+$__['line %s of file %s is not in cic format'] = "la ligne %s du fichier %s n'est pas au format cic";
 $__['line %s of file %s is not in coop format'] = "la ligne %s du fichier %s n'est pas au format coop";
 $__['mask'] = "masquer";
 $__['more'] = "plus";

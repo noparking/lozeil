@@ -126,21 +126,43 @@ class Writing extends Record {
 	}
 	
 	function merge_from(Writing $to_merge) {
-		$this->account_id = (isset($to_merge->account_id) and $to_merge->account_id > 0) ? (int)$to_merge->account_id : $this->account_id;
-		$this->bank_id = (isset($to_merge->bank_id) and $to_merge->bank_id > 0) ? (int)$to_merge->bank_id : $this->bank_id;
-		$this->source_id = (isset($to_merge->source_id) and $to_merge->source_id > 0) ? (int)$to_merge->source_id : $this->source_id;
-		$this->amount_excl_vat = isset($to_merge->amount_excl_vat) ? $to_merge->amount_excl_vat : $this->amount_excl_vat;
-		$this->amount_inc_vat = isset($to_merge->amount_inc_vat) ? $to_merge->amount_inc_vat : $this->amount_inc_vat;
-		$this->comment = isset($to_merge->comment) ? $to_merge->comment : $this->comment;
-		$this->day = isset($to_merge->day) ? $to_merge->day : $this->day;
-		$this->information = isset($to_merge->information) ? $to_merge->information : $this->information;
-		$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
-		$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
-		$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
-		$this->search_index = $this->search_index();
-		$this->unique_key = "";
-		$this->save();
-		$to_merge->delete();
+		if ( $this->bank_id == 0 or $to_merge->bank_id == 0 ) {
+			if ($this->bank_id != 0) {
+				$this->account_id = (isset($this->account_id) and $this->account_id > 0) ? (int)$this->account_id : $to_merge->account_id;
+				$this->bank_id = (isset($this->bank_id) and $this->bank_id > 0) ? (int)$this->bank_id : $to_merge->bank_id;
+				$this->source_id = (isset($this->source_id) and $this->source_id > 0) ? (int)$this->source_id : $to_merge->source_id;
+				$this->amount_excl_vat = isset($this->amount_excl_vat) ? $this->amount_excl_vat : $to_merge->amount_excl_vat;
+				$this->amount_inc_vat = isset($this->amount_inc_vat) ? $this->amount_inc_vat : $to_merge->amount_inc_vat;
+				$this->comment = isset($this->comment) ? $this->comment : $to_merge->comment;
+				$this->day = isset($this->day) ? $this->day : $to_merge->day;
+				$this->information = isset($this->information) ? $this->information : $to_merge->information;
+				$this->vat = isset($this->vat) ? $this->vat : $to_merge->vat;
+				$this->type_id = (isset($this->type_id) and $this->type_id > 0) ? $this->type_id : $to_merge->type_id;
+				$this->paid = isset($this->paid) ? $this->paid : $to_merge->paid;
+				$this->search_index = $this->search_index();
+				$this->unique_key = "";
+				$this->save();
+				$to_merge->delete();
+			} else {
+				$this->account_id = (isset($to_merge->account_id) and $to_merge->account_id > 0) ? (int)$to_merge->account_id : $this->account_id;
+				$this->bank_id = (isset($to_merge->bank_id) and $to_merge->bank_id > 0) ? (int)$to_merge->bank_id : $this->bank_id;
+				$this->source_id = (isset($to_merge->source_id) and $to_merge->source_id > 0) ? (int)$to_merge->source_id : $this->source_id;
+				$this->amount_excl_vat = isset($to_merge->amount_excl_vat) ? $to_merge->amount_excl_vat : $this->amount_excl_vat;
+				$this->amount_inc_vat = isset($to_merge->amount_inc_vat) ? $to_merge->amount_inc_vat : $this->amount_inc_vat;
+				$this->comment = isset($to_merge->comment) ? $to_merge->comment : $this->comment;
+				$this->day = isset($to_merge->day) ? $to_merge->day : $this->day;
+				$this->information = isset($to_merge->information) ? $to_merge->information : $this->information;
+				$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
+				$this->type_id = (isset($to_merge->type_id) and $to_merge->type_id > 0) ? $to_merge->type_id : $this->type_id;
+				$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
+				$this->search_index = $this->search_index();
+				$this->unique_key = "";
+				$this->save();
+				$to_merge->delete();
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	function split($amount = 0) {
@@ -189,9 +211,6 @@ class Writing extends Record {
 		$types = new Types();
 		$types->select();
 		$types_name = $types->names();
-		$banks = new Banks();
-		$banks->select();
-		$banks_name = $banks->names();
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
@@ -201,7 +220,6 @@ class Writing extends Record {
 		$account = new Html_Select("account_id", $accounts_name, $this->account_id);
 		$source = new Html_Select("source_id", $sources_name, $this->source_id);
 		$type = new Html_Select("type_id", $types_name, $this->type_id);
-		$bank = new Html_Select("bank_id", $banks_name, $this->bank_id);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
@@ -224,9 +242,6 @@ class Writing extends Record {
 				),
 				'type' => array(
 					'value' => $type->item(__('type')),
-				),
-				'bank' => array(
-					'value' => $bank->item(__('bank')),
 				),
 				'amount_excl_vat' => array(
 					'value' => $amount_excl_vat->item(__('amount excluding tax')),
@@ -261,27 +276,35 @@ class Writing extends Record {
 	}
 	
 	function form_duplicate() {
-		$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "duplicate");
-		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
-		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-		$form .= "</form></div>";
-		return $form;
+		if ($this->bank_id > 0) {
+			return "<div class=\"table_writings_duplicate disabled\"></div>";
+		} else {
+			$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
+			$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
+			$input_hidden_action = new Html_Input("action", "duplicate");
+			$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
+			$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
+			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
+			$form .= "</form></div>";
+			return $form;
+		}
 	}
 	
 	function form_delete() {
-		$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "delete");
-		$submit = new Html_Input("table_writings_delete_submit", "", "submit");
-		$submit->properties = array(
-			'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
-		);
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
-		$form .= "</form></div>";
-		return $form;
+		if ($this->bank_id > 0) {
+			return "<div class=\"table_writings_delete disabled\"></div>";
+		} else {
+			$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
+			$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
+			$input_hidden_action = new Html_Input("action", "delete");
+			$submit = new Html_Input("table_writings_delete_submit", "", "submit");
+			$submit->properties = array(
+				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
+			$form .= "</form></div>";
+			return $form;
+		}
 	}
 	
 	function form_split() {
@@ -296,9 +319,13 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		return "<div class=\"table_writings_modify\">".
-			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
-			"</div>";
+		if ($this->bank_id > 0) {
+			return "<div class=\"table_writings_modify disabled\"></div>";
+		} else {
+			return "<div class=\"table_writings_modify\">".
+				Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
+				"</div>";
+		}
 	}
 	
 	function fill($hash) {
@@ -319,10 +346,6 @@ class Writing extends Record {
 				$new_writing->save();
 			}
 		}
-	}
-	
-	function show_comment($class) {
-		return "<div class=\"".$class."\">".$this->comment.$this->show_further_information()."</div>";
 	}
 	
 	function show_further_information() {
