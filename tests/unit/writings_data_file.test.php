@@ -118,7 +118,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")
 			);
 		
-		$handle = fopen($name, 'w');
+		$handle = fopen($name, 'w+');
 		
 		foreach($mydata as $data) {
 			fputcsv($handle, $data, ";");
@@ -190,7 +190,7 @@ class tests_Writings_Data_File extends TableTestCase {
 			array("03/07/2013", "", "", "152,20", "CREDIT")
 			);
 		
-		$handle = fopen($name, 'w');
+		$handle = fopen($name, 'w+');
 		
 		foreach($mydata as $data) {
 			fputcsv($handle, $data, ";");
@@ -198,9 +198,6 @@ class tests_Writings_Data_File extends TableTestCase {
 		
 		$data = new Writings_Data_File($name, 2);
 		$data->import_as_coop();
-
-		fclose($handle);
-		unlink($name);
 		
 		$this->assertRecordExists(
 			"writings",
@@ -242,6 +239,9 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		);
 		
 		$data->import_as_coop();
+		
+		fclose($handle);
+		unlink($name);
 		
 		$writings = new Writings();
 		$writings->select();
