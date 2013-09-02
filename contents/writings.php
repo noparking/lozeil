@@ -10,7 +10,7 @@
 
 $timestamp = mktime(0, 0, 0, date("m"), 1, date("Y"));
 $_SESSION['timestamp'] = $timestamp;
-if (!isset($_SESSION['order_col_name']) || !isset($_SESSION['order_direction'])) {
+if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
 }
@@ -31,17 +31,20 @@ if (isset($_POST) and count($_POST) > 0) {
 				$writing->save();
 			}
 			break;
+			
 		case 'insert':
 			$writing = new Writing();
 			$writing->fill($_POST);
 			$writing->save();
 			break;
+		
 		case 'delete':
 			if (isset($_POST['table_writings_delete_id'])) {
 				$writing = new Writing($_POST['table_writings_delete_id']);
 				$writing->delete();
 			}
 			break;
+			
 		case 'split':
 			if (isset($_POST['table_writings_split_amount'])) {
 				$amount = str_replace(",", ".", $_POST['table_writings_split_amount']);
@@ -52,6 +55,7 @@ if (isset($_POST) and count($_POST) > 0) {
 				}
 			}
 			break;
+			
 		case 'duplicate':
 			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
 				$writing = new Writing();
@@ -59,6 +63,7 @@ if (isset($_POST) and count($_POST) > 0) {
 				$writing->duplicate((int)$_POST['table_writings_duplicate_amount']);
 			}
 			break;
+			
 		default:
 			break;
 	}

@@ -158,56 +158,98 @@ class Writings extends Collector  {
 			if (!empty($informations)) {
 				$class = "table_writings_comment";
 			}
-			$grid[$writing->id] =  array(
-					'class' => "draggable",
-					'id' => "table_".$writing->id,
+			$grid[] =  array(
+					'class' => 'draggable',
+					'id' => 'table_'.$writing->id,
 					'cells' => array(
-						array(
-							'type' => "td",
-							'value' => date("d/m/Y", $writing->day),
-						),
-						array(
-							'type' => "td",
-							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => round($writing->amount_excl_vat, 2),
-						),
-						array(
-							'type' => "td",
-							'value' => $writing->vat,
-						),
-						array(
-							'type' => "td",
-							'value' => round($writing->amount_inc_vat, 2),
-						),
-						array(
-							'type' => "td",
-							'class' => $class,
-							'value' => $writing->comment.$writing->show_further_information(),
-						),
-						array(
-							'type' => "td",
-							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => $writing->show_operations(),
-						),
+							date("d/m/Y", $writing->day),
+							isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
+							isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
+							isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
+							round($writing->amount_excl_vat, 2),
+							$writing->vat,
+							round($writing->amount_inc_vat, 2),
+							$writing->show_comment($class),
+							isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
+							$writing->show_operations(),
 					),
 			);
 		}
+		
 		return $grid;
 	}
+	
+//	function grid_body() {
+//		$accounts = new Accounts();
+//		$accounts->select();
+//		$accounts_names = $accounts->names();
+//		$types = new Types();
+//		$types->select();
+//		$types_name = $types->names();
+//		$sources = new Sources();
+//		$sources->select();
+//		$sources_name = $sources->names();
+//		$banks = new Banks();
+//		$banks->select();
+//		$banks_name = $banks->names();
+//		$grid = array();
+//		
+//		foreach ($this as $writing) {
+//			$class = "";
+//			$informations = $writing->show_further_information();
+//			if (!empty($informations)) {
+//				$class = "table_writings_comment";
+//			}
+//			$grid[$writing->id] =  array(
+//					'class' => "draggable",
+//					'id' => "table_".$writing->id,
+//					'cells' => array(
+//						array(
+//							'type' => "td",
+//							'value' => date("d/m/Y", $writing->day),
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => isset($accounts_names[$writing->account_id]) ? $accounts_names[$writing->account_id] : "",
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => isset($sources_name[$writing->source_id]) ? $sources_name[$writing->source_id] : "",
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => isset($types_name[$writing->type_id]) ? $types_name[$writing->type_id] : "",
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => round($writing->amount_excl_vat, 2),
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => $writing->vat,
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => round($writing->amount_inc_vat, 2),
+//						),
+//						array(
+//							'type' => "td",
+//							'class' => $class,
+//							'value' => $writing->comment.$writing->show_further_information(),
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => isset($banks_name[$writing->bank_id]) ? $banks_name[$writing->bank_id] : "",
+//						),
+//						array(
+//							'type' => "td",
+//							'value' => $writing->show_operations(),
+//						),
+//					),
+//			);
+//		}
+//		return $grid;
+//	}
 
 	function grid_footer() {
 		return array();
@@ -232,10 +274,12 @@ class Writings extends Collector  {
 		
 		$timeline_iterator = strtotime('-2 months', $this->month);
 		$timeline_stop = strtotime('+10 months', $this->month);
-		
+
 		$writings = new Writings();
+		$writings->filter_with(array('stop' => $timeline_stop));
+		$writings->select_columns('amount_inc_vat');
 		$writings->select();
-		
+
 		while ($timeline_iterator <= $timeline_stop) {
 			$class = "navigation";
 			if ($timeline_iterator == $this->month) {
@@ -274,7 +318,7 @@ class Writings extends Collector  {
 		if (isset($this->filters['stop'])) {
 			$query_where[] = $this->db->config['table_writings'].".day <= ".(int)$this->filters['stop'];
 		}
-		if (isset($this->filters['*']) && !empty($this->filters['*'])) {
+		if (isset($this->filters['*']) and !empty($this->filters['*'])) {
 			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
 		}
 		

@@ -47,14 +47,22 @@ class Menu_Area {
 	function prepare_navigation($content = "") {
 		if (preg_match("/writings.php/", $content)) {
 			$writings = new Writings();
+			$writings->filter_with(array('stop' => time()));
+			$writings->select_columns('amount_inc_vat');
 			$writings->select();
 			$this->header = $writings->show_balance_on_current_date();
 			
 			$data = new Writings_Data_File();
-			$grid = array();
-			
-			$grid['leaves'][0]['value'] = Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")));
-			$grid['leaves'][1]['value'] = $data->form_import();			
+			$grid = array(
+				'leaves' => array (
+					0 => array(
+						'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
+					),
+					1 => array(
+						'value' => $data->form_import()
+					)
+				)
+			);	
 			
 			$list = new Html_List($grid);
 			$this->actions = $list->show();

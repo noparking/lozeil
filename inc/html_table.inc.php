@@ -64,7 +64,6 @@ class Html_table {
 	
 	function show_lines($lines_data = array()) {
 		$content = "";
-
 		foreach ($lines_data as $row) {
 			$tr_attribute = "";
 			if (!isset($row['cells'])) {
@@ -72,7 +71,7 @@ class Html_table {
 				$row = array('cells' => $temp);
 			}
 			foreach ($row as $row_attribute => $row_attribute_value) {
-				if (is_string($row_attribute) && $row_attribute != 'cells') {
+				if (is_string($row_attribute) and $row_attribute != 'cells') {
 					$tr_attribute .= " ".$row_attribute."=\"".$row_attribute_value."\"";
 				}
 			}

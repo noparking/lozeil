@@ -16,12 +16,8 @@ if (isset($_GET['content']) and !empty($_GET['content'])) {
 	$content = "writings.php";
 }
 $location = clean_location($_SERVER['PHP_SELF']);
-if (!isset($_REQUEST['method']) && !preg_match("/ajax/", $content)) {
+if (!isset($_REQUEST['method']) and !preg_match("/ajax/", $content)) {
 	$theme = new Theme_Default();
-
-	header('Cache-control: private');
-	header('Content-Type: text/html; charset=UTF-8');
-	header('X-UA-Compatible: IE=edge');
 
 	echo $theme->html_top();
 	echo $theme->head();

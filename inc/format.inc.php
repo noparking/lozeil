@@ -187,7 +187,7 @@ class Format {
 		if ($symbol === false or empty($symbol)) {
 			$symbol = $GLOBALS['param']['currency'];
 		}
-		if ($force_zero === true || !empty($amount)) {
+		if ($force_zero === true or !empty($amount)) {
 			if ($locale === null) {
 				$locale = $GLOBALS['param']['locale_lang'];
 			}

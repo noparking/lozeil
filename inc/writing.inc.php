@@ -321,6 +321,10 @@ class Writing extends Record {
 		}
 	}
 	
+	function show_comment($class) {
+		return "<div class=\"".$class."\">".$this->comment.$this->show_further_information()."</div>";
+	}
+	
 	function show_further_information() {
 		if (!empty($this->information)) {
 			return "<div class=\"table_writings_comment_further_information\">".nl2br($this->information)."</div>";

@@ -139,7 +139,7 @@ function get_error_log($start="", $stop="") {
 	}
 	$file_error = dirname(__FILE__)."/../var/log/error.log.php";
 
-	if (is_file($file_error) && is_readable($file_error)) {
+	if (is_file($file_error) and is_readable($file_error)) {
 		$all_error = array();
 		$content = $premier = file($file_error);
 		for ($i=0; $i<sizeof($content); $i++) {
@@ -221,7 +221,7 @@ function error_handling($type, $msg, $file, $line, $args) {
 				touch($file_error);
 			}
 
-			if (is_file($file_error) && is_writable($file_error)) {
+			if (is_file($file_error) and is_writable($file_error)) {
 				error_log($message."\n", 3, $file_error);
 			} else {
 				error_log($message);
@@ -237,7 +237,7 @@ function error_handling($type, $msg, $file, $line, $args) {
 
 function link_content($parameters="") {
 	$link_content = "";
-	if (isset($GLOBALS['config']['link_handling']) && $GLOBALS['config']['link_handling']) {
+	if (isset($GLOBALS['config']['link_handling']) and $GLOBALS['config']['link_handling']) {
 		$link_content .= $GLOBALS['config']['name'];
 		if ($parameters) {
 			$link_content .= "&".$parameters;
@@ -303,10 +303,10 @@ function determine_first_day_of_next_month($timestamp) {
 }
 
 function get_time($format,$act_time="") {
-	if (!$act_time || $act_time == "") {
+	if (!$act_time or $act_time == "") {
 		$act_time = time();
 	}
-	if (!$format || $format == "") {
+	if (!$format or $format == "") {
 		return date("d.m.Y, H:i:s", $act_time);
 	} else {
 		return date($format, $act_time);

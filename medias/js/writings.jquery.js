@@ -1,6 +1,3 @@
-var order_direction = 0;
-var sort_by = "day";
-
 function toggle_line_information() {
 	$(".table_writings_comment").on("click", function() {
 		$(".table_writings_comment_further_information").slideUp();
@@ -28,7 +25,7 @@ function make_droppable() {
 			$(this).removeClass('over').addClass('out');
 			$.post(
 				"index.php?content=writings.ajax.php",
-				{ method: "json", action: "merge", writing_from: writing_from, writing_into: writing_into, sort_by: sort_by, order_direction: order_direction },
+				{action: "merge", writing_from: writing_from, writing_into: writing_into},
 				function(data) {
 					refresh_balance();
 					$('#table_writings table').html(data);
@@ -43,20 +40,18 @@ function make_droppable() {
 
 function make_draggable() {
 	var table_header = $(".table_header").html();
-	var html = "";
-	var id = 0;
 	$("tr.draggable").draggable({
 		cursor: "pointer",
 		stack: "tr",
 		helper: function(event) {
-			html = $(this).html();
-			id = $(this).attr('id');
+			var html = $(this).html();
+			var id = $(this).attr('id');
 			return "<div class=\"dragged\"><table><tr id=\""+id+"\">"+html+"</tr><tr id=\"table_header_dragged\">"+table_header+"</tr></table></div>";
 		}
 	});
 }
 
-function make_split() {
+function toggle_input() {
 	$("input#table_writings_split_submit, input#table_writings_duplicate_submit").on("click", function() {
 		var next = "";
 		if ($(this).next().val() == "") {
@@ -72,26 +67,14 @@ function make_split() {
 	})
 }
 
-function sort_elements() {
+function sort_lines() {
 	$(".sort").bind("click", function() {
 		order_col_name = $(this).attr('id');
-		if (order_direction) {
-			order_direction = 0;
-			var direction = 'DESC';
-		} else {
-			order_direction = 1;
-			var direction = 'ASC';
-		}
 		$.post(
 			"index.php?content=writings.ajax.php",
-			{ method: "json", action: "sort", order_col_name: order_col_name, direction: direction},
+			{action: "sort", order_col_name: order_col_name},
 			function(data) {
 				$('table').html(data);
-				if ( order_direction == 0 ) {
-					$("#"+order_col_name).addClass("sorteddown");
-				} else {
-					$("#"+order_col_name).addClass("sortedup");
-				}
 			}
 		)
 	})
@@ -100,8 +83,8 @@ function sort_elements() {
 function jQuery_table() {
 	make_droppable();
 	make_draggable();
-	make_split();
-	sort_elements();
+	toggle_input();
+	sort_lines();
 	toggle_line_information();
 }
 

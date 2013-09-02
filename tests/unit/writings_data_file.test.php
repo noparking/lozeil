@@ -94,11 +94,11 @@ class tests_Writings_Data_File extends TableTestCase {
 			foreach ($line as $key => $value) {
 				if ($key == 0) {
 					$time = explode("/", $value);
-					if (isset($time[1]) && $time[2]) {
+					if (isset($time[1]) and $time[2]) {
 						$value = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 					}
 				}
-				if ($key == 3 && $value!= "Montant") {
+				if ($key == 3 and $value!= "Montant") {
 					$value = (float)str_replace(",", ".", $value);
 				}
 				$data->csv_data[$row][$key] = trim($value);

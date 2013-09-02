@@ -88,7 +88,7 @@ class Writings_Data_File {
 					if ($this->is_line_coop($line)) {
 						$information = "";
 						for ($i = 0; $i < count($line); $i++) {
-							if (!empty($line[$i]) && $i != 0 && $i != 1 && $i != 3 && $i != 4) {
+							if (!empty($line[$i]) and $i != 0 and $i != 1 and $i != 3 and $i != 4) {
 								$information .= $row_names[$i]." : ".$line[$i]."\n";
 							}
 						}
