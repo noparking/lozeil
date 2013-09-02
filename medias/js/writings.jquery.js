@@ -4,8 +4,6 @@ function toggle_line_information() {
 		var cell = $(this).find(".table_writings_comment_further_information");
 		if (cell.css("display") == "none") {
 			cell.slideDown();
-		} else {
-			cell.slideUp();
 		}
 	})
 }
@@ -98,10 +96,9 @@ $(document).ajaxStop(function() {
 
 $(document).ready(function() {
 	$("#extra_filter_writings_value").keyup(function() {
-		var word = $("#extra_filter_writings_value").val();
 		$.post(
 			"index.php?content=writings.ajax.php",
-			{ method: "json", action: "filter", value: word },
+			{ method: "json", action: "filter", value: $(this).val() },
 			function(data){
 				$('#table_writings table').html(data);
 			}
