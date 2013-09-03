@@ -37,4 +37,14 @@ class tests_Categories extends TableTestCase {
 		$this->assertTrue(in_array("deuxième category", $names));
 		$this->assertTrue(in_array("troisième category", $names));
 	}
+	
+	function test_show_form() {
+		$categories = new Categories();
+		$categories->select();
+		$form = $categories->show_form();
+		$this->assertPattern("/premier category/", $form);
+		$this->assertPattern("/deuxième category/", $form);
+		$this->assertPattern("/troisième category/", $form);
+		$this->assertPattern("/name_new/", $form);
+	}
 }

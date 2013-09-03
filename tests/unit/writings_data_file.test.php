@@ -57,7 +57,7 @@ class tests_Writings_Data_File extends TableTestCase {
 	
 	function test_is_cic() {
 		$mydata = array(
-			array("Date d'opération","Date de valeur","D�bit","Cr�dit","Libellé","Solde"),
+			array("Date d'opération","Date de valeur","Débit","Crédit","Libellé","Solde"),
 			array("02/07/2013", "01/07/2013", "", "152,20", "test de libellé", "1252,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "test de libellé 2", "1300,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")
@@ -112,7 +112,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		$name = tempnam('/tmp', 'csv');
 		
 		$mydata =array(
-			array("Date d'opération","Date de valeur","D�bit","Cr�dit","Libellé","Solde"),
+			array("Date d'opération","Date de valeur","Débit","Crédit","Libellé","Solde"),
 			array("02/07/2013", "01/07/2013", "", "152,20", "test de libellé", "1252,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "test de libellé 2", "1300,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")

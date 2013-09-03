@@ -28,4 +28,28 @@ class tests_Menu_area extends TableTestCase {
 		$this->assertPattern("/menu_actions_import/", $area_html);
 		$this->assertPattern("/file/", $area_html);
 	}
+	
+	function test_prepare_navigation() {
+		$writing = new Writing();
+		$writing->day = time() + 500;
+		$writing->amount_inc_vat = 250;
+		$writing->save();
+		
+		$writing = new Writing();
+		$writing->day = time() - 500;
+		$writing->amount_inc_vat = 200;
+		$writing->save();
+		
+		$menu = new Menu_Area();
+		$menu->prepare_navigation("");
+		$area_html = $menu->show();
+		
+		$this->assertPattern("/200/", $area_html);
+		$this->assertPattern("/content=writings.php/", $area_html);
+		$this->assertPattern("/content=sources.php/", $area_html);
+		$this->assertPattern("/content=types.php/", $area_html);
+		$this->assertPattern("/content=categories.php/", $area_html);
+		$this->assertNoPattern("/450/", $area_html);
+		
+	}
 }

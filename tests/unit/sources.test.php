@@ -37,4 +37,14 @@ class tests_Sources extends TableTestCase {
 		$this->assertTrue(in_array("deuxième source", $names));
 		$this->assertTrue(in_array("troisième source", $names));
 	}
+	
+	function test_show_form() {
+		$sources = new Sources();
+		$sources->select();
+		$form = $sources->show_form();
+		$this->assertPattern("/première source/", $form);
+		$this->assertPattern("/deuxième source/", $form);
+		$this->assertPattern("/troisième source/", $form);
+		$this->assertPattern("/name_new/", $form);
+	}
 }

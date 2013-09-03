@@ -37,4 +37,14 @@ class tests_Types extends TableTestCase {
 		$this->assertTrue(in_array("deuxième type", $names));
 		$this->assertTrue(in_array("troisième type", $names));
 	}
+		
+	function test_show_form() {
+		$types = new Types();
+		$types->select();
+		$form = $types->show_form();
+		$this->assertPattern("/premier type/", $form);
+		$this->assertPattern("/deuxième type/", $form);
+		$this->assertPattern("/troisième type/", $form);
+		$this->assertPattern("/name_new/", $form);
+	}
 }

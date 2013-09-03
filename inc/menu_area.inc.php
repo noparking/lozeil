@@ -45,29 +45,32 @@ class Menu_Area {
 	}
 	
 	function prepare_navigation($content = "") {
-		if (preg_match("/writings.php/", $content)) {
-			$writings = new Writings();
-			$writings->filter_with(array('stop' => time()));
-			$writings->select_columns('amount_inc_vat');
-			$writings->select();
-			$this->header = $writings->show_balance_on_current_date();
-			
-			$data = new Writings_Data_File();
-			$grid = array(
-				'leaves' => array (
-					0 => array(
-						'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
-					),
-					1 => array(
-						'value' => $data->form_import()
-					)
+		$writings = new Writings();
+		$writings->filter_with(array('stop' => time()));
+		$writings->select_columns('amount_inc_vat');
+		$writings->select();
+		$this->header = $writings->show_balance_on_current_date();
+
+		$data = new Writings_Data_File();
+		$grid = array(
+			'leaves' => array (
+				0 => array(
+					'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
+				),
+				1 => array(
+					'value' => Html_tag::a(link_content("content=categories.php"), utf8_ucfirst(__("manage categories"))).
+							   Html_tag::a(link_content("content=sources.php"), utf8_ucfirst(__("manage sources"))).
+							   Html_tag::a(link_content("content=types.php"), utf8_ucfirst(__("manage types")))
+				),
+				2 => array(
+					'value' => $data->form_import()
 				)
-			);	
-			
-			$list = new Html_List($grid);
-			$this->actions = $list->show();
-			
-			$this->handle = "<span id=\"menu_handle_hide\">".utf8_ucfirst(__("more"))."</span><span id=\"menu_handle_show\">".utf8_ucfirst(__('less'))."</span>";
-		}
+			)
+		);	
+
+		$list = new Html_List($grid);
+		$this->actions = $list->show();
+
+		$this->handle = "<span id=\"menu_handle_hide\">".utf8_ucfirst(__("more"))."</span><span id=\"menu_handle_show\">".utf8_ucfirst(__('less'))."</span>";
 	}
 }

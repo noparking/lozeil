@@ -44,7 +44,7 @@ class Writing extends Record {
 		$type->load($this->types_id);
 		$category = new Category();
 		$category->load($this->categories_id);
-		return $this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name." ".$type->name;
+		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name." ".$type->name;
 	}
 	
 	function load($id = null) {
@@ -189,7 +189,7 @@ class Writing extends Record {
 			<form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
-			$input_hidden = new Html_Input("action", "edit");
+			$input_hidden = new Html_Input("action", "edit", "submit");
 			$input_hidden->id = $this->id;
 		} else {
 			$input_hidden = new Html_Input("action", "insert");
@@ -276,18 +276,14 @@ class Writing extends Record {
 	}
 	
 	function form_duplicate() {
-		if ($this->banks_id > 0) {
-			return "<div class=\"table_writings_duplicate disabled\"></div>";
-		} else {
-			$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
-			$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
-			$input_hidden_action = new Html_Input("action", "duplicate");
-			$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
-			$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
-			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-			$form .= "</form></div>";
-			return $form;
-		}
+		$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "duplicate");
+		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
+		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
+		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
+		$form .= "</form></div>";
+		return $form;
 	}
 	
 	function form_delete() {

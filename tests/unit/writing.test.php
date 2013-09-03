@@ -443,4 +443,43 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/class=\"table_writings_comment_further_information\"/", $writing->show_further_information());
 		$this->assertPattern("/Ceci est un complément d'information/", $writing->show_further_information());
 	}
+	
+	function test_search_index() {
+		$bank = new Bank();
+		$bank->banks_id = 1;
+		$bank->name = "cic";
+		$bank->save();
+		$source = new Source();
+		$source->sources_id = 1;
+		$source->name = "source 1";
+		$source->save();
+		$type = new Type();
+		$type->types_id = 1;
+		$type->name = "type 1";
+		$type->save();
+		$category = new Category();
+		$category->categories_id = 1;
+		$category->name = "chèque";
+		$category->save();
+		$writing = new Writing();
+		$writing->categories_id = 1;
+		$writing->amount_excl_vat = 167.22;
+		$writing->amount_inc_vat = 200;
+		$writing->banks_id = 1;
+		$writing->comment = "Ceci est un commentaire";
+		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
+		$writing->sources_id = 1;
+		$writing->types_id = 1;
+		$writing->vat = 19.6;
+		
+		$this->assertPattern("/cic/", $writing->search_index());
+		$this->assertPattern("/source 1/", $writing->search_index());
+		$this->assertPattern("/type 1/", $writing->search_index());
+		$this->assertPattern("/chèque/", $writing->search_index());
+		$this->assertPattern("/Ceci est un commentaire/", $writing->search_index());
+		$this->assertPattern("/31\/07\/2013/", $writing->search_index());
+		$this->assertPattern("/19.6/", $writing->search_index());
+		$this->assertPattern("/167.22/", $writing->search_index());
+		$this->assertPattern("/200/", $writing->search_index());
+	}
 }

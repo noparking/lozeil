@@ -7,6 +7,7 @@
 
 	Copyright (C) No Parking 2013 - 2013
 */
+error_reporting(E_ALL);
 
 require dirname(__FILE__)."/inc/require.inc.php";
 session_start();

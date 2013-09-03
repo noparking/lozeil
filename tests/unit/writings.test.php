@@ -252,4 +252,12 @@ class tests_Writings extends TableTestCase {
 		$this->assertTrue(in_array("unique 2", $unique_keys));
 		$this->assertTrue(in_array("unique 3", $unique_keys));
 	}
+	
+	function test_filter_with() {
+		$writings = new Writings();
+		$writings->filter_with(array('start' => mktime(0, 0, 0, 3, 9, 2013), 'stop' => mktime(0, 0, 0, 3, 10, 2013), '*' => 'fullsearch'));
+		$this->assertEqual($writings->filters['start'], 1362783600);
+		$this->assertEqual($writings->filters['stop'], 1362870000);
+		$this->assertEqual($writings->filters['*'], "fullsearch");
+	}
 }
