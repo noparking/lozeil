@@ -298,16 +298,6 @@ class Writings extends Collector  {
 		return round($amount, 2);
 	}
 	
-	function get_unique_key_in_array() {
-		$this->select();
-		$keys = array();
-		foreach ($this as $writing) {
-			if (!empty($writing->unique_key))
-			$keys[] = $writing->unique_key;
-		}
-		return $keys;
-	}
-	
 	function form_filter($value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");

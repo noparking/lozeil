@@ -235,24 +235,6 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_get_unique_key_in_array() {
-		$writing = new Writing();
-		$writing->unique_key = "unique 1";
-		$writing->save();
-		$writing2 = new Writing();
-		$writing2->unique_key = "unique 2";
-		$writing2->save();
-		$writing3 = new Writing();
-		$writing3->unique_key = "unique 3";
-		$writing3->save();
-		$writings = new Writings();
-		$writings->select();
-		$unique_keys = $writings->get_unique_key_in_array();
-		$this->assertTrue(in_array("unique 1", $unique_keys));
-		$this->assertTrue(in_array("unique 2", $unique_keys));
-		$this->assertTrue(in_array("unique 3", $unique_keys));
-	}
-	
 	function test_filter_with() {
 		$writings = new Writings();
 		$writings->filter_with(array('start' => mktime(0, 0, 0, 3, 9, 2013), 'stop' => mktime(0, 0, 0, 3, 10, 2013), '*' => 'fullsearch'));

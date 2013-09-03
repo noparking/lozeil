@@ -25,12 +25,11 @@ if (isset($_POST['submit'])) {
 		if ($category->name != $name and !empty($name)) {
 			$category->name = $name;
 			$category->save();
-		} elseif (empty($name)) {
+		} elseif (empty($name) and $category->is_deletable()) {
 			$category->delete();
 		}
 	}
 }
-
 
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);

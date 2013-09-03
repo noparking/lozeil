@@ -164,11 +164,8 @@ class tests_Writings_Data_File extends TableTestCase {
 		
 		fclose($handle);
 		unlink($name);
-		$writings = new Writings();
-		$writings->select();
-		$unique_keys = $writings->get_unique_key_in_array();
-		$this->assertTrue(array_unique($unique_keys) == $unique_keys);
-		$this->assertTrue(count($unique_keys) === 3);
+		$writing = new Writing();
+		$this->assertFalse($writing->load(4));
 		$this->truncateTable("writings");
 	}
 	
@@ -242,12 +239,8 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		
 		fclose($handle);
 		unlink($name);
-		
-		$writings = new Writings();
-		$writings->select();
-		$unique_keys = $writings->get_unique_key_in_array();
-		$this->assertTrue(array_unique($unique_keys) == $unique_keys);
-		$this->assertTrue(count($unique_keys) === 2);
+		$writing = new Writing();
+		$this->assertFalse($writing->load(3));
 		$this->truncateTable("writings");
 	}
 	

@@ -53,4 +53,18 @@ class tests_Source extends TableTestCase {
 		$source->delete();
 		$this->assertFalse($source_loaded->load(1));
 	}
+	
+	function test_is_deletable() {
+		$source = new Source();
+		$source->id = 1;
+		$source->save();
+		$this->assertTrue($source->is_deletable());
+		$writing = new Writing();
+		$writing->sources_id = 1;
+		$writing->save();
+		$this->assertFalse($source->is_deletable());
+		$this->assertFalse($source->is_deletable());
+		$this->truncateTable("sources");
+		$this->truncateTable("writings");
+	}
 }

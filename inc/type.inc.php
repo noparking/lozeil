@@ -76,6 +76,13 @@ class Type extends Record {
 		return $this->id;
 	}
 	
+	function is_deletable() {
+		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
+		" WHERE types_id = '".$this->id."'";
+		$result = $this->db->value_exists($query);
+		return !$result;
+	}
+	
 	function name() {
 		return 	$this->name;
 	}

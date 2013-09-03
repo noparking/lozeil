@@ -53,4 +53,18 @@ class tests_Type extends TableTestCase {
 		$type->delete();
 		$this->assertFalse($type_loaded->load(1));
 	}
+	
+	function test_is_deletable() {
+		$type = new Type();
+		$type->id = 1;
+		$type->save();
+		$this->assertTrue($type->is_deletable());
+		$writing = new Writing();
+		$writing->types_id = 1;
+		$writing->save();
+		$this->assertFalse($type->is_deletable());
+		$this->assertFalse($type->is_deletable());
+		$this->truncateTable("types");
+		$this->truncateTable("writings");
+	}
 }

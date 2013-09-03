@@ -58,9 +58,10 @@ class Menu_Area {
 					'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
 				),
 				1 => array(
-					'value' => Html_tag::a(link_content("content=categories.php"), utf8_ucfirst(__("manage categories"))).
-							   Html_tag::a(link_content("content=sources.php"), utf8_ucfirst(__("manage sources"))).
-							   Html_tag::a(link_content("content=types.php"), utf8_ucfirst(__("manage types")))
+					'value' => utf8_ucfirst(__("manage the"))." ".
+							   Html_tag::a(link_content("content=categories.php"), __("categories")).", ".
+							   Html_tag::a(link_content("content=sources.php"), __("sources")).", ".
+							   Html_tag::a(link_content("content=types.php"), __("types"))
 				),
 				2 => array(
 					'value' => $data->form_import()

@@ -47,6 +47,7 @@ $__['line %s of file %s is not in cic format'] = "la ligne %s du fichier %s n'es
 $__['line %s of file %s is not in coop format'] = "la ligne %s du fichier %s n'est pas au format coop";
 $__['manage categories'] = "gérer les catégories";
 $__['manage sources'] = "gérer les sources";
+$__['manage the'] = "gérer les";
 $__['manage types'] = "gérer les types";
 $__['mask'] = "masquer";
 $__['modify'] = "modifier";

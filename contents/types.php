@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
 		if ($type->name != $name and !empty($name)) {
 			$type->name = $name;
 			$type->save();
-		} elseif (empty($name)) {
+		} elseif (empty($name) and $type->is_deletable()) {
 			$type->delete();
 		}
 	}

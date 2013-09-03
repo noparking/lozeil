@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
 		if ($source->name != $name and !empty($name)) {
 			$source->name = $name;
 			$source->save();
-		} elseif (empty($name)) {
+		} elseif (empty($name) and $source->is_deletable()) {
 			$source->delete();
 		}
 	}

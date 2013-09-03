@@ -395,10 +395,6 @@ table {
 	z-index: 9999;
 }
 
-.menu_actions li a {
-	margin: 0 20px 0 0;
-}
-
 #menu_header_balance {
 	margin-left: 20px;
 	margin-top: 3px;

@@ -38,10 +38,6 @@ class Writings_Data_File {
 			
 			if ($this->is_cic($this->csv_data)) {
 				unset($this->csv_data[0]);
-				
-				$writings = new Writings();
-				$writings_key = $writings->get_unique_key_in_array();
-				
 				foreach ($this->csv_data as $line) {
 					if ($this->is_line_cic($line)) {
 						$writing = new Writing();
@@ -57,7 +53,7 @@ class Writings_Data_File {
 							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['credit']);
 						}
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
-						if (!in_array($writing->unique_key, $writings_key)) {
+						if ($writing->is_insertable()) {
 							$writing->save();
 							$nb_records++;
 						}
@@ -91,10 +87,6 @@ class Writings_Data_File {
 				$row_names = $this->csv_data[0];
 				unset($this->csv_data[0]);
 				
-				$writings = new Writings();
-				$writings->select();
-				$writings_key = $writings->get_unique_key_in_array();
-				
 				foreach ($this->csv_data as $line) {
 					
 					if ($this->is_line_coop($line)) {
@@ -119,7 +111,7 @@ class Writings_Data_File {
 						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
-						if (!in_array($writing->unique_key, $writings_key)) {
+						if ($writing->is_insertable()) {
 							$writing->save();
 							$nb_records++;
 						}

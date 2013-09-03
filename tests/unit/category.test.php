@@ -14,6 +14,7 @@ class tests_Category extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
+			"writings",
 			"categories"
 		);
 	}
@@ -46,12 +47,26 @@ class tests_Category extends TableTestCase {
 	
 	function test_delete() {
 		$category = new Category();
-		$category->name = "premier category";
+		$category->name = "première category";
 		$category->save();
 		$category_loaded = new Category();
 		$this->assertTrue($category_loaded->load(1));
 		$category->delete();
 		$this->assertFalse($category_loaded->load(1));
 		$this->truncateTable("categories");
+	}
+	
+	function test_is_deletable() {
+		$category = new Category();
+		$category->id = 1;
+		$category->save();
+		$this->assertTrue($category->is_deletable());
+		$writing = new Writing();
+		$writing->categories_id = 1;
+		$writing->save();
+		$this->assertFalse($category->is_deletable());
+		$this->assertFalse($category->is_deletable());
+		$this->truncateTable("categories");
+		$this->truncateTable("writings");
 	}
 }
