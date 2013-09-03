@@ -235,7 +235,6 @@ table {
 	clear: left;
 	margin: 0;
 	padding: 8px 0 4px 0;
-	cursor: pointer;
 	position: relative;
 	list-style: none;
 }
@@ -393,6 +392,7 @@ table {
 	background-color: black;
 	color: white;
 	border: solid black thin;
+	z-index: 9999;
 }
 
 .menu_actions li a {
@@ -533,4 +533,12 @@ input[type="file"] {
 
 .table_writings #comment {
 	width: 600px;
+}
+
+input[type="submit"]:hover {
+	cursor: pointer;
+}
+
+.edit_writings_form {
+	width: 50%;
 }

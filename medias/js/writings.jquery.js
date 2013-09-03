@@ -95,6 +95,24 @@ $(document).ajaxStop(function() {
 })
 
 $(document).ready(function() {
+	$("input#amount_excl_vat").on("keyup", function() {
+		$(this).val($(this).val().replace(",", "."));
+		var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
+		$("input#amount_inc_vat").val(amount_inc_vat);
+	});
+	
+	$("input#amount_inc_vat").on("keyup", function() {
+		$(this).val($(this).val().replace(",", "."));
+		var amount_excl_vat = Math.round($(this).val() / (($("input#vat").val()/100 +1))*1000000)/1000000;
+		$("input#amount_excl_vat").val(amount_excl_vat);
+	});
+	
+	$("input#vat").on("keyup", function() {
+		$(this).val($(this).val().replace(",", "."));
+		var amount_excl_vat = Math.round($("input#amount_inc_vat").val() / (($(this).val()/100 +1))*1000000)/1000000;
+		$("input#amount_excl_vat").val(amount_excl_vat);
+	});
+	
 	$("#extra_filter_writings_value").keyup(function() {
 		$.post(
 			"index.php?content=writings.ajax.php",
