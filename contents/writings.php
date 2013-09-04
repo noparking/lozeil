@@ -8,8 +8,7 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-$timestamp = mktime(0, 0, 0, date("m"), 1, date("Y"));
-$_SESSION['timestamp'] = $timestamp;
+
 if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
@@ -17,8 +16,11 @@ if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction']))
 
 $timestamp_selected = determine_integer_from_post_get_session(null, "timestamp");
 $selected_writing = determine_integer_from_post_get_session(null, "writings_id");
-if (isset($timestamp_selected) and $timestamp_selected > 0) {
+
+if ($timestamp_selected > 0) {
 	$_SESSION['timestamp'] = $timestamp_selected;
+} else {
+	$_SESSION['timestamp'] = mktime(0, 0, 0, date("m"), 1, date("Y"));
 }
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
@@ -83,13 +85,11 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 
-$heading = new Heading_Area(null, $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value));
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value));
 echo $heading->show();
 
 echo $writings->display();
 
 $writing = new Writing();
-if ($selected_writing > 0) {
-	$writing->load($selected_writing);
-}
+$writing->load($selected_writing);
 echo $writing->form();

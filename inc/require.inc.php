@@ -40,6 +40,7 @@ require $current_directory."/message.inc.php";
 require $current_directory."/misc.inc.php";
 require $current_directory."/source.inc.php";
 require $current_directory."/sources.inc.php";
+require $current_directory."/sparkline.inc.php";
 require $current_directory."/theme_default.inc.php";
 require $current_directory."/type.inc.php";
 require $current_directory."/types.inc.php";

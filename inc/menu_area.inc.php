@@ -28,23 +28,19 @@ class Menu_Area {
 		if (!empty($this->img_src)) {
 			$content .= "<div id=\"menu_header_logo\"><img ".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\"></div>";
 		}
-		$content .= "</div>";
-		
-		$content .= "<div class=\"menu_actions\">";
+		$content .= "</div><div class=\"menu_actions\">";
 		if (!empty($this->actions)) {
 			$content .= $this->actions;
 		}
 		$content .= "</div>";
-
 		if (!empty($this->handle)) {
 			$content .= "<div class=\"menu_handle hide\">".$this->handle."</div>";
 		}
-		
 		$content .= "</div>";
 		return $content;
 	}
 	
-	function prepare_navigation($content = "") {
+	function prepare_navigation() {
 		$writings = new Writings();
 		$writings->filter_with(array('stop' => time()));
 		$writings->select_columns('amount_inc_vat');
@@ -54,16 +50,19 @@ class Menu_Area {
 		$data = new Writings_Data_File();
 		$grid = array(
 			'leaves' => array (
-				0 => array(
+				array(
 					'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
 				),
-				1 => array(
+				array(
+					'value' => Html_tag::a(link_content("content=followupwritings.php"), utf8_ucfirst(__("consult statistics")))
+				),
+				array(
 					'value' => utf8_ucfirst(__("manage the"))." ".
 							   Html_tag::a(link_content("content=categories.php"), __("categories")).", ".
 							   Html_tag::a(link_content("content=sources.php"), __("sources")).", ".
 							   Html_tag::a(link_content("content=types.php"), __("types"))
 				),
-				2 => array(
+				array(
 					'value' => $data->form_import()
 				)
 			)

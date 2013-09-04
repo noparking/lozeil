@@ -126,35 +126,30 @@ class Writing extends Record {
 	}
 	
 	function merge_from(Writing $to_merge) {
-		if ( $this->banks_id == 0 or $to_merge->banks_id == 0 ) {
+		if ($this->banks_id == 0 or $to_merge->banks_id == 0) {
 			if ($this->banks_id != 0) {
-				$this->categories_id = (isset($this->categories_id) and $this->categories_id > 0) ? (int)$this->categories_id : $to_merge->categories_id;
-				$this->banks_id = (isset($this->banks_id) and $this->banks_id > 0) ? (int)$this->banks_id : $to_merge->banks_id;
-				$this->sources_id = (isset($this->sources_id) and $this->sources_id > 0) ? (int)$this->sources_id : $to_merge->sources_id;
-				$this->amount_excl_vat = isset($this->amount_excl_vat) ? $this->amount_excl_vat : $to_merge->amount_excl_vat;
-				$this->amount_inc_vat = isset($this->amount_inc_vat) ? $this->amount_inc_vat : $to_merge->amount_inc_vat;
-				$this->comment = isset($this->comment) ? $this->comment : $to_merge->comment;
-				$this->day = isset($this->day) ? $this->day : $to_merge->day;
-				$this->information = isset($this->information) ? $this->information : $to_merge->information;
-				$this->vat = isset($this->vat) ? $this->vat : $to_merge->vat;
-				$this->types_id = (isset($this->types_id) and $this->types_id > 0) ? $this->types_id : $to_merge->types_id;
-				$this->paid = isset($this->paid) ? $this->paid : $to_merge->paid;
+				$this->categories_id = $this->categories_id > 0 ? (int)$this->categories_id : $to_merge->categories_id;
+				$this->banks_id = $this->banks_id > 0 ? (int)$this->banks_id : $to_merge->banks_id;
+				$this->sources_id = $this->sources_id > 0 ? (int)$this->sources_id : $to_merge->sources_id;
+				$this->comment = !empty($this->comment) ? $this->comment : $to_merge->comment;
+				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
+				$this->types_id = $this->types_id > 0 ? $this->types_id : $to_merge->types_id;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
 				$this->save();
 				$to_merge->delete();
 			} else {
-				$this->categories_id = (isset($to_merge->categories_id) and $to_merge->categories_id > 0) ? (int)$to_merge->categories_id : $this->categories_id;
-				$this->banks_id = (isset($to_merge->banks_id) and $to_merge->banks_id > 0) ? (int)$to_merge->banks_id : $this->banks_id;
-				$this->sources_id = (isset($to_merge->sources_id) and $to_merge->sources_id > 0) ? (int)$to_merge->sources_id : $this->sources_id;
-				$this->amount_excl_vat = isset($to_merge->amount_excl_vat) ? $to_merge->amount_excl_vat : $this->amount_excl_vat;
-				$this->amount_inc_vat = isset($to_merge->amount_inc_vat) ? $to_merge->amount_inc_vat : $this->amount_inc_vat;
-				$this->comment = isset($to_merge->comment) ? $to_merge->comment : $this->comment;
-				$this->day = isset($to_merge->day) ? $to_merge->day : $this->day;
-				$this->information = isset($to_merge->information) ? $to_merge->information : $this->information;
-				$this->vat = isset($to_merge->vat) ? $to_merge->vat : $this->vat;
-				$this->types_id = (isset($to_merge->types_id) and $to_merge->types_id > 0) ? $to_merge->types_id : $this->types_id;
-				$this->paid = isset($to_merge->paid) ? $to_merge->paid : $this->paid;
+				$this->categories_id = $to_merge->categories_id > 0 ? (int)$to_merge->categories_id : $this->categories_id;
+				$this->banks_id = $to_merge->banks_id > 0 ? (int)$to_merge->banks_id : $this->banks_id;
+				$this->sources_id = $to_merge->sources_id > 0 ? (int)$to_merge->sources_id : $this->sources_id;
+				$this->amount_excl_vat =  $to_merge->amount_excl_vat;
+				$this->amount_inc_vat = $to_merge->amount_inc_vat;
+				$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
+				$this->day = $to_merge->day;
+				$this->information = !empty($to_merge->information) ? $to_merge->information : $this->information;
+				$this->vat = $to_merge->vat;
+				$this->types_id = $to_merge->types_id > 0 ? $to_merge->types_id : $this->types_id;
+				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
 				$this->save();
@@ -166,26 +161,25 @@ class Writing extends Record {
 	}
 	
 	function split($amount = 0) {
-		if (isset($this->amount_inc_vat)) {
-			$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
-			$this->amount_excl_vat = round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
-			$this->search_index = $this->search_index();
-			$this->save();
-			$writing = new Writing();
-			$writing->id = $this->id;
-			$writing->load();
-			$writing->id = 0;
-			$writing->amount_inc_vat = $amount;
-			$writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
-			$writing->search_index = $this->search_index();
-			$writing->save();
-		}
+		$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
+		$this->amount_excl_vat = round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
+		$this->search_index = $this->search_index();
+		$this->save();
+		$writing = new Writing();
+		$writing->load($this->id);
+		$writing->id = 0;
+		$writing->amount_inc_vat = $amount;
+		$writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
+		$writing->search_index = $this->search_index();
+		$writing->save();
 	}
 	
 	function form() {
-		$form = "<div id=\"edit_writings\"><span id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span><span id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>";
-		$form .= "<div class=\"edit_writings_form\">
+		$form = "<div id=\"edit_writings\">
+			<span id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span>
+			<span id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
+			<span id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<div class=\"edit_writings_form\">
 			<form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
@@ -232,7 +226,7 @@ class Writing extends Record {
 			'class' => "itemsform",
 			'leaves' => array(
 				'date' => array(
-					'value' => $datepicker->item(__('day')),
+					'value' => $datepicker->item(__('date')),
 				),
 				'category' => array(
 					'value' => $category->item(__('category')),
@@ -334,8 +328,7 @@ class Writing extends Record {
 	
 	function duplicate($amount) {
 		if ($amount > 0) {
-			$new_writing->day = $this->day;
-			for ( $i=1; $i<=$amount; $i++) {
+			for ($i=1; $i<=$amount; $i++) {
 				$new_writing = $this;
 				$new_writing->id = 0;
 				$new_writing->day = strtotime('+1 months', $new_writing->day);
@@ -348,9 +341,8 @@ class Writing extends Record {
 	function show_further_information() {
 		if (!empty($this->information)) {
 			return "<div class=\"table_writings_comment_further_information\">".nl2br($this->information)."</div>";
-		} else {
-			return "";
 		}
+		return "";
 	}
 	
 	function show_operations() {

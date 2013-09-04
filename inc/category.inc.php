@@ -84,6 +84,13 @@ class Category extends Record {
 		return !$result;
 	}
 	
+	function is_in_use() {
+		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
+		" WHERE categories_id = '".$this->id."'";
+		$result = $this->db->value_exists($query);
+		return $result;
+	}
+	
 	function name() {
 		return 	$this->name;
 	}

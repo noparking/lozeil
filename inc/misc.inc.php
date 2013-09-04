@@ -317,3 +317,11 @@ function log_status($status) {
 	Message::log($status);
 	return true;
 }
+
+function close_years_in_array() {
+	$years_in_array = "";
+	for ($i = date('Y') - 2; $i <= date('Y') + 4; $i++) {
+		$years_in_array[$i] = $i;
+	}
+	return $years_in_array;
+}

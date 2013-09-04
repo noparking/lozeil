@@ -538,3 +538,42 @@ input[type="submit"]:hover {
 .edit_writings_form {
 	width: 50%;
 }
+
+.sparkline, .sparkline_header th {
+	margin: 10px;
+	text-align: center;
+}
+
+.sparkline-min {
+	color: #ff0000;
+	padding-left: 0.3em;
+}
+
+.sparkline-max {
+	color: #009900;
+	padding-left: 0.3em;
+}
+
+.sparkline-last {
+	font-weight: bold;
+	padding-left: 0.3em;
+}
+
+.sparkline-name {
+	padding-left: 0.3em;
+}
+
+#followupwritings_year div{
+	display: inline-block;
+}
+
+#table_followupwritings {
+	width: auto;
+	margin-top: 10px;
+}
+
+h2 {
+	font-size: 1.2em;
+	padding: 5px 0;
+	margin: 5px 0;
+}

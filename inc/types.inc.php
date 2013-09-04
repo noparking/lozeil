@@ -33,20 +33,6 @@ class Types extends Collector  {
 		return $names;
 	}
 	
-	function grid_header() {
-		$grid = array(
-			'header' => array(
-				'cells' => array(
-					array(
-						'type' => "th",
-						'value' => utf8_ucfirst(__("types")),
-					)
-				)
-			)
-		);
-		return $grid;
-	}
-	
 	function grid_body() {
 		$input = new Html_Input("name_new");
 		$grid[0] =  array(
@@ -82,17 +68,9 @@ class Types extends Collector  {
 		);
 		return $grid;
 	}
-
-	function grid_footer() {
-		return array();
-	}
-
-	function grid() {
-		return $this->grid_header() + $this->grid_body() + $this->grid_footer();
-	}
 	
 	function show() {
-		$html_table = new Html_table(array('lines' => $this->grid()));
+		$html_table = new Html_table(array('lines' => $this->grid_body()));
 		return $html_table->show();
 	}
 	

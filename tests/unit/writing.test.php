@@ -146,21 +146,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertIdentical($writing_to_merge, $writing);
 		
 		$writing_to_merge_2 = new Writing();
-		$writing_to_merge_2->categories_id = NULL;
-		$writing_to_merge_2->amount_excl_vat = NULL;
-		$writing_to_merge_2->amount_inc_vat = NULL;
-		$writing_to_merge_2->comment = NULL;
-		$writing_to_merge_2->day = NULL;
-		$writing_to_merge_2->information = NULL;
-		$writing_to_merge_2->paid = NULL;
-		$writing_to_merge_2->sources_id = NULL;
-		$writing_to_merge_2->types_id = NULL;
-		$writing_to_merge_2->vat = NULL;
-		
-		$writing->merge_from($writing_to_merge_2);
-		
-		$this->assertIdentical($writing_to_merge, $writing);
-		
 		$writing_to_merge_2->categories_id = 0;
 		$writing_to_merge_2->amount_excl_vat = 0;
 		$writing_to_merge_2->amount_inc_vat = 0;
@@ -177,7 +162,9 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->categories_id = 2;
 		$writing_to_merge_3->amount_excl_vat = 0;
 		$writing_to_merge_3->amount_inc_vat = 0;
+		$writing_to_merge_3->comment = "Ceci est un autre test";
 		$writing_to_merge_3->day = 0;
+		$writing_to_merge_3->information = "Autre complément d'infos";
 		$writing_to_merge_3->paid = 0;
 		$writing_to_merge_3->sources_id = 1;
 		$writing_to_merge_3->types_id = 2;

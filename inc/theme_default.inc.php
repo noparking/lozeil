@@ -60,6 +60,10 @@ class Theme_Default {
 		if ($GLOBALS['content'] == "writings.php") {
 			$js_files[] = "medias/js/writings.jquery.js";
 		}
+		if ($GLOBALS['content'] == "followupwritings.php") {
+			$js_files[] = "medias/js/sparkline.jquery.min.js";
+			$js_files[] = "medias/js/sparkline.jquery.js";
+		}
 		
 		$html = "";
 

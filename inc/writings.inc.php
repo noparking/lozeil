@@ -64,7 +64,7 @@ class Writings extends Collector  {
 						'type' => "th",
 						'class' => $this->determine_table_header_class("day"),
 						'id' => "day",
-						'value' => utf8_ucfirst(__("day")),
+						'value' => utf8_ucfirst(__("date")),
 					),
 					array(
 						'type' => "th",
@@ -159,62 +159,58 @@ class Writings extends Collector  {
 				$class = "table_writings_comment";
 			}
 			$grid[$writing->id] =  array(
-					'class' => "draggable",
-					'id' => "table_".$writing->id,
-					'cells' => array(
-						array(
-							'type' => "td",
-							'value' => date("d/m/Y", $writing->day),
-						),
-						array(
-							'type' => "td",
-							'value' => isset($categories_names[$writing->categories_id]) ? $categories_names[$writing->categories_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => isset($types_name[$writing->types_id]) ? $types_name[$writing->types_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => round($writing->amount_excl_vat, 2),
-						),
-						array(
-							'type' => "td",
-							'value' => $writing->vat,
-						),
-						array(
-							'type' => "td",
-							'value' => round($writing->amount_inc_vat, 2),
-						),
-						array(
-							'type' => "td",
-							'class' => $class,
-							'value' => $writing->comment.$writing->show_further_information(),
-						),
-						array(
-							'type' => "td",
-							'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
-						),
-						array(
-							'type' => "td",
-							'value' => $writing->show_operations(),
-						),
+				'class' => "draggable",
+				'id' => "table_".$writing->id,
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => date("d/m/Y", $writing->day),
 					),
+					array(
+						'type' => "td",
+						'value' => isset($categories_names[$writing->categories_id]) ? $categories_names[$writing->categories_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => isset($types_name[$writing->types_id]) ? $types_name[$writing->types_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => round($writing->amount_excl_vat, 2),
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->vat,
+					),
+					array(
+						'type' => "td",
+						'value' => round($writing->amount_inc_vat, 2),
+					),
+					array(
+						'type' => "td",
+						'class' => $class,
+						'value' => $writing->comment.$informations,
+					),
+					array(
+						'type' => "td",
+						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->show_operations(),
+					),
+				),
 			);
 		}
 		return $grid;
 	}
 
-	function grid_footer() {
-		return array();
-	}
-
 	function grid() {
-		return $this->grid_header() + $this->grid_body() + $this->grid_footer();
+		return $this->grid_header() + $this->grid_body();
 	}
 	
 	function show() {
@@ -230,15 +226,14 @@ class Writings extends Collector  {
 		$grid = array();
 		$this->month = determine_first_day_of_month($timestamp);
 		
-		$timeline_iterator = strtotime('-2 months', $this->month);
-		$timeline_stop = strtotime('+10 months', $this->month);
-
 		$writings = new Writings();
 		$writings->filter_with(array('stop' => strtotime('+11 months', $this->month)));
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 
-		while ($timeline_iterator <= $timeline_stop) {
+		$timeline_iterator = strtotime('-2 months', $this->month);
+
+		while ($timeline_iterator <= strtotime('+10 months', $this->month)) {
 			$class = "navigation";
 			if ($timeline_iterator == $this->month) {
 				$class = "encours";
@@ -246,15 +241,13 @@ class Writings extends Collector  {
 			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
 			$next_month = determine_first_day_of_next_month($timeline_iterator);
 			$balance = $writings->show_balance_at($next_month);
-			if ($balance < 0) {
-				$class = "negative_balance";
-			} else {
-				$class = "positive_balance";
-			}
+			
+			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
+			
 			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=writings.php&timestamp=".$timeline_iterator),
 					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
 					date("Y", $timeline_iterator))."<br /><br />
-					<span class=\"".$class."\">".$balance."</span>";
+					<span class=\"".$balance_class."\">".$balance."</span>";
 			$timeline_iterator = $next_month;
 		}
 		$list = new Html_List($grid);
@@ -279,20 +272,22 @@ class Writings extends Collector  {
 		if (isset($this->filters['*']) and !empty($this->filters['*'])) {
 			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
 		}
+		if (isset($this->filters['categories_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
+		}
 		
 		return $query_where;
 	}
 	
 	function show_balance_on_current_date() {
-		$summary = utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€");
-		return $summary;
+		return utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€");
 	}
 	
 	function show_balance_at($timestamp) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
 			if($writing->day < $timestamp) {
-				$amount = $amount + $writing->amount_inc_vat;
+				$amount += $writing->amount_inc_vat;
 			}
 		}
 		return round($amount, 2);
@@ -314,5 +309,23 @@ class Writings extends Collector  {
 				$this->filters[$key] = $value;
 			}
 		}
+	}
+	
+	function balance_per_month_in_a_year_in_array($timestamp) {
+		$values = array();
+		for ($i = 0; $i < 12; $i++) {
+			$timestamp = strtotime('+1 month', $timestamp);
+			$values[] = $this->show_balance_at($timestamp);
+		}
+		return $values;
+	}
+	
+	function balance_per_day_in_a_year_in_array($timestamp) {
+		$values = array();
+		for ($i = 0; $i <= 365; $i++) {
+			$timestamp = strtotime('+1 day', $timestamp);
+			$values[] = $this->show_balance_at($timestamp);
+		}
+		return $values;
 	}
 }

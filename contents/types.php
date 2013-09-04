@@ -36,7 +36,7 @@ $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
-$heading = new Heading_Area();
+$heading = new Heading_Area(utf8_ucfirst(__('manage the types')));
 echo $heading->show();
 
 $types = new Types();
