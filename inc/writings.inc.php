@@ -280,7 +280,7 @@ class Writings extends Collector  {
 	}
 	
 	function show_balance_on_current_date() {
-		return utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€");
+		return Html_Tag::a(link_content("content=writings.php&timestamp=".determine_first_day_of_month(time())),utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€"));
 	}
 	
 	function show_balance_at($timestamp) {

@@ -225,9 +225,7 @@ class Writing extends Record {
 		if($this->banks_id > 0) {
 			$datepicker->properties['disabled'] = "disabled";
 			$amount_excl_vat->properties['disabled'] = "disabled";
-			$vat->properties['disabled'] = "disabled";
 			$amount_inc_vat->properties['disabled'] = "disabled";
-			$comment->properties['disabled'] = "disabled";
 			$paid->properties['disabled'] = "disabled";
 		}
 		$grid = array(
@@ -325,6 +323,9 @@ class Writing extends Record {
 		$writing = parent::fill($hash);
 		if (isset($hash['datepicker'])) {
 			$writing->day = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
+		}
+		if($writing->banks_id > 0) {
+			$writing->amount_excl_vat = round(($writing->amount_inc_vat/(($writing->vat/100) + 1)), 6);
 		}
 		return $writing;
 	}

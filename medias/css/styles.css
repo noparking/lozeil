@@ -581,3 +581,7 @@ h2 {
 #menu_actions_export, #menu_actions_export form, .show {
 	display: inline-block;
 }
+
+#menu_header_balance a{
+	color: white;
+}
