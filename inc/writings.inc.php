@@ -293,6 +293,16 @@ class Writings extends Collector  {
 		return round($amount, 2);
 	}
 	
+	function show_balance_between($timestamp_min, $timestamp_max) {
+		$amount = 0;
+		foreach ($this->instances as $writing) {
+			if($writing->day >= $timestamp_min and $writing->day < $timestamp_max) {
+				$amount += $writing->amount_inc_vat;
+			}
+		}
+		return round($amount, 2);
+	}
+	
 	function form_filter($value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
@@ -311,20 +321,22 @@ class Writings extends Collector  {
 		}
 	}
 	
-	function balance_per_month_in_a_year_in_array($timestamp) {
+	function balance_per_month_in_a_year_in_array($timestamp_max) {
 		$values = array();
 		for ($i = 0; $i < 12; $i++) {
-			$timestamp = strtotime('+1 month', $timestamp);
-			$values[] = $this->show_balance_at($timestamp);
+			$timestamp_min = $timestamp_max;
+			$timestamp_max = strtotime('+1 month', $timestamp_max);
+			$values[] = $this->show_balance_between($timestamp_min, $timestamp_max);
 		}
 		return $values;
 	}
 	
-	function balance_per_day_in_a_year_in_array($timestamp) {
+	function balance_per_day_in_a_year_in_array($timestamp_max) {
 		$values = array();
 		for ($i = 0; $i <= 365; $i++) {
-			$timestamp = strtotime('+1 day', $timestamp);
-			$values[] = $this->show_balance_at($timestamp);
+			$timestamp_min = $timestamp_max;
+			$timestamp_max = strtotime('+1 day', $timestamp_max);
+			$values[] = $this->show_balance_between($timestamp_min, $timestamp_max);
 		}
 		return $values;
 	}
