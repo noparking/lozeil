@@ -88,7 +88,7 @@ class Writings extends Collector  {
 						'type' => "th",
 						'class' => $this->determine_table_header_class("amount_excl_vat"),
 						'id' => "amount_excl_vat",
-						'value' => utf8_ucfirst(__("amount excluding tax")),
+						'value' => utf8_ucfirst(__("amount excluding vat")),
 					),
 					array(
 						'type' => "th",
@@ -100,7 +100,7 @@ class Writings extends Collector  {
 						'type' => "th",
 						'class' => $this->determine_table_header_class("amount_inc_vat"),
 						'id' => "amount_inc_vat",
-						'value' => utf8_ucfirst(__("amount including tax")),
+						'value' => utf8_ucfirst(__("amount including vat")),
 					),
 					array(
 						'type' => "th",

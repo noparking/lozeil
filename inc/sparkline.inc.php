@@ -19,7 +19,7 @@ class Sparkline {
 		$this->type = $type;
 		$this->period = $period;
 		if ($year == 0) {
-			$this->year = date('Y');
+			$this->year = mktime(0, 0, 0, 1, 1, date('Y'));
 		}
 	}
 	

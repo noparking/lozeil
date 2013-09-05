@@ -136,7 +136,17 @@ class Writings_Data_File {
 		$import_file = new Html_Input("menu_actions_import_file", "", "file");
 		$bank = new Html_Select("menu_actions_import_bank_id", $banks_name);
 		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
-		$form .= $import_file->item(utf8_ucfirst(__("import bank statement"))).$bank->item(__('bank')).$submit->input();
+		$form .= "<a id=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import bank statement"))."</a>".$import_file->item("").$bank->item(__('bank')).$submit->input();
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function form_export() {
+		$date_picker_from = new Html_Input_Date('date_picker_from');
+		$date_picker_to = new Html_Input_Date('date_picker_to');
+		$form = "<div id=\"menu_actions_export\"><form method=\"post\" name=\"menu_actions_export_form\" action=\"".link_content("content=writingsexport.php")."\" enctype=\"multipart/form-data\">";
+		$submit = new Html_Input("menu_actions_export_submit", "Ok", "submit");
+		$form .= $date_picker_from->input().$date_picker_to->input().$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}

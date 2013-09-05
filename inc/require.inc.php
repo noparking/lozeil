@@ -25,6 +25,8 @@ require $current_directory."/bot.inc.php";
 require $current_directory."/categories.inc.php";
 require $current_directory."/category.inc.php";
 require $current_directory."/config_file.inc.php";
+require $current_directory."/excel.inc.php";
+require $current_directory."/export_excel.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/heading_area.inc.php";
 require $current_directory."/html_input.inc.php";

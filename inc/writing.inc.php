@@ -238,13 +238,13 @@ class Writing extends Record {
 					'value' => $type->item(__('type')),
 				),
 				'amount_excl_vat' => array(
-					'value' => $amount_excl_vat->item(__('amount excluding tax')),
+					'value' => $amount_excl_vat->item(__('amount excluding vat')),
 				),
 				'vat' => array(
 					'value' => $vat->item(__('VAT')),
 				),
 				'amount_inc_vat' => array(
-					'value' => $amount_inc_vat->item(__('amount including tax')),
+					'value' => $amount_inc_vat->item(__('amount including vat')),
 				),
 				'comment' => array(
 					'value' => $comment->item(__('comment')),

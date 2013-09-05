@@ -1,5 +1,7 @@
 $(document)
 	.ready(function() {
+		$("#menu_actions_export").hide();
+		$("#menu_actions_import_label").nextAll().hide();
 		if($(".edit_writings_form #id").attr("value") > 0) {
 			$(".edit_writings_form, #edit_writings_hide, #edit_writings_cancel").show();
 			$("#edit_writings_show").hide();
@@ -25,6 +27,14 @@ $(document)
 			$(".edit_writings_form").slideUp();
 			$(this).hide();
 			$("#edit_writings_show").show();
+		})
+		$("#menu_actions_export_label").bind("click", function() {
+			event.preventDefault();
+			$("#menu_actions_export").toggle();
+		})
+		$("#menu_actions_import_label").bind("click", function() {
+			event.preventDefault();
+			$(this).nextAll().toggle();
 		})
 	})
 	.keyup(function(e) {

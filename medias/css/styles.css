@@ -577,3 +577,7 @@ h2 {
 	padding: 5px 0;
 	margin: 5px 0;
 }
+
+#menu_actions_export, #menu_actions_export form, .show {
+	display: inline-block;
+}

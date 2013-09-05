@@ -17,7 +17,7 @@ if (isset($_GET['content']) and !empty($_GET['content'])) {
 	$content = "writings.php";
 }
 $location = clean_location($_SERVER['PHP_SELF']);
-if (!isset($_REQUEST['method']) and !preg_match("/ajax/", $content)) {
+if (!isset($_REQUEST['method']) and !preg_match("/ajax/", $content) and !preg_match("/export/", $content)) {
 	$theme = new Theme_Default();
 
 	echo $theme->html_top();

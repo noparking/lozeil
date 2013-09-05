@@ -325,3 +325,24 @@ function close_years_in_array() {
 	}
 	return $years_in_array;
 }
+
+function column_number_in_excel($int) {
+	if ($int > 25) {
+		$column_number = $GLOBALS['array_excel'][floor($int / 26) - 1];
+		$column_number .= $GLOBALS['array_excel'][$int % 26];
+	} else {
+		$column_number = $GLOBALS['array_excel'][$int];
+	}
+
+	return $column_number;
+}
+
+function excel_span_format($span) {
+	if ($GLOBALS['param']['time_unit'] == "d") {
+		$excel_formatted = get_day($span);
+	} else {
+		$excel_formatted = round($span / 3600, $GLOBALS['param']['time_unit_round']);
+	}
+	
+	return $excel_formatted;
+}
