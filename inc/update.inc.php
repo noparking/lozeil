@@ -24,9 +24,11 @@ class Update {
 
 	function to_4() {
 		$this->dbconfig->add("table_users", "users");
-		$this->db->query("CREATE TABLE `users` (id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT);");
-		$this->db->query("ALTER TABLE `users` ADD `username` VARCHAR(80)  NOT NULL  DEFAULT ''  AFTER `id`;");
-		$this->db->query("ALTER TABLE `users` ADD `password` VARCHAR(50)  NOT NULL  DEFAULT ''  AFTER `username`;");
+		$this->db->query("CREATE TABLE `users` (`id` int(11) NOT NULL AUTO_INCREMENT,`username` varchar(80) NOT NULL DEFAULT '',`password` varchar(50) NOT NULL DEFAULT '',
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `username` (`username`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		);
 	}
 	
 	function to_3() {
