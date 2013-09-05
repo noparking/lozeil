@@ -568,7 +568,7 @@ input[type="submit"]:hover {
 }
 
 #table_followupwritings {
-	width: auto;
+	width: 50%;
 	margin-top: 10px;
 }
 

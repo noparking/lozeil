@@ -29,7 +29,8 @@ $dbExport->config['table_banks'].".name as ".__('bank').", ".
 $dbExport->config['table_categories'].".name as ".__('category').", ".
 $dbExport->config['table_sources'].".name as ".__('source').", ".
 $dbExport->config['table_types'].".name as ".__('type').", ".
-$dbExport->config['table_writings'].".comment as ".__('comment')." ".
+$dbExport->config['table_writings'].".comment as ".__('comment').", ".
+$dbExport->config['table_writings'].".information as ".__('information')." ".
 "FROM ".$dbExport->config['table_writings'].
 " LEFT JOIN ".$dbExport->config['table_banks'].
 " ON ".$dbExport->config['table_banks'].".id = ".$dbExport->config['table_writings'].".banks_id".

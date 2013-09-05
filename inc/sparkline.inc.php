@@ -39,30 +39,38 @@ class Sparkline {
 		return $this->values;
 	}
 	
-	function show() {
-		$show = "<tr class=\"sparkline\" >";
-		$show .= "<td class=\"sparkline-values\" sparkType=\"".$this->type."\">".join(",", $this->values)."</td>";
-		$show .= "<td class=\"sparkline-min\">".min($this->values)."</td>";
-		$show .= "<td class=\"sparkline-max\">".max($this->values)."</td>";
-		$show .= "<td class=\"sparkline-last\">".end($this->values)."</td>";
-		$show .= "<td class=\"sparkline-name\">".$this->name."</td>";
-		$show .= "</tr>";
-		return $show;
+	function grid_header() {
+		$grid = array(
+			'header' => array(
+				'class' => "sparkline_header",
+				'cells' => array(
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__('sparkline')),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__('min')),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__('max')),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__('last')),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__('category')),
+					)
+				)
+			)
+		);
+		return $grid;
 	}
 	
-	function show_header() {
-		$show = "<tr class=\"sparkline_header\">";
-		$show .= "<th>".utf8_ucfirst(__('sparkline'))."</th>";
-		$show .= "<th>".utf8_ucfirst(__('min'))."</th>";
-		$show .= "<th>".utf8_ucfirst(__('max'))."</th>";
-		$show .= "<th>".utf8_ucfirst(__('last'))."</th>";
-		$show .= "<th>".utf8_ucfirst(__('category'))."</th>";
-		$show .= "</tr>";
-		return $show;
-	}
-	
-	function display() {
-		$html = $this->show_header();
+	function grid_body() {
 		$writings = new Writings();
 		$categories = new Categories();
 		$categories->select();
@@ -77,9 +85,41 @@ class Sparkline {
 				}
 				$this->name = $category->name;
 				$this->values($values);
-				$html .= $this->show();
+				
+				$grid[$category->id] = array(
+						'class' => "sparkline",
+						'cells' => array(
+							array(
+								'type' => "td",
+								'class' => "sparkline-values",
+								'sparkType' => $this->type,
+								'value' => join(",", $this->values),
+							),
+							array(
+								'type' => "td",
+								'class' => "sparkline-min",
+								'value' => min($this->values),
+							),
+							array(
+								'type' => "td",
+								'class' => "sparkline-max",
+								'value' => max($this->values),
+							),
+							array(
+								'type' => "td",
+								'class' => "sparkline-last",
+								'value' => end($this->values),
+							),
+							array(
+								'type' => "td",
+								'class' => "sparkline-name",
+								'value' => $this->name,
+							),
+						)
+				);
 			}
 		}
+		
 		$writings->filter_with(array('categories_id' => 0));
 		$writings->select();
 		if ($this->period == 'day') {
@@ -89,7 +129,50 @@ class Sparkline {
 		}
 		$this->name = __('without category');
 		$this->values($values);
-		$html .= $this->show();
+		$grid[0] = array(
+				'class' => "sparkline",
+				'cells' => array(
+					array(
+						'type' => "td",
+						'class' => "sparkline-values",
+						'sparkType' => $this->type,
+						'value' => join(",", $this->values),
+					),
+					array(
+						'type' => "td",
+						'class' => "sparkline-min",
+						'value' => min($this->values),
+					),
+					array(
+						'type' => "td",
+						'class' => "sparkline-max",
+						'value' => max($this->values),
+					),
+					array(
+						'type' => "td",
+						'class' => "sparkline-last",
+						'value' => end($this->values),
+					),
+					array(
+						'type' => "td",
+						'class' => "sparkline-name",
+						'value' => $this->name,
+					),
+				)
+		);
+		return $grid;
+	}
+
+	function grid() {
+		return $this->grid_header() + $this->grid_body();
+	}
+	
+	function show() {
+		$html_table = new Html_table(array('lines' => $this->grid()));
+		return $html_table->show();
+	}
+	
+	function display() {
 		$year = new Html_Select("year", close_years_in_array(), (int)date('Y', $this->year));
 		$type = new Html_Select("type", array('bar' => 'bar','line' => 'line','tristate' => 'tristate','box' => 'box'), $this->type);
 		$period = new Html_Select("period", array('month' => __('month'),'day' => __('day')), $this->period);
@@ -97,6 +180,6 @@ class Sparkline {
 		$submit->value =__('ok');
 		
 		return "<form method=\"post\" id=\"followupwritings_year\" action=\"\">".$type->selectbox().$period->selectbox().$year->selectbox().$submit->item("")."</form>
-			<table id =\"table_followupwritings\">".$html."</table>";
+			<div id =\"table_followupwritings\">".$this->show()."</div>";
 	}
 }
