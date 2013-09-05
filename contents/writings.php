@@ -23,7 +23,7 @@ if ($timestamp_selected > 0) {
 }
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
-if (isset($_POST) and count($_POST) > 0) {
+if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		case 'edit':
 			if (isset($_POST['id']) and $_POST['id'] > 0) {

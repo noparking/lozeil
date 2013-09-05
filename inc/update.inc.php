@@ -22,6 +22,13 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 
+	function to_4() {
+		$this->dbconfig->add("table_users", "users");
+		$this->db->query("CREATE TABLE `users` (id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT);");
+		$this->db->query("ALTER TABLE `users` ADD `username` VARCHAR(80)  NOT NULL  DEFAULT ''  AFTER `id`;");
+		$this->db->query("ALTER TABLE `users` ADD `password` VARCHAR(50)  NOT NULL  DEFAULT ''  AFTER `username`;");
+	}
+	
 	function to_3() {
 		$this->dbconfig->add("table_categories", "categories");
 		$this->db->query("ALTER TABLE `writings` CHANGE `account_id` `categories_id` INT(11)  NULL  DEFAULT NULL;");

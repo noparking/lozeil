@@ -28,6 +28,7 @@ class Menu_Area {
 		if (!empty($this->img_src)) {
 			$content .= "<div id=\"menu_header_logo\"><img ".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\"></div>";
 		}
+		$content .= "<div id=\"menu_header_logout\">".Html_Tag::a(link_content("content=logout.php"),__('logout'))."</div>";
 		$content .= "</div><div class=\"menu_actions\">";
 		if (!empty($this->actions)) {
 			$content .= $this->actions;

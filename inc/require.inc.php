@@ -47,6 +47,7 @@ require $current_directory."/theme_default.inc.php";
 require $current_directory."/type.inc.php";
 require $current_directory."/types.inc.php";
 require $current_directory."/update.inc.php";
+require $current_directory."/user_authentication.inc.php";
 require $current_directory."/writing.inc.php";
 require $current_directory."/writings.inc.php";
 require $current_directory."/writings_data_file.inc.php";

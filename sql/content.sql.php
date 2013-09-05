@@ -53,4 +53,12 @@ $queries = array(
 		  KEY sources_id (sources_id),
 		  KEY types_id (types_id)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'users' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_users']." (
+		  id INT(11) NOT NULL AUTO_INCREMENT,
+		  username VARCHAR(80) NOT NULL DEFAULT '',
+		  password VARCHAR(50) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`),
+		  UNIQUE KEY username (username)
+		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 );

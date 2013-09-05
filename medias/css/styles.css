@@ -585,3 +585,37 @@ h2 {
 #menu_header_balance a{
 	color: white;
 }
+
+#form_login {
+	width: 400px;
+	padding-top: 100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#form_login ul {
+	border: solid black thin;
+}
+
+#form_login label {
+	width: 150px;
+}
+
+#form_login .itemsform-submit {
+	width: 90px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#menu_header_logout {
+	display:inline-block;
+	float: right;
+	margin-top: 1px;
+	margin-right: 10px;
+}
+
+#menu_header_logout a {
+	color: white;
+	font-size: 0.75em;
+	text-decoration: none;
+}
