@@ -18,7 +18,9 @@ class Bot {
 		$this->db = $db;
 		$this->directory_cfg = dirname(__FILE__)."/../cfg";
 	}
-	
+	function setup() {
+		
+	}
 	
 	function reinstall_database() {
 		$this->uninstall_database();
