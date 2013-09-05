@@ -222,6 +222,14 @@ class Writing extends Record {
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
+		if($this->banks_id > 0) {
+			$datepicker->properties['disabled'] = "disabled";
+			$amount_excl_vat->properties['disabled'] = "disabled";
+			$vat->properties['disabled'] = "disabled";
+			$amount_inc_vat->properties['disabled'] = "disabled";
+			$comment->properties['disabled'] = "disabled";
+			$paid->properties['disabled'] = "disabled";
+		}
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
@@ -259,8 +267,7 @@ class Writing extends Record {
 					'value' => $category->item(__('category')),
 				),
 			)
-		);
-				
+		);				
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
@@ -309,13 +316,9 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		if ($this->banks_id > 0) {
-			return "<div class=\"table_writings_modify disabled\"></div>";
-		} else {
-			return "<div class=\"table_writings_modify\">".
-				Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
-				"</div>";
-		}
+		return "<div class=\"table_writings_modify\">".
+			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
+			"</div>";
 	}
 	
 	function fill($hash) {
@@ -327,13 +330,34 @@ class Writing extends Record {
 	}
 	
 	function duplicate($amount) {
-		if ($amount > 0) {
+		if (is_numeric($amount) and $amount > 0) {
 			for ($i=1; $i<=$amount; $i++) {
 				$new_writing = $this;
 				$new_writing->id = 0;
 				$new_writing->day = strtotime('+1 months', $new_writing->day);
 				$new_writing->banks_id = 0;
 				$new_writing->save();
+			}
+		} else {
+			$split = preg_split("/(q)|(y)|(a)|(t)/", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			if (count($split) == 2 and is_numeric($split[0])) {
+				if($split[1] == 'q' or $split[1] == 't') {
+					for ($i=1; $i<=$split[0]; $i++) {
+						$new_writing = $this;
+						$new_writing->id = 0;
+						$new_writing->day = strtotime('+3 months', $new_writing->day);
+						$new_writing->banks_id = 0;
+						$new_writing->save();
+					}
+				} elseif($split[1] == 'a' or $split[1] == 'y') {
+					for ($i=1; $i<=$split[0]; $i++) {
+						$new_writing = $this;
+						$new_writing->id = 0;
+						$new_writing->day = strtotime('+1 year', $new_writing->day);
+						$new_writing->banks_id = 0;
+						$new_writing->save();
+					}
+				}
 			}
 		}
 	}

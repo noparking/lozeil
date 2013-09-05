@@ -8,7 +8,6 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-
 if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
@@ -28,7 +27,8 @@ if (isset($_POST) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		case 'edit':
 			if (isset($_POST['id']) and $_POST['id'] > 0) {
-				$writing = new Writing($_POST['id']);
+				$writing = new Writing();
+				$writing->load($_POST['id']);
 				$writing->fill($_POST);
 				$writing->save();
 			}
@@ -62,7 +62,7 @@ if (isset($_POST) and count($_POST) > 0) {
 			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
 				$writing = new Writing();
 				$writing->load((int)$_POST['table_writings_duplicate_id']);
-				$writing->duplicate((int)$_POST['table_writings_duplicate_amount']);
+				$writing->duplicate($_POST['table_writings_duplicate_amount']);
 			}
 			break;
 			

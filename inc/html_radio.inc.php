@@ -58,6 +58,9 @@ class Html_Radio {
 			if (!isset($this->properties['front']) or $this->properties['front'] == "value") {
 				$html .= $value." ";
 			}
+			if (isset($this->properties['disabled'])) {
+				$extra .= "disabled=\"disabled\"";
+			}
 			$html .= "<input id=\"".$this->id."\" name=\"".$this->name."\"".
 			" value=\"".$key."\"".
 			" type=\"radio\"".

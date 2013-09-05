@@ -52,6 +52,7 @@ class Writings_Data_File {
 							$writing->amount_inc_vat = (float)str_replace(",", ".", $line['credit']);
 							$writing->amount_excl_vat = (float)str_replace(",", ".", $line['credit']);
 						}
+						$writing->paid = 1;
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 						if ($writing->is_insertable()) {
 							$writing->save();
@@ -110,6 +111,7 @@ class Writings_Data_File {
 						}
 						$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 						$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
+						$writing->paid = 1;
 						$writing->unique_key = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 						if ($writing->is_insertable()) {
 							$writing->save();
