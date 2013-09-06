@@ -17,12 +17,6 @@ echo $heading->show();
 
 $sparkline = new Sparkline();
 if (isset($_POST['submit'])) {
-	$sparkline->period = $_POST['period'];
-	if ($_POST['period'] == 'day') {
-		$sparkline->type = 'line';
-	} else {
-		$sparkline->type = $_POST['type'];
-	}
 		$sparkline->year = mktime(0, 0, 0, 1, 1, $_POST['year']);
 }
 

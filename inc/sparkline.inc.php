@@ -136,6 +136,7 @@ class Sparkline {
 						'type' => "td",
 						'class' => "sparkline-values",
 						'sparkType' => $this->type,
+						'sparklineWidth' => '5px',
 						'value' => join(",", $this->values),
 					),
 					array(
@@ -179,7 +180,7 @@ class Sparkline {
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('ok');
 		
-		return "<form method=\"post\" id=\"followupwritings_year\" action=\"\">".$type->selectbox().$period->selectbox().$year->selectbox().$submit->item("")."</form>
+		return "<form method=\"post\" id=\"followupwritings_year\" action=\"\">".$year->selectbox().$submit->item("")."</form>
 			<div id =\"table_followupwritings\">".$this->show()."</div>";
 	}
 }
