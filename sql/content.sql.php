@@ -45,13 +45,15 @@ $queries = array(
 		  paid tinyint(1) NOT NULL DEFAULT '0',
 		  search_index TEXT NOT NULL,
 		  sources_id INT(11),
+		  simulations_id int(11),
 		  types_id INT(11),
 		  unique_key TEXT,
 		  vat DECIMAL(5,2),
 		  PRIMARY KEY (`id`),
 		  KEY categories_id (categories_id),
 		  KEY sources_id (sources_id),
-		  KEY types_id (types_id)
+		  KEY types_id (types_id),
+		  KEY simulations_id (simulations_id)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	
 	'users' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_users']." (
@@ -61,4 +63,14 @@ $queries = array(
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY username (username)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'writingssimulations' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_writingssimulations']." (
+		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`name` varchar(100) NOT NULL DEFAULT '',
+		`duration` varchar(50) NOT NULL DEFAULT '',
+		`periodicity` varchar(50) NOT NULL DEFAULT '',
+		`date` int(10) NOT NULL,
+		`display` tinyint(1) NOT NULL,
+		PRIMARY KEY (`id`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );

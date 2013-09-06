@@ -54,6 +54,7 @@ $__['line %s of file %s is not in cic format'] = "la ligne %s du fichier %s n'es
 $__['line %s of file %s is not in coop format'] = "la ligne %s du fichier %s n'est pas au format coop";
 $__['login'] = "se connecter";
 $__['logout'] = "se deconnecter";
+$__['make a simulation'] = "faire une simulation";
 $__['manage categories'] = "gérer les catégories";
 $__['manage sources'] = "gérer les sources";
 $__['manage the'] = "gérer les";

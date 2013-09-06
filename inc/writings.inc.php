@@ -151,14 +151,15 @@ class Writings extends Collector  {
 		$banks->select();
 		$banks_name = $banks->names();
 		$grid = array();
-		
+		$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
+
 		foreach ($this as $writing) {
 			$class = "";
 			$informations = $writing->show_further_information();
 			if (!empty($informations)) {
 				$class = "table_writings_comment";
 			}
-			$grid[$writing->id] =  array(
+			$grid[] =  array(
 				'class' => "draggable",
 				'id' => "table_".$writing->id,
 				'cells' => array(
@@ -205,6 +206,20 @@ class Writings extends Collector  {
 					),
 				),
 			);
+			
+			if($selected_writing == $writing->id) {
+				$grid[] =  array(
+					'class' => "table_writings_form_modify",
+					'id' => "table_".$writing->id,
+					'cells' => array(
+						array(
+							'type' => "td",
+							'colspan' => "10",
+							'value' => $writing->form_in_table()
+						)
+					),
+				);
+			}
 		}
 		return $grid;
 	}
@@ -219,7 +234,7 @@ class Writings extends Collector  {
 	}
 	
 	function display() {
-		return "<div id=\"table_writings\">".$this->show()."</div>";
+		return "<div id=\"table_writings\"><form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".$this->show()."</form></div>";
 	}
 	
 	function show_timeline_at($timestamp) {

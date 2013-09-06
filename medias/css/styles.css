@@ -177,7 +177,8 @@ table {
 	background: transparent;
 }
 
-#table_writings input[type="text"] {
+#table_writings .table_writings_split input[type="text"],
+#table_writings .table_writings_duplicate input[type="text"]{
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
@@ -482,7 +483,7 @@ table {
 	color: #016B01;
 }
 
-#edit_writings_hide, #edit_writings_show, #edit_writings_cancel {
+#edit_writings_hide, #edit_writings_show, #edit_writings_cancel, #table_edit_writings_cancel {
 	border: black thin solid;
 	cursor: pointer;
 	padding: 5px;
@@ -493,12 +494,16 @@ table {
 	display: none;
 }
 
-#edit_writings_cancel a{
+#table_edit_writings_cancel {
+	margin-left: 120px;
+}
+
+#edit_writings_cancel a, #table_edit_writings_cancel a{
 	text-decoration: none;
 	color: black;
 }
 
-#edit_writings_hide:hover, #edit_writings_show:hover, #edit_writings_cancel:hover {
+#edit_writings_hide:hover, #edit_writings_show:hover, #edit_writings_cancel:hover, #table_edit_writings_cancel:hover {
 	background-color: #F6F6F6;
 }
 

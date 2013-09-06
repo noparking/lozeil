@@ -37,7 +37,7 @@ class Html_Radio {
 		$label = "";
 
 		if ($this->id) {
-			$label = "<label for=\"".$this->id."\">".Format::name($string)."</label>";
+			$label = "<label for=\"".$this->id."\">".$string."</label>";
 		}
 
 		return $label;
@@ -77,7 +77,6 @@ class Html_Radio {
 		if (isset($this->properties['separator'])) {
 			$html = substr($html, 0, strlen($html) - strlen($this->properties['separator']));
 		}
-
 		return $html;
 	}
 	

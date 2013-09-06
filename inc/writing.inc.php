@@ -274,6 +274,104 @@ class Writing extends Record {
 		return $form;
 	}
 	
+	function form_in_table() {
+		$form = "<div id=\"table_edit_writings\">
+			<span id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<div class=\"table_edit_writings_form\">
+			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
+		
+		if ($this->id) {
+			$input_hidden = new Html_Input("action", "edit", "submit");
+			$input_hidden->id = $this->id;
+		} else {
+			$input_hidden = new Html_Input("action", "insert");
+		}
+		$form .= $input_hidden->input_hidden();
+		
+		$input_hidden_id = new Html_Input("id", $this->id);
+		$form .= $input_hidden_id->input_hidden();
+		
+		if ($this->day > 0) {
+			$date = (int)$this->day;
+		} else {
+			$date = (int)$_SESSION['timestamp'];
+		}
+		
+		$categories = new Categories();
+		$categories->select();
+		$categories_name = $categories->names();
+		$types = new Types();
+		$types->select();
+		$types_name = $types->names();
+		$sources = new Sources();
+		$sources->select();
+		$sources_name = $sources->names();
+		
+		$datepicker = new Html_Input_Date("datepicker");
+		$datepicker->value = $date;
+		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
+		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
+		$type = new Html_Select("types_id", $types_name, $this->types_id);
+		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
+		$vat = new Html_Input("vat", $this->vat);
+		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
+		$comment = new Html_Textarea("comment", $this->comment);
+		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
+		$submit = new Html_Input("submit", "", "submit");
+		$submit->value =__('save');
+		
+		if($this->banks_id > 0) {
+			$datepicker->properties['disabled'] = "disabled";
+			$amount_excl_vat->properties['disabled'] = "disabled";
+			$amount_inc_vat->properties['disabled'] = "disabled";
+			$paid->properties['disabled'] = "disabled";
+		}
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'date' => array(
+					'value' => $datepicker->item(__('date')),
+				),
+				'category' => array(
+					'value' => $category->item(__('category')),
+				),
+				'source' => array(
+					'value' => $source->item(__('source')),
+				),
+				'type' => array(
+					'value' => $type->item(__('type')),
+				),
+				'amount_excl_vat' => array(
+					'value' => $amount_excl_vat->item(__('amount excluding vat')),
+				),
+				'vat' => array(
+					'value' => $vat->item(__('VAT')),
+				),
+				'amount_inc_vat' => array(
+					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'comment' => array(
+					'value' => $comment->item(__('comment')),
+				),
+				'paid' => array(
+					'value' => $paid->item(__('paid')),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+				'category' => array(
+					'value' => $category->item(__('category')),
+				),
+			)
+		);				
+		$list = new Html_List($grid);
+		$form .= $list->show();
+		
+		$form .= "</form></div></div>";
+
+		return $form;
+	}
+	
 	function form_duplicate() {
 		$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
@@ -310,6 +408,7 @@ class Writing extends Record {
 		$input_hidden_value = new Html_Input("table_writings_split_amount", "");
 		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
+		
 		return $form;
 	}
 	

@@ -91,5 +91,4 @@ echo $heading->show();
 echo $writings->display();
 
 $writing = new Writing();
-$writing->load($selected_writing);
 echo $writing->form();

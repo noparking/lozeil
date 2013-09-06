@@ -35,7 +35,7 @@ class Html_Select {
 		$label = "";
 
 		if ($this->id) {
-			$label = "<label for=\"".$this->id."\">".Format::name($string)."</label>";
+			$label = "<label for=\"".$this->id."\">".$string."</label>";
 		}
 
 		return $label;

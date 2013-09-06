@@ -22,6 +22,23 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 
+	function to_5() {
+		$this->dbconfig->add("table_writingssimulations", "writingssimulations");
+		$this->db->query("CREATE TABLE `writingssimulations` (
+			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(100) NOT NULL DEFAULT '',
+			`duration` varchar(50) NOT NULL DEFAULT '',
+			`periodicity` varchar(50) NOT NULL DEFAULT '',
+			`date` int(10) NOT NULL,
+			`display` tinyint(1) NOT NULL,
+			PRIMARY KEY (`id`)
+		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		);
+		$this->db->query("ALTER TABLE `writings` ADD `simulations_id` INT(11)  NULL  DEFAULT NULL  AFTER `vat`;
+"
+		);
+	}
+
 	function to_4() {
 		$this->dbconfig->add("table_users", "users");
 		$this->db->query("CREATE TABLE `users` (`id` int(11) NOT NULL AUTO_INCREMENT,`username` varchar(80) NOT NULL DEFAULT '',`password` varchar(50) NOT NULL DEFAULT '',
