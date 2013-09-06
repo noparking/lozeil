@@ -10,8 +10,12 @@
 
 $current_directory = dirname(__FILE__);
 
-require $current_directory."/../cfg/config.inc.php";
-require $current_directory."/../cfg/param.inc.php";
+if(file_exists($current_directory."/../cfg/config.inc.php")) {
+	require $current_directory."/../cfg/config.inc.php";
+}
+if(file_exists($current_directory."/../cfg/param.inc.php")) {
+	require $current_directory."/../cfg/param.inc.php";
+}
 require $current_directory."/../lang/fr_FR.lang.php";
 
 require $current_directory."/collector.inc.php";
@@ -40,6 +44,8 @@ require $current_directory."/html_textarea.inc.php";
 require $current_directory."/menu_area.inc.php";
 require $current_directory."/message.inc.php";
 require $current_directory."/misc.inc.php";
+require $current_directory."/param_file.inc.php";
+require $current_directory."/plugins.inc.php";
 require $current_directory."/source.inc.php";
 require $current_directory."/sources.inc.php";
 require $current_directory."/sparkline.inc.php";

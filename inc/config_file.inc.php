@@ -100,95 +100,6 @@ class Config_File {
 		return $this->write();
 	}
 
-	function display_as_form_object($key = null, $pattern = "[^\']+", $sort = false) {
-		$form = "";
-
-		if ($_SERVER['SCRIPT_FILENAME'] != 'setup.php' && !$GLOBALS['config']['ext_lock']) {
-			$form .= '<table cellspacing="1" cellpadding="0" class="configuration">';
-
-			$file_contents = file_get_contents($this->path);
-
-			if ($file_contents !== false) {
-				if ($key === null) {
-					$key = '[^[]+';
-				}
-
-				if (preg_match_all('|^\\$('.$key.')\\[\'('.$pattern.')\'\\]\s*=\s*"([^"]*)";(?:\s*//\s*(([^(\n]+)(?:\(([^,\n]+)[^\n]+)?))?|mu', $file_contents, $parameters, PREG_SET_ORDER)) {
-					$sorted_parameters = array();
-
-					foreach ($parameters as & $parameter) {
-						$sorted_parameters[] = array_slice($parameter, 1);
-					}
-					if ($sort) {
-						sort($sorted_parameters);
-					}
-
-					foreach ($sorted_parameters as & $parameter) {
-						$form .= '<tr><td class="key">'.$parameter[0].'</td><td class="sub_key">'.$parameter[1].'</td><td class="value">';
-
-						switch (true) {
-							case array_key_exists($parameter[1], $GLOBALS['array_param']):
-								$form .= '<select name="'.$this->type().'['.$parameter[0].']['.$parameter[1].']">';
-
-								foreach ($GLOBALS['array_param'][$parameter[1]] as $value => $name) {
-									$form .= '<option value="'.$value.'"';
-
-									if ($value == $parameter[2]) {
-										$form .= ' selected="selected"';
-									}
-
-									$form .= '>' . $name . '</option>';
-								}
-
-								$form .= '</select>';
-								break;
-
-							case isset($parameter[5]) && preg_match('/^[01] - (?:oui|non)$/', $parameter[5]):
-								$form .= '<input type="radio" id="param'.$parameter[1].'" name="'.$this->type().'['.$parameter[0].']['.$parameter[1].']" value="1"';
-
-								if ($GLOBALS[$parameter[0]][$parameter[1]]) {
-									$form .= ' checked="checked"';
-								}
-
-								$form .= '/><label for="param'.$parameter[1].'">oui</label><input type="radio"  id="notParam'.$parameter[1].'" name="'.$this->type().'['.$parameter[0].']['.$parameter[1].']" value="0"';
-
-								if (!$GLOBALS[$parameter[0]][$parameter[1]]) {
-									$form .= ' checked="checked"';
-								}
-
-								$form .= '/><label for="notParam'.$parameter[1].'">non</label>';
-								break;
-
-							case isset($parameter[5]) && $parameter[5] == 'month':
-								$form .= '<select name="'.$this->type().'['.$parameter[0].']['.$parameter[1].']">';
-
-								for($i = 1; $i <= 12; $i++) {
-									$form .= '<option value="'.$i.'"';
-
-									if ($i == $GLOBALS[$parameter[0]][$parameter[1]]) {
-										$form .= ' selected="selected"';
-									}
-
-									$form .= '>'.$GLOBALS['array_month'][$i].'</option>';
-								}
-								$form .= '</select>';
-								break;
-
-							default:
-								$form .= '<input type="text" name="'.$this->type().'['.$parameter[0].']['.$parameter[1].']" value="'.utf8_htmlentities($parameter[2]).'" />';
-						}
-
-						$form .= '</td><td class="comment">'.(!isset($parameter[3]) ? '' : $parameter[3]).'</td></tr>'."\n";
-					}
-				}
-			}
-
-			$form .= '</table>';
-		}
-
-		return $form;
-	}
-	
 	function add($key, $value, $type = null, $comment = "") {
 		if ($type === null) {
 			$type = $this->type();
@@ -213,7 +124,6 @@ class Config_File {
 			} else {
 				$values = $values[$this->type()];
 				$contents = array();
-
 				foreach (file($this->path) as $line) {
 					if (!preg_match('|^\\$([^[]+)\\[\'([^\']+)\'\\]\s*=\s*"([^"]*)"(;.*)$|u', $line, $parameters) || !isset($values[$parameters[1]][$parameters[2]])) {
 						$contents[] = $line;

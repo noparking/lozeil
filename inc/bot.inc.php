@@ -12,14 +12,71 @@ class Bot {
 	public $directory_cfg = "";
 	
 	function __construct(db $db = null) {
-		if ($db === null) {
-			$db = new db();
-		}
 		$this->db = $db;
 		$this->directory_cfg = dirname(__FILE__)."/../cfg";
+		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
+	
 	function setup() {
+		echo utf8_ucfirst(__('database configuration'))."\n";
+		while(empty($dbname)) {
+			 $dbname = $this->input(__('name'));
+		};
+		while(empty($dbuser)) {
+			 $dbuser = $this->input(__('username'));
+		};
+		$dbpass = $this->input(__('password'));
+
 		
+		$config_file = new Config_File($this->directory_cfg."/config.inc.php");
+		if (!$config_file->exists()) {
+			$dist_config_file = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php.dist");
+
+			if (!$dist_config_file->exists()) {
+				die("Configuration file '".$dist_config_file."' does not exist");
+			} else {
+				try {
+					$config_file->copy($dist_config_file);
+				} catch (exception $exception) {
+					die($exception->getMessage());
+				}
+			}
+		}
+		
+		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("name" => $dbname))));
+		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("user" => $dbuser))));
+		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("pass" => $dbpass))));
+		
+		$param_file = new Param_File($this->directory_cfg."/param.inc.php");
+		if (!$param_file->exists()) {
+			$dist_param_file = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php.dist");
+
+			if (!$dist_param_file->exists()) {
+				die("Parameters file '".$dist_param_file."' does not exist");
+			} else {
+				try {
+					$param_file->copy($dist_param_file);
+				} catch (exception $exception) {
+					die($exception->getMessage());
+				}
+			}
+		}
+		
+		$load_config = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
+		$load_config->load_at_global_level();
+		if ($this->db === null) {
+			$this->db = new db();
+		}
+		$this->reinstall_database();
+		
+		echo utf8_ucfirst(__('create a default user'))."\n";
+		while(empty($username)) {
+			 $username = $this->input(__('username'));
+		};
+		while(empty($password)) {
+			 $password = $this->input(__('password'));
+		};
+		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password('".$password."'));");
 	}
 	
 	function reinstall_database() {
@@ -28,8 +85,10 @@ class Bot {
 	}
 
 	function install_database() {
+		if ($this->db === null) {
+			$this->db = new db();
+		}
 		$queries = array();
-		$db = new db();
 		require dirname(__FILE__)."/../sql/content.sql.php";
 		$this->db->initialize($queries);
 		return true;
@@ -107,4 +166,10 @@ class Bot {
 		Message::log($message);
 		return $this;
 	}
+	
+	function input($message){
+	  fwrite(STDOUT, "$message: ");
+	  $input = trim(fgets(STDIN));
+	  return $input;
+	}	
 }

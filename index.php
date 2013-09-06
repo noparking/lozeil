@@ -21,7 +21,7 @@ if (isset($_POST['loginname']) and $_POST['loginname'] != '') {
 	if ($auth->is_authorized($_POST['loginname'], $_POST['password'])) {
 		$_SESSION['username'] = $_POST['loginname'];
 	} else {
-		$status = end($_SESSION['global_status']);
+		$status = $_SESSION['global_status'][0];
 	}
 }
 
