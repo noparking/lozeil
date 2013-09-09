@@ -463,6 +463,8 @@ table {
 }
 
 #table_edit_writings_cancel {
+	display: inline-block;
+	margin-top: 5px;
 	margin-left: 120px;
 }
 
@@ -607,4 +609,8 @@ h2 {
 
 tr.merged {
 	background-color: #FFFF78;
+}
+
+#table_edit_writings {
+	display: none;
 }

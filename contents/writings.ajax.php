@@ -19,6 +19,12 @@ switch ($_REQUEST['action']) {
 		$writing_into->load((int)$_REQUEST['writing_into']);
 		$writing_into->merge_from($writing_from);
 		break;
+	case "edit":
+		$writing = new Writing();
+		$writing->load((int)$_REQUEST['id']);
+		echo $writing->form_in_table();
+		exit(0);
+		break;
 	case "filter":
 		$_SESSION['filter_value_*'] = $_REQUEST['value'];
 		break;

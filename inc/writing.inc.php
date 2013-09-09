@@ -272,7 +272,7 @@ class Writing extends Record {
 	}
 	
 	function form_in_table() {
-		$form = "<div id=\"table_edit_writings\">
+		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"10\" ><div id=\"table_edit_writings\">
 			<span id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
@@ -361,7 +361,7 @@ class Writing extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div></div>";
+		$form .= "</form></div></div></td></tr>";
 
 		return $form;
 	}

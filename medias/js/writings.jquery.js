@@ -1,3 +1,33 @@
+function make_editable() {
+	$(".table_writings_modify a").on("click", function() {
+		var row = $(this).parent().parent().parent();
+		var id = row.attr("id").substr(6);
+		event.preventDefault();
+		if (row.next().hasClass("table_writings_form_modify")) {
+			$("#table_edit_writings").slideUp(400, function() {
+			$(".table_writings_form_modify").remove();
+		})
+		} else {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				{action: "edit", id: id},
+				function(data) {
+					$(".table_writings_form_modify").remove();
+					$(data).insertAfter(row);
+					$("#table_edit_writings").slideDown();
+				}
+			);
+		}
+	})
+	
+	$("#table_edit_writings_cancel").on("click", function() {
+		event.preventDefault();
+		$("#table_edit_writings").slideUp(400, function() {
+			$(".table_writings_form_modify").remove();
+		})
+	})
+}
+
 function toggle_line_information() {
 	$(".table_writings_comment").on("click", function() {
 		$(".table_writings_comment_further_information").slideUp();
@@ -84,6 +114,8 @@ function jQuery_table() {
 	toggle_input();
 	sort_lines();
 	toggle_line_information();
+	make_editable();
+	input();
 }
 
 $(function() {
@@ -94,7 +126,7 @@ $(document).ajaxStop(function() {
 	jQuery_table();
 })
 
-$(document).ready(function() {
+function input() {
 	$("input#amount_excl_vat").on("keyup", function() {
 		$(this).val($(this).val().replace(",", "."));
 		var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
@@ -122,4 +154,4 @@ $(document).ready(function() {
 			}
 		);
 	});
-});
+};

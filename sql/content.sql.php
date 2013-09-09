@@ -63,9 +63,10 @@ $queries = array(
 	'writingssimulations' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_writingssimulations']." (
 		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		`name` varchar(100) NOT NULL DEFAULT '',
-		`duration` varchar(50) NOT NULL DEFAULT '',
+		`amount_inc_vat` DECIMAL(12,6),
 		`periodicity` varchar(50) NOT NULL DEFAULT '',
-		`date` int(10) NOT NULL,
+		`date_start` int(10) NOT NULL,
+		`date_stop` int(10) NOT NULL,
 		`display` tinyint(1) NOT NULL,
 		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"

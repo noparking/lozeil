@@ -22,6 +22,13 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_8() {
+		$this->db->query("ALTER TABLE `writingssimulations` DROP `duration`;");
+		$this->db->query("ALTER TABLE `writingssimulations` ADD `date_start` INT(10)  NOT NULL AFTER `periodicity`;");
+		$this->db->query("ALTER TABLE `writingssimulations` ADD `amount_inc_vat` DECIMAL(12,6)  NOT NULL AFTER `name`;");
+		$this->db->query("ALTER TABLE `writingssimulations` CHANGE `date` `date_stop` INT(10)  NOT NULL;");
+	}
+	
 	function to_7() {
 		$this->db->query("ALTER TABLE `banks` ADD `selected` TINYINT(1)  NOT NULL DEFAULT 0  AFTER `name`;");
 	}
