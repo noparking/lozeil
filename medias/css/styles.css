@@ -624,3 +624,11 @@ h2 {
 	font-size: 0.75em;
 	text-decoration: none;
 }
+
+.hidden_field {
+	display: inline-block;
+}
+
+#edit_banks {
+	width: 400px;
+}

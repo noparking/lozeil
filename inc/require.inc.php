@@ -33,6 +33,7 @@ require $current_directory."/excel.inc.php";
 require $current_directory."/export_excel.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/heading_area.inc.php";
+require $current_directory."/html_checkbox.inc.php";
 require $current_directory."/html_input.inc.php";
 require $current_directory."/html_input_date.inc.php";
 require $current_directory."/html_list.inc.php";

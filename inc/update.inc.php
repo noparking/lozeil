@@ -22,10 +22,14 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_7() {
+		$this->db->query("ALTER TABLE `banks` ADD `selected` TINYINT(1)  NOT NULL DEFAULT 0  AFTER `name`;");
+	}
+	
 	function to_6() {
 		$this->db->query("DROP TABLE `types`;");
 		$this->db->query("ALTER TABLE `writings` CHANGE `types_id` `number` INT(20)  NULL  DEFAULT NULL;");
-		}
+	}
 
 	function to_5() {
 		$this->dbconfig->add("table_writingssimulations", "writingssimulations");
@@ -39,9 +43,7 @@ class Update {
 			PRIMARY KEY (`id`)
 		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 		);
-		$this->db->query("ALTER TABLE `writings` ADD `simulations_id` INT(11)  NULL  DEFAULT NULL  AFTER `vat`;
-"
-		);
+		$this->db->query("ALTER TABLE `writings` ADD `simulations_id` INT(11)  NULL  DEFAULT NULL  AFTER `vat`;");
 	}
 
 	function to_4() {

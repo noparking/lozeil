@@ -133,7 +133,7 @@ class Writings_Data_File {
 	function form_import() {
 		$banks = new Banks();
 		$banks->select();
-		$banks_name = $banks->names();
+		$banks_name = $banks->names_of_selected_banks();
 		$form = "<div id=\"menu_actions_import\"><form method=\"post\" name=\"menu_actions_import_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
 		$import_file = new Html_Input("menu_actions_import_file", "", "file");
 		$bank = new Html_Select("menu_actions_import_bank_id", $banks_name);

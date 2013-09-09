@@ -247,10 +247,12 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 	function test_form_import() {
 		$bank = new Bank();
 		$bank->name = "Bank 1";
+		$bank->selected = 1;
 		$bank->save();
 		
 		$bank2 = new Bank();
 		$bank2->name = "Bank 2";
+		$bank2->selected = 0;
 		$bank2->save();
 		
 		$data = new Writings_Data_File();
@@ -261,7 +263,7 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$this->assertPattern("/bank_id/", $form_import);
 		$this->assertPattern("/menu_actions_import_submit/", $form_import);
 		$this->assertPattern("/Bank 1/", $form_import);
-		$this->assertPattern("/Bank 2/", $form_import);
+		$this->assertNoPattern("/Bank 2/", $form_import);
 		
 		$this->truncateTable("banks");
 	}

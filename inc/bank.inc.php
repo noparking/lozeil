@@ -11,6 +11,7 @@
 class Bank extends Record {
 	public $id = 0;
 	public $name = "";
+	public $selected = 0;
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -49,7 +50,8 @@ class Bank extends Record {
 	function insert() {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_banks']."
-			SET name = ".$this->db->quote($this->name)
+			SET name = ".$this->db->quote($this->name).", ".
+			"selected = ".$this->selected
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('bank'));
@@ -59,7 +61,8 @@ class Bank extends Record {
 	
 	function update() {
 		$query = "UPDATE ".$this->db->config['table_banks'].
-		" SET name = ".$this->db->quote($this->name)."
+		" SET name = ".$this->db->quote($this->name).", ".
+		"selected = ".$this->selected."
 		WHERE id = ".(int)$this->id;
 		$result = $this->db->query($query);
 		$this->db->status($result[1], "u", __('bank'));
@@ -75,6 +78,13 @@ class Bank extends Record {
 		$this->db->status($result[1], "u", __('bank'));
 
 		return $this->id;
+	}
+	
+	function is_deletable() {
+		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
+		" WHERE banks_id = '".$this->id."'";
+		$result = $this->db->value_exists($query);
+		return !$result;
 	}
 	
 	function name() {
