@@ -137,7 +137,6 @@ class Collector implements iterator, countable, arrayAccess {
 				}
 			}
 		}
-		
 		return $this;
 	}
 

@@ -14,9 +14,8 @@ if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction']))
 }
 
 $timestamp_selected = determine_integer_from_post_get_session(null, "timestamp");
-$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
 
-if ($timestamp_selected > 0) {
+if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
 	$_SESSION['timestamp'] = $timestamp_selected;
 } else {
 	$_SESSION['timestamp'] = mktime(0, 0, 0, date("m"), 1, date("Y"));

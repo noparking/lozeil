@@ -27,8 +27,8 @@ function make_droppable() {
 					$('#table_writings table tbody').remove();
 					refresh_balance();
 					$('#table_writings table').html(data);
-					$("#table_" + writing_into).addClass('over').delay('3000').queue(function(next){
-						$(this).removeClass('over');
+					$("#table_" + writing_into).addClass('merged').delay('3000').queue(function(next){
+						$(this).removeClass('merged');
 					})
 				}
 			);

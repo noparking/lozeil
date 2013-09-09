@@ -36,47 +36,31 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /* --- General --- */
 
-ul,li{list-style:none;margin: 0 40px;}
-a{color:#2489CE;text-decoration:none;}
-a:hover{color:#2489CE;text-decoration:underline;}
-p{line-height:1em;}
-header, section, footer,
-aside, nav, article, figure {
-	display: block;
-}
+ul,li{list-style:none; margin: 0 20px;}
+a{color:#000;text-decoration:none;}
+a:hover{color:#828282;text-decoration:underline;}
 
 body {
 	color: #000;
 	font-size: 14px;
 	font-family: 'Bitter', Helvetica, Arial, sans-serif;
 	text-align: left;
-	background-color: #efefef;
 	background: #efefef;
 }
 
 img { border: none; }
 
-/* --- Menu --- */
-
-
-/* --- Contenu
--------------------------------------------------------------------------------------------------------*/
-
 .content {
 	background-color: #fff;
-	margin: 0px 50px;
+	margin: 0 50px;
 	box-shadow: 3px 3px 5px #888888;
+	padding: 0;
+	min-height: 600px;
 }
-
-/* --- Timeline --- */
 
 td, th {
 	padding: 10px;
 	border-bottom: 1px solid #efefef;
-	vertical-align: middle;
-}
-
-.body-linessplit td {
 	vertical-align: middle;
 }
 
@@ -109,18 +93,13 @@ table {
 	clear: both;
 }
 
-#table_accounting {
-	border-radius: 4px 4px 0 0;
-	background-color: #fff;
-}
-
 .dragged {
 	width: 92%;
 	cursor: move;
 }
 
 .dragged tr:first-child {
-	background: rgba(175, 175, 175, 0.3);
+	background: rgba(175, 175, 175, 0.15);
 }
 
 .over {
@@ -186,7 +165,6 @@ table {
 
 #heading_timeline a,
 #heading_timeline a {
-    color:#000;
     font-size:0.9em;
 }
 
@@ -241,8 +219,6 @@ table {
 }
 
 .itemsform label {
-	padding: 8px 20px 8px 0;
-	line-height: 1.2em;
 	width: 125px;
 	padding: 8px 20px 8px 0;
 	line-height: 1em;
@@ -321,9 +297,6 @@ table {
 	padding:40px 16px 16px 16px;
 	border:1px solid #CCC !important;
 	background:#f6f6f6 !important;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#f6f6f6') !important; /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#f6f6f6)) !important; /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #FFFFFF,  #f6f6f6) !important; /* for firefox 3.6+ */
 	border-radius:4px;
     -moz-border-radius:4px;
     -webkit-border-radius:4px;
@@ -343,8 +316,8 @@ table {
 .input-date-calendar table th {
     height: auto !important;
     background:none !important;
-    margin:0 !important;
-    padding:0 !important;
+    margin:3px !important;
+    padding:3px !important;
 }
 
 
@@ -426,17 +399,12 @@ table {
 	border: solid black thin;
 }
 
-.menu_actions ul li {
+.menu_actions ul {
 	list-style: circle;
 }
 
 .menu_actions ul li a {
 	color: white;
-	list-style: circle;
-}
-
-.content {
-	min-height: 600px;
 }
 
 .menu_actions li {
@@ -486,7 +454,7 @@ table {
 #edit_writings_hide, #edit_writings_show, #edit_writings_cancel, #table_edit_writings_cancel {
 	border: black thin solid;
 	cursor: pointer;
-	padding: 5px;
+	padding: 3px;
 }
 
 #edit_writings_cancel {
@@ -631,4 +599,12 @@ h2 {
 
 #edit_banks {
 	width: 400px;
+}
+
+.table_edit_writings_form {
+	margin-top: 15px;
+}
+
+tr.merged {
+	background-color: #FFFF78;
 }

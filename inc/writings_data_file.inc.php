@@ -70,7 +70,6 @@ class Writings_Data_File {
 			log_status(__('can not open file')." : ".$this->file_name);
 		}
 	}
-	
 	function import_as_coop() {
 		if ($file_opened = fopen( $this->tmp_name , 'r') ) {
 			$row = 0;

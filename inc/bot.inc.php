@@ -73,9 +73,7 @@ class Bot {
 		while(empty($username)) {
 			 $username = $this->input(__('username'));
 		};
-		while(empty($password)) {
-			 $password = $this->input(__('password'));
-		};
+		$password = $this->input(__('password'));
 		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password('".$password."'));");
 	}
 	
