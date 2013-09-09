@@ -129,6 +129,8 @@ class Writing extends Record {
 				$this->categories_id = $this->categories_id > 0 ? (int)$this->categories_id : $to_merge->categories_id;
 				$this->banks_id = $this->banks_id > 0 ? (int)$this->banks_id : $to_merge->banks_id;
 				$this->sources_id = $this->sources_id > 0 ? (int)$this->sources_id : $to_merge->sources_id;
+				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
+				$this->amount_excl_vat =  round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
 				$this->comment = !empty($this->comment) ? $this->comment : $to_merge->comment;
 				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
 				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
@@ -140,12 +142,12 @@ class Writing extends Record {
 				$this->categories_id = $to_merge->categories_id > 0 ? (int)$to_merge->categories_id : $this->categories_id;
 				$this->banks_id = $to_merge->banks_id > 0 ? (int)$to_merge->banks_id : $this->banks_id;
 				$this->sources_id = $to_merge->sources_id > 0 ? (int)$to_merge->sources_id : $this->sources_id;
-				$this->amount_excl_vat =  $to_merge->amount_excl_vat;
+				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
 				$this->amount_inc_vat = $to_merge->amount_inc_vat;
+				$this->amount_excl_vat =  round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
 				$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
 				$this->day = $to_merge->day;
 				$this->information = !empty($to_merge->information) ? $to_merge->information : $this->information;
-				$this->vat = $to_merge->vat;
 				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
