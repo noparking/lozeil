@@ -16,7 +16,6 @@ class tests_Writing extends TableTestCase {
 		$this->initializeTables(
 			"categories",
 			"sources",
-			"types",
 			"writings",
 			"banks"
 		);
@@ -33,7 +32,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
-		$writing->types_id = 1;
+		$writing->number = 132;
 		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
@@ -50,7 +49,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->information, $writing->information);
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
 		$this->assertEqual($writing_loaded->sources_id, $writing->sources_id);
-		$this->assertEqual($writing_loaded->types_id, $writing->types_id);
+		$this->assertEqual($writing_loaded->number, $writing->number);
 		$this->assertEqual($writing_loaded->unique_key, $writing->unique_key);
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
 		$this->truncateTable("writings");
@@ -67,7 +66,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
-		$writing->types_id = 1;
+		$writing->number = 132;
 		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
@@ -83,7 +82,7 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->information = "Autre complément d'infos";
 		$writing_loaded->paid = 1;
 		$writing_loaded->sources_id = 1;
-		$writing_loaded->types_id = 2;
+		$writing_loaded->number = 2;
 		$writing_loaded->vat = 5.5;
 		$writing_loaded->save();
 		$this->assertEqual($writing_loaded->categories_id, 2);
@@ -96,7 +95,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->information, "Autre complément d'infos");
 		$this->assertEqual($writing_loaded->paid, 1);
 		$this->assertEqual($writing_loaded->sources_id, 1);
-		$this->assertEqual($writing_loaded->types_id, 2);
+		$this->assertEqual($writing_loaded->number, 2);
 		$this->assertEqual($writing_loaded->vat, 5.5);
 		$this->truncateTable("writings");
 	}
@@ -124,7 +123,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
-		$writing->types_id = 1;
+		$writing->number = 1;
 		$writing->vat = 19.6;
 		
 		$writing_to_merge = new Writing();
@@ -137,7 +136,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->information = "Autre complément d'infos";
 		$writing_to_merge->paid = 1;
 		$writing_to_merge->sources_id = 1;
-		$writing_to_merge->types_id = 2;
+		$writing_to_merge->number = 2;
 		$writing_to_merge->vat = 5.5;
 		$writing_to_merge->search_index = $writing_to_merge->search_index();
 		
@@ -154,7 +153,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_2->information = "";
 		$writing_to_merge_2->paid = 0;
 		$writing_to_merge_2->sources_id = 0;
-		$writing_to_merge_2->types_id = 0;
+		$writing_to_merge_2->number = 0;
 		$writing_to_merge_2->vat = 0;
 		
 		$writing_to_merge_3 = new Writing();
@@ -167,7 +166,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->information = "Autre complément d'infos";
 		$writing_to_merge_3->paid = 0;
 		$writing_to_merge_3->sources_id = 1;
-		$writing_to_merge_3->types_id = 2;
+		$writing_to_merge_3->number = 2;
 		$writing_to_merge_3->vat = 0;
 		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
@@ -209,7 +208,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
-		$writing->types_id = 1;
+		$writing->number = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -222,7 +221,7 @@ class tests_Writing extends TableTestCase {
 		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
 		$writing2->sources_id = 1;
-		$writing2->types_id = 2;
+		$writing2->number = 2;
 		$writing2->vat = 5.5;
 		$writing2->save();
 		
@@ -241,7 +240,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->information, "Complément d'infos");
 		$this->assertEqual($writing2_loaded->paid, 0);
 		$this->assertEqual($writing2_loaded->sources_id, 2);
-		$this->assertEqual($writing2_loaded->types_id, 1);
+		$this->assertEqual($writing2_loaded->number, 1);
 		$this->assertEqual($writing2_loaded->vat, 19.6);
 		
 		$this->truncateTable("writings");
@@ -258,7 +257,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Informations";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
-		$writing->types_id = 1;
+		$writing->number = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -275,7 +274,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		$this->assertEqual($writing_splited->paid, 0);
 		$this->assertEqual($writing_splited->sources_id, 2);
-		$this->assertEqual($writing_splited->types_id, 1);
+		$this->assertEqual($writing_splited->number, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
 		
 		$this->truncateTable("writings");
@@ -285,7 +284,7 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_excl_vat = 188.13;
 		$writing->amount_inc_vat = 225;
 		$writing->paid = 0;
-		$writing->types_id = 1;
+		$writing->number = 1;
 		$writing->vat = 19.6;
 		$writing->sources_id = 2;
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
@@ -300,7 +299,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_splited->amount_excl_vat, 188.127090);
 		$this->assertEqual($writing_splited->amount_inc_vat, 225);
 		$this->assertEqual($writing_splited->paid, 0);
-		$this->assertEqual($writing_splited->types_id, 1);
+		$this->assertEqual($writing_splited->number, 1);
 		$this->assertEqual($writing_splited->vat, 19.6);
 		$this->assertEqual($writing_splited->sources_id, 2);
 		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
@@ -325,9 +324,6 @@ class tests_Writing extends TableTestCase {
 		$source = new Source();
 		$source->name = "Source 1";
 		$source->save();
-		$type = new Type();
-		$type->name = "Type 1";
-		$type->save();
 		$writing = new Writing();
 		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 167.22;
@@ -336,14 +332,12 @@ class tests_Writing extends TableTestCase {
 		$writing->comment = "Ceci est un commentaire";
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->sources_id = 1;
-		$writing->types_id = 1;
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing->load(1);
 		$form = $writing->form();
 		$this->assertPattern("/".date('m', mktime(10, 0, 0, 7, 31, 2013))."/", $form);
 		$this->assertPattern("/".date('Y', mktime(10, 0, 0, 7, 31, 2013))."/", $form);
-		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Type 1<\/option>/", $form);
 		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Source 1<\/option>/", $form);
 		$this->assertNoPattern("/<option value=\"1\" selected=\"selected\">Bank 1<\/option>/", $form);
 		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Category 1<\/option>/", $form);
@@ -356,7 +350,6 @@ class tests_Writing extends TableTestCase {
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
-		$this->truncateTable("types");
 		$this->truncateTable("categories");
 		$this->truncateTable("banks");
 	}
@@ -500,10 +493,6 @@ class tests_Writing extends TableTestCase {
 		$source->sources_id = 1;
 		$source->name = "source 1";
 		$source->save();
-		$type = new Type();
-		$type->types_id = 1;
-		$type->name = "type 1";
-		$type->save();
 		$category = new Category();
 		$category->categories_id = 1;
 		$category->name = "chèque";
@@ -516,12 +505,11 @@ class tests_Writing extends TableTestCase {
 		$writing->comment = "Ceci est un commentaire";
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->sources_id = 1;
-		$writing->types_id = 1;
+		$writing->number = 1;
 		$writing->vat = 19.6;
 		
 		$this->assertPattern("/cic/", $writing->search_index());
 		$this->assertPattern("/source 1/", $writing->search_index());
-		$this->assertPattern("/type 1/", $writing->search_index());
 		$this->assertPattern("/chèque/", $writing->search_index());
 		$this->assertPattern("/Ceci est un commentaire/", $writing->search_index());
 		$this->assertPattern("/31\/07\/2013/", $writing->search_index());

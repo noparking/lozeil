@@ -63,8 +63,7 @@ class Menu_Area {
 				array(
 					'value' => utf8_ucfirst(__("manage the"))." ".
 							   Html_tag::a(link_content("content=categories.php"), __("categories")).", ".
-							   Html_tag::a(link_content("content=sources.php"), __("sources")).", ".
-							   Html_tag::a(link_content("content=types.php"), __("types"))
+							   Html_tag::a(link_content("content=sources.php"), __("sources"))
 				),
 				array(
 					'value' => $data->form_import()

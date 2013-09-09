@@ -22,13 +22,13 @@ if (!empty($_POST['date_picker_to']['m'])) {
 
 $query_export = "SELECT ".
 $dbExport->config['table_writings'].".day as ".__('date').", ".
+$dbExport->config['table_writings'].".number as '".__('piece number')."', ".
 $dbExport->config['table_writings'].".amount_excl_vat as ".__('amount excluding vat').", ".
 $dbExport->config['table_writings'].".vat as ".__('VAT').", ".
 $dbExport->config['table_writings'].".amount_inc_vat as ".__('amount including vat').", ".
 $dbExport->config['table_banks'].".name as ".__('bank').", ".
 $dbExport->config['table_categories'].".name as ".__('category').", ".
 $dbExport->config['table_sources'].".name as ".__('source').", ".
-$dbExport->config['table_types'].".name as ".__('type').", ".
 $dbExport->config['table_writings'].".comment as ".__('comment').", ".
 $dbExport->config['table_writings'].".information as ".__('information')." ".
 "FROM ".$dbExport->config['table_writings'].
@@ -38,11 +38,9 @@ $dbExport->config['table_writings'].".information as ".__('information')." ".
 " ON ".$dbExport->config['table_categories'].".id = ".$dbExport->config['table_writings'].".categories_id".
 " LEFT JOIN ".$dbExport->config['table_sources'].
 " ON ".$dbExport->config['table_sources'].".id = ".$dbExport->config['table_writings'].".sources_id".
-" LEFT JOIN ".$dbExport->config['table_types'].
-" ON ".$dbExport->config['table_types'].".id = ".$dbExport->config['table_writings'].".types_id".
 " WHERE (1=1)".
 $querywhere.
-" ORDER BY amount_excl_vat";
+" ORDER BY date ASC";
 $result_export = $dbExport->query($query_export);
 if ($result_export[1] > 0) {
 	while ($row_export = $dbExport->fetchArray($result_export[0])) {

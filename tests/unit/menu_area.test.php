@@ -47,7 +47,7 @@ class tests_Menu_area extends TableTestCase {
 		$this->assertPattern("/200/", $area_html);
 		$this->assertPattern("/content=writings.php/", $area_html);
 		$this->assertPattern("/content=sources.php/", $area_html);
-		$this->assertPattern("/content=types.php/", $area_html);
+		$this->assertPattern("/content=followupwritings.php/", $area_html);
 		$this->assertPattern("/content=categories.php/", $area_html);
 		$this->assertNoPattern("/450/", $area_html);
 		

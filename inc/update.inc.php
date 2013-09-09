@@ -21,6 +21,11 @@ class Update {
 		$this->param = new Config_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
+	
+	function to_6() {
+		$this->db->query("DROP TABLE `types`;");
+		$this->db->query("ALTER TABLE `writings` CHANGE `types_id` `number` INT(20)  NULL  DEFAULT NULL;");
+		}
 
 	function to_5() {
 		$this->dbconfig->add("table_writingssimulations", "writingssimulations");

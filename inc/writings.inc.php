@@ -37,10 +37,6 @@ class Writings extends Collector  {
 			ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".sources_id
 		";
 		$join[] = "
-			LEFT JOIN ".$this->db->config['table_types']."
-			ON ".$this->db->config['table_types'].".id = ".$this->db->config['table_writings'].".types_id
-		";
-		$join[] = "
 			LEFT JOIN ".$this->db->config['table_banks']."
 			ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".banks_id
 		";
@@ -50,7 +46,7 @@ class Writings extends Collector  {
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_types'].".name as type_name, ".$this->db->config['table_banks'].".name as bank_name";
+		$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_banks'].".name as bank_name";
 
 		return $columns;
 	}
@@ -80,9 +76,9 @@ class Writings extends Collector  {
 						),
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("type_name"),
-						'id' => "type_name",
-						'value' => utf8_ucfirst(__("type")),
+						'class' => $this->determine_table_header_class("number"),
+						'id' => "number",
+						'value' => utf8_ucfirst(__('piece nb')),
 					),
 					array(
 						'type' => "th",
@@ -141,9 +137,6 @@ class Writings extends Collector  {
 		$categories = new Categories();
 		$categories->select();
 		$categories_names = $categories->names();
-		$types = new Types();
-		$types->select();
-		$types_name = $types->names();
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
@@ -177,7 +170,7 @@ class Writings extends Collector  {
 					),
 					array(
 						'type' => "td",
-						'value' => isset($types_name[$writing->types_id]) ? $types_name[$writing->types_id] : "",
+						'value' => $writing->number,
 					),
 					array(
 						'type' => "td",

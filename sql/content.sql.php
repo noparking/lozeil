@@ -21,12 +21,6 @@ $queries = array(
 		  PRIMARY KEY (`id`)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	
-	'types' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_types']." (
-		  id int(21) NOT NULL AUTO_INCREMENT,
-		  name VARCHAR(100) NOT NULL DEFAULT '',
-		  PRIMARY KEY (`id`)
-		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-	
 	'banks' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_banks']." (
 		  id int(21) NOT NULL AUTO_INCREMENT,
 		  name VARCHAR(100) NOT NULL DEFAULT '',
@@ -46,13 +40,12 @@ $queries = array(
 		  search_index TEXT NOT NULL,
 		  sources_id INT(11),
 		  simulations_id int(11),
-		  types_id INT(11),
+		  number INT(20),
 		  unique_key TEXT,
 		  vat DECIMAL(5,2),
 		  PRIMARY KEY (`id`),
 		  KEY categories_id (categories_id),
 		  KEY sources_id (sources_id),
-		  KEY types_id (types_id),
 		  KEY simulations_id (simulations_id)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	

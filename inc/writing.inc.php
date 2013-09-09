@@ -20,7 +20,7 @@ class Writing extends Record {
 	public $paid = 0;
 	public $search_index = "";
 	public $sources_id = 0;
-	public $types_id = 0;
+	public $number = "";
 	public $unique_key = "";
 	public $vat = 0;
 	
@@ -40,11 +40,9 @@ class Writing extends Record {
 		$bank->load($this->banks_id);
 		$source = new Source();
 		$source->load($this->sources_id);
-		$type = new Type();
-		$type->load($this->types_id);
 		$category = new Category();
 		$category->load($this->categories_id);
-		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name." ".$type->name;
+		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name;
 	}
 	
 	function load($id = null) {
@@ -85,7 +83,7 @@ class Writing extends Record {
 		banks_id = ".(int)$this->banks_id.",
 		sources_id = ".(int)$this->sources_id.",
 		amount_inc_vat = ".$this->amount_inc_vat.",
-		types_id  = ".(int)$this->types_id.",
+		number  = ".(int)$this->number.",
 		vat = ".$this->vat.",
 		amount_excl_vat = ".$this->amount_excl_vat.",
 		comment = ".$this->db->quote($this->comment).",
@@ -109,7 +107,7 @@ class Writing extends Record {
 			banks_id = ".(int)$this->banks_id.",
 			sources_id = ".(int)$this->sources_id.",
 			amount_inc_vat = ".$this->amount_inc_vat.",
-			types_id  = ".(int)$this->types_id.",
+			number  = ".(int)$this->number.",
 			vat = ".$this->vat.",
 			amount_excl_vat = ".$this->amount_excl_vat.",
 			comment = ".$this->db->quote($this->comment).",
@@ -133,7 +131,7 @@ class Writing extends Record {
 				$this->sources_id = $this->sources_id > 0 ? (int)$this->sources_id : $to_merge->sources_id;
 				$this->comment = !empty($this->comment) ? $this->comment : $to_merge->comment;
 				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
-				$this->types_id = $this->types_id > 0 ? $this->types_id : $to_merge->types_id;
+				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
 				$this->save();
@@ -148,7 +146,7 @@ class Writing extends Record {
 				$this->day = $to_merge->day;
 				$this->information = !empty($to_merge->information) ? $to_merge->information : $this->information;
 				$this->vat = $to_merge->vat;
-				$this->types_id = $to_merge->types_id > 0 ? $to_merge->types_id : $this->types_id;
+				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
 				$this->unique_key = "";
@@ -202,9 +200,6 @@ class Writing extends Record {
 		$categories = new Categories();
 		$categories->select();
 		$categories_name = $categories->names();
-		$types = new Types();
-		$types->select();
-		$types_name = $types->names();
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
@@ -213,7 +208,7 @@ class Writing extends Record {
 		$datepicker->value = $date;
 		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
 		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
-		$type = new Html_Select("types_id", $types_name, $this->types_id);
+		$number = new Html_Input("number", $this->number);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
@@ -240,8 +235,8 @@ class Writing extends Record {
 				'source' => array(
 					'value' => $source->item(__('source')),
 				),
-				'type' => array(
-					'value' => $type->item(__('type')),
+				'number' => array(
+					'value' => $number->item(__('piece nb')),
 				),
 				'amount_excl_vat' => array(
 					'value' => $amount_excl_vat->item(__('amount excluding vat')),
@@ -300,9 +295,6 @@ class Writing extends Record {
 		$categories = new Categories();
 		$categories->select();
 		$categories_name = $categories->names();
-		$types = new Types();
-		$types->select();
-		$types_name = $types->names();
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
@@ -311,7 +303,7 @@ class Writing extends Record {
 		$datepicker->value = $date;
 		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
 		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
-		$type = new Html_Select("types_id", $types_name, $this->types_id);
+		$number = new Html_Input("number", $this->number);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
@@ -338,8 +330,8 @@ class Writing extends Record {
 				'source' => array(
 					'value' => $source->item(__('source')),
 				),
-				'type' => array(
-					'value' => $type->item(__('type')),
+				'number' => array(
+					'value' => $number->item(__('piece nb')),
 				),
 				'amount_excl_vat' => array(
 					'value' => $amount_excl_vat->item(__('amount excluding vat')),
