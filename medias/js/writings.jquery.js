@@ -20,11 +20,11 @@ function make_droppable() {
         drop: function() {
         	var writing_from = $(".ui-draggable-dragging tr").attr('id').substr(6);
 			var writing_into = $(this).attr('id').substr(6);
-			$(this).removeClass('over').addClass('out');
 			$.post(
 				"index.php?content=writings.ajax.php",
 				{action: "merge", writing_from: writing_from, writing_into: writing_into},
 				function(data) {
+					$('#table_writings table tbody').remove();
 					refresh_balance();
 					$('#table_writings table').html(data);
 					$("#table_" + writing_into).addClass('over').delay('3000').queue(function(next){

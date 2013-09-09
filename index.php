@@ -65,5 +65,4 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	echo $theme->content_bottom();
 	echo $theme->body_bottom();
 	echo $theme->html_bottom();
-
 }

@@ -40,4 +40,3 @@ $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 echo $writings->show();
 exit(0);
-
