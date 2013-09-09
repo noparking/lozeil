@@ -27,6 +27,7 @@ $dbconfig['new'] = "0";		// forcer la création d'une nouvelle connexion
 $dbconfig['table_sources'] = "sources";
 $dbconfig['table_types'] = "types";
 $dbconfig['table_writings'] = "writings";
+$dbconfig['table_writingssimulations'] = "writingssimulations";
 $dbconfig['table_banks'] = "banks";
 $dbconfig['table_categories'] = "categories";
 $dbconfig['table_users'] = "users";
