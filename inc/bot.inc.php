@@ -25,7 +25,7 @@ class Bot {
 		while(empty($dbuser)) {
 			 $dbuser = $this->input(__('username'));
 		};
-		$dbpass = $this->input(__('password'));
+		$dbpass = $this->input_hidden(__('password'));
 
 		
 		$config_file = new Config_File($this->directory_cfg."/config.inc.php");
@@ -43,9 +43,15 @@ class Bot {
 			}
 		}
 		
-		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("name" => $dbname))));
-		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("user" => $dbuser))));
-		$this->dbconfig->update(array('dbconfig' => array( 'dbconfig' => array("pass" => $dbpass))));
+		$this->dbconfig->update(array(
+			'dbconfig' => array(
+				'dbconfig' => array(
+					"name" => $dbname,
+					"user" => $dbuser,
+					"pass" => $dbpass
+				)
+			)
+		));
 		
 		$param_file = new Param_File($this->directory_cfg."/param.inc.php");
 		if (!$param_file->exists()) {
@@ -73,7 +79,7 @@ class Bot {
 		while(empty($username)) {
 			 $username = $this->input(__('username'));
 		};
-		$password = $this->input(__('password'));
+		$password = $this->input_hidden(__('password'));
 		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password('".$password."'));");
 	}
 	
@@ -165,9 +171,19 @@ class Bot {
 		return $this;
 	}
 	
-	function input($message){
+	function input($message) {
 	  fwrite(STDOUT, "$message: ");
 	  $input = trim(fgets(STDIN));
 	  return $input;
-	}	
+	}
+	
+	function input_hidden($message) {
+		fwrite(STDOUT, "$message: ");
+		$oldStyle = shell_exec('stty -g');
+		shell_exec('stty -echo');
+		$password = rtrim(fgets(STDIN), "\n");
+		echo "\n";
+		shell_exec('stty ' . $oldStyle);
+		return $password;
+	}
 }
