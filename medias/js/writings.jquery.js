@@ -58,7 +58,7 @@ $(document).ready(function() {
 				"index.php?content=writings.ajax.php",
 				{action: "sort", order_col_name: order_col_name},
 				function(data) {
-					$('table').html(data);
+					$('#table_writings table').html(data);
 				}
 			)
 		})
