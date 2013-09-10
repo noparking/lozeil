@@ -22,6 +22,9 @@ echo $menu->show();
 $heading = new Heading_Area(utf8_ucfirst(__('make a simulation')), $writings_simulation->display_timeline_at($timestamp_selected));
 echo $heading->show();
 
-$simulation = new Writings_Simulations();
-$simulation->select();
-echo $simulation->show_form();
+$simulations = new Writings_Simulations();
+$simulations->select();
+echo $simulations->display();
+
+//$simulation = new Writings_Simulation();
+//echo $simulation->form();

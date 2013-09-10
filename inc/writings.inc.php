@@ -206,20 +206,6 @@ class Writings extends Collector  {
 					),
 				),
 			);
-			
-//			if($selected_writing == $writing->id) {
-//				$grid[] =  array(
-//					'class' => "table_writings_form_modify",
-//					'id' => "table_".$writing->id,
-//					'cells' => array(
-//						array(
-//							'type' => "td",
-//							'colspan' => "10",
-//							'value' => $writing->form_in_table()
-//						)
-//					),
-//				);
-//			}
 		}
 		return $grid;
 	}

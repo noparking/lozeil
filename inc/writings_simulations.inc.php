@@ -187,27 +187,9 @@ class Writings_Simulations extends Collector  {
 		return $html_table->show();
 	}
 	
-	function show_form() {
+	function display() {
 		$submit = new Html_Input("submit", __('save'), "submit");
 		return "<div id=\"simulation\"><form method=\"post\" name=\"simulation\" action=\"\" enctype=\"multipart/form-data\">".
 				$this->show().$submit->item("")."</form></div>";
-	}
-	
-	function prepare_results_from_post($posts) {
-		$results = array();
-		foreach ($posts as $name => $post) {
-			$id = explode("__", $name);
-			if(is_array($post)) {
-				foreach($post as $key => $value) {
-					if (!empty($value)) {
-						$results[$id[1]][$key] = $value;
-					}
-				}
-			} else {
-				if (!empty($post)) {
-					$results[$id[1]][$id[0]] = $post;
-				}
-			}
-		}
 	}
 }
