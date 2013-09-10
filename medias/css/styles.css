@@ -146,7 +146,8 @@ table {
 	background-position: left center;
 }
 
-.table_writings_split input[type="submit"] {
+.table_writings_split input[type="submit"], .table_writings_split input[type="submit"]:hover {
+	width: 16px;
 	cursor: pointer;
 	border: 0;
 	background: transparent;
@@ -502,9 +503,17 @@ input[type="file"] {
 	width: 600px;
 }
 
-input[type="submit"]:hover {
+input[type="submit"] {
+	border: black thin solid;
 	cursor: pointer;
+	padding: 3px;
+	background-color: white;
+	font-size: 80%;
 }
+input[type="submit"]:hover {
+	background-color: #F6F6F6;
+}
+
 
 .edit_writings_form {
 	width: 50%;
@@ -551,6 +560,10 @@ h2 {
 
 #menu_actions_export, #menu_actions_export form, .show {
 	display: inline-block;
+}
+
+#menu_actions_export {
+	margin-left: 20px;
 }
 
 #menu_header_balance a{
