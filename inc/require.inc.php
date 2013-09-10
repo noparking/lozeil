@@ -10,10 +10,10 @@
 
 $current_directory = dirname(__FILE__);
 
-if(file_exists($current_directory."/../cfg/config.inc.php")) {
+if (file_exists($current_directory."/../cfg/config.inc.php")) {
 	require $current_directory."/../cfg/config.inc.php";
 }
-if(file_exists($current_directory."/../cfg/param.inc.php")) {
+if (file_exists($current_directory."/../cfg/param.inc.php")) {
 	require $current_directory."/../cfg/param.inc.php";
 }
 require $current_directory."/../lang/fr_FR.lang.php";
@@ -58,3 +58,7 @@ require $current_directory."/writings.inc.php";
 require $current_directory."/writings_data_file.inc.php";
 require $current_directory."/writings_simulation.inc.php";
 require $current_directory."/writings_simulations.inc.php";
+
+if (function_exists("date_default_timezone_set")) {
+	date_default_timezone_set("Europe/Paris");
+}
