@@ -7,7 +7,7 @@
 
 	Copyright (C) No Parking 2013 - 2013
 */
-var_dump($_POST);
+
 $writings_simulation = new Writings_Simulations();
 if (!empty($_POST)) {
 	unset($_POST['submit']);
