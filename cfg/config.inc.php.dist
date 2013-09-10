@@ -10,7 +10,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "7";
+$config['version'] = "8";
 
 $config['layout_mediaserver'] = "";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
