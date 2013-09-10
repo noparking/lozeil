@@ -70,6 +70,10 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 	}
 }
 
+if (isset($_POST['submit_sparklines'])) {
+	$_SESSION['filter_value_*'] = $_POST['submit_sparklines'];
+}
+
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();

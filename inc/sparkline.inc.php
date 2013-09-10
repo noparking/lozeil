@@ -85,6 +85,7 @@ class Sparkline {
 				}
 				$this->name = $category->name;
 				$this->values($values);
+				$submit = new Html_Input("submit_sparklines", $this->name, "submit");
 				
 				$grid[$category->id] = array(
 						'class' => "sparkline",
@@ -113,7 +114,7 @@ class Sparkline {
 							array(
 								'type' => "td",
 								'class' => "sparkline-name",
-								'value' => $this->name,
+								'value' => "<form method=\"post\" action=\"".link_content("content=writings.php")."\">".$submit->input()."</form>",
 							),
 						)
 				);
