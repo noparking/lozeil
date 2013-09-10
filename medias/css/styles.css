@@ -83,10 +83,6 @@ tr.draggable {
 	cursor: move;
 }
 
-tr.draggable:hover {
-	background: #f6f6f6;
-}
-
 table {
 	border-collapse: collapse;
 	width: 100%;
@@ -607,7 +603,7 @@ h2 {
 	margin-top: 15px;
 }
 
-tr.merged {
+tr.modified {
 	background-color: #FFFF78;
 }
 

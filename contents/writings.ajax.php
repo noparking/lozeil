@@ -14,6 +14,7 @@ list($start, $stop) = determine_month($_SESSION['timestamp']);
 switch ($_REQUEST['action']) {
 	case "merge":
 		$writing_from = new Writing();
+		$writings->modified[] = (int)$_REQUEST['writing_into'];
 		$writing_from->load((int)$_REQUEST['writing_from']);
 		$writing_into = new Writing();
 		$writing_into->load((int)$_REQUEST['writing_into']);

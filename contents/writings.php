@@ -22,6 +22,7 @@ if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
 }
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
+$writings = new Writings();
 if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		case 'edit':
@@ -30,13 +31,14 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				$writing->load($_POST['id']);
 				$writing->fill($_POST);
 				$writing->save();
+				$writings->modified[] = $_POST['id'];
 			}
 			break;
 			
 		case 'insert':
 			$writing = new Writing();
 			$writing->fill($_POST);
-			$writing->save();
+			$writings->modified[] = $writing->save();
 			break;
 		
 		case 'delete':
@@ -52,7 +54,8 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				if (is_numeric($amount)) {
 					$writing = new Writing();
 					$writing->load((int)$_POST['table_writings_split_id']);
-					$writing->split($amount);
+					$writings->modified[] = $writing->split($amount);
+					$writings->modified[] = (int)$_POST['table_writings_split_id'];
 				}
 			}
 			break;
@@ -78,7 +81,6 @@ $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
-$writings = new Writings();
 $writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 $writings_filter_value = "";
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {

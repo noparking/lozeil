@@ -89,7 +89,11 @@ $(document).ready(function() {
 					$('#table_writings table').html(data);
 				}
 			);
-		});
+		})
+		
+		.find(".merged").delay('8000').queue(function(next){
+			$(this).removeClass('merged');
+		})
 });
 
 function make_drag_and_drop() {
@@ -111,9 +115,6 @@ function make_drag_and_drop() {
 					$('#table_writings table tbody').remove();
 					refresh_balance();
 					$('#table_writings table').html(data);
-					$("#table_" + writing_into).addClass('merged').delay('3000').queue(function(next){
-						$(this).removeClass('merged');
-					})
 				}
 			);
 		}
@@ -129,6 +130,10 @@ function make_drag_and_drop() {
 			return "<div class=\"dragged\"><table><tr id=\""+id+"\">"+html+"</tr><tr id=\"table_header_dragged\">"+table_header+"</tr></table></div>";
 		}
 	});
+	
+	$("body").find(".modified").delay('8000').queue(function(next){
+		$(this).removeClass('modified');
+	})
 }
 
 $(document).ajaxStop(function() {

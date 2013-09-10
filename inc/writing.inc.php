@@ -171,7 +171,7 @@ class Writing extends Record {
 		$writing->amount_inc_vat = $amount;
 		$writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
 		$writing->search_index = $this->search_index();
-		$writing->save();
+		return $writing->save();
 	}
 	
 	function form() {

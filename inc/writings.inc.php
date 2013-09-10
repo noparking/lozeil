@@ -10,6 +10,7 @@
 
 class Writings extends Collector  {
 	public $filters = null;
+	public $modified = array();
 	
 	private $month = 0;
 	
@@ -147,13 +148,19 @@ class Writings extends Collector  {
 		$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
 
 		foreach ($this as $writing) {
-			$class = "";
+			$class_comment = "";
 			$informations = $writing->show_further_information();
 			if (!empty($informations)) {
-				$class = "table_writings_comment";
+				$class_comment = "table_writings_comment";
 			}
+			if (in_array($writing->id, $this->modified)) {
+				$class = "draggable modified";
+			} else {
+				$class = "draggable";
+			}
+			
 			$grid[] =  array(
-				'class' => "draggable",
+				'class' => $class,
 				'id' => "table_".$writing->id,
 				'cells' => array(
 					array(
@@ -186,7 +193,7 @@ class Writings extends Collector  {
 					),
 					array(
 						'type' => "td",
-						'class' => $class,
+						'class' => $class_comment,
 						'value' => $writing->comment.$informations,
 					),
 					array(
