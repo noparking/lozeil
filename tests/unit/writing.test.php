@@ -480,7 +480,37 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
 		$writing->save();
+		$writing->duplicate('3Q');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
 		$writing->duplicate('3t');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
+		$writing->duplicate('3T');
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
@@ -510,6 +540,21 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
 		$writing->save();
+		$writing->duplicate('3Y');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
 		$writing->duplicate('3a');
 		$writings = new Writings();
 		$writings->select();
@@ -520,6 +565,51 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
 		$writing->load(4);
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
+		$writing->duplicate('3A');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
+		$writing->duplicate('3m');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->save();
+		$writing->duplicate('3M');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 4);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
+		$writing->load(4);
+		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
 		$this->truncateTable("writings");
 	}
 	
