@@ -433,9 +433,9 @@ class Writing extends Record {
 				$new_writing->save();
 			}
 		} else {
-			$split = preg_split("/(q)|(y)|(a)|(t)/", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			$split = preg_split("/(q)|(y)|(a)|(t)/i", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 			if (count($split) == 2 and is_numeric($split[0])) {
-				if($split[1] == 'q' or $split[1] == 't') {
+				if(preg_match("/(q)|(t)/i", $split[1])) {
 					for ($i=1; $i<=$split[0]; $i++) {
 						$new_writing = $this;
 						$new_writing->id = 0;
@@ -443,7 +443,7 @@ class Writing extends Record {
 						$new_writing->banks_id = 0;
 						$new_writing->save();
 					}
-				} elseif($split[1] == 'a' or $split[1] == 'y') {
+				} elseif(preg_match("/(a)|(y)/i", $split[1])) {
 					for ($i=1; $i<=$split[0]; $i++) {
 						$new_writing = $this;
 						$new_writing->id = 0;
