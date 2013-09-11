@@ -231,4 +231,19 @@ class tests_Writings extends TableTestCase {
 		$this->assertEqual($writings->filters['stop'], 1362870000);
 		$this->assertEqual($writings->filters['*'], "fullsearch");
 	}
+	
+	function test_cancel_last_operation() {
+		$writing = new Writing();
+		$writing->save();
+		$writing = new Writing();
+		$writing->save();
+		$writing = new Writing();
+		$writing->save();
+		$writing = new Writing();
+		$writing->save();
+		$writings = new Writings();
+		$writings->cancel_last_operation();
+		$writings->select();
+		$this->assertTrue(count($writings) == 0);
+	}
 }
