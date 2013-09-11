@@ -667,3 +667,16 @@ tr.modified {
 .operations > div {
 	display: none;
 }
+
+.extra_filter_writings {
+	display: inline-block;
+}
+
+.extra_cancel_writings {
+	display: inline-block;
+	float: right;
+}
+
+.extra_cancel_writings input{
+	border: none;
+}

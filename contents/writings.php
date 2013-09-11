@@ -22,7 +22,6 @@ if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
 }
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
-$writings = new Writings();
 if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		case 'edit':
@@ -74,6 +73,11 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 			}
 			break;
 			
+		case 'cancel':
+			$writings = new Writings();
+			$writings->cancel_last_operation();
+			break;
+			
 		default:
 			break;
 	}
@@ -87,6 +91,7 @@ $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
+$writings = new Writings();
 $writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
 $writings_filter_value = "";
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
@@ -96,7 +101,7 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value));
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value).$writings->form_cancel_last_operation());
 echo $heading->show();
 
 echo $writings->display();

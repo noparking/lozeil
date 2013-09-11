@@ -57,9 +57,9 @@ class Menu_Area {
 				array(
 					'value' => Html_tag::a(link_content("content=followupwritings.php"), utf8_ucfirst(__("consult statistics")))
 				),
-//				array(
-//					'value' => Html_tag::a(link_content("content=writingssimulations.php"), utf8_ucfirst(__("make a simulation")))
-//				),
+				array(
+					'value' => Html_tag::a(link_content("content=writingssimulations.php"), utf8_ucfirst(__("make a simulation")))
+				),
 				array(
 					'value' => utf8_ucfirst(__("manage the"))." ".
 							   Html_tag::a(link_content("content=categories.php"), __("categories")).", ".

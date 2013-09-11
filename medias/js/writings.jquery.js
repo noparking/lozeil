@@ -81,7 +81,7 @@ $(document).ready(function() {
 			$("input#amount_excl_vat").val(amount_excl_vat);
 		})
 
-		.on("change", "#extra_filter_writings_value", function() {
+		.on("keyup", "#extra_filter_writings_value", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
 				{ method: "json", action: "filter", value: $(this).val() },
