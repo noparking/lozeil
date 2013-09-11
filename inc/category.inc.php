@@ -11,6 +11,7 @@
 class Category extends Record {
 	public $id = 0;
 	public $name = "";
+	public $vat = 0;
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -49,7 +50,8 @@ class Category extends Record {
 	function insert() {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_categories']."
-			SET name = ".$this->db->quote($this->name)
+			SET name = ".$this->db->quote($this->name).",
+				vat = ".$this->vat
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('category'));
@@ -59,7 +61,8 @@ class Category extends Record {
 	
 	function update() {
 		$query = "UPDATE ".$this->db->config['table_categories'].
-		" SET name = ".$this->db->quote($this->name)."
+		" SET name = ".$this->db->quote($this->name).", 
+		vat = ".$this->vat."
 		WHERE id = ".(int)$this->id;
 		$result = $this->db->query($query);
 		$this->db->status($result[1], "u", __('category'));

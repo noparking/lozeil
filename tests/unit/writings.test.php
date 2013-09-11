@@ -128,7 +128,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Ceci est un test/", $table);
 		$this->assertPattern("/Autre complément d'infos/", $table);
 		$this->assertNoPattern("/e50b79ffaccc6b50d018aad432711418/", $table);
-		$this->assertPattern("/class=\"draggable\"/", $table);
+		$this->assertPattern("/class=\"draggable/", $table);
 		$this->assertNoPattern("/<td>250.00<\/td>/", $table);
 		$this->assertNoPattern("/279/", $table);
 		

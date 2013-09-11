@@ -63,25 +63,25 @@ $(document).ready(function() {
 			)
 		})
 		//Filter input
-		.on("keyup", "input#amount_excl_vat", function() {
+		.on("change", "input#amount_excl_vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
 			$("input#amount_inc_vat").val(amount_inc_vat);
 		})
 
-		.on("keyup", "input#amount_inc_vat", function() {
+		.on("change", "input#amount_inc_vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_excl_vat = Math.round($(this).val() / (($("input#vat").val()/100 +1))*1000000)/1000000;
 			$("input#amount_excl_vat").val(amount_excl_vat);
 		})
 
-		.on("keyup", "input#vat", function() {
+		.on("change", "input#vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_excl_vat = Math.round($("input#amount_inc_vat").val() / (($(this).val()/100 +1))*1000000)/1000000;
 			$("input#amount_excl_vat").val(amount_excl_vat);
 		})
 
-		.on("keyup", "#extra_filter_writings_value", function() {
+		.on("change", "#extra_filter_writings_value", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
 				{ method: "json", action: "filter", value: $(this).val() },
@@ -100,9 +100,22 @@ $(document).ready(function() {
 			$(this).find(".operations > div").hide();
 		})
 		
+		//Chargement automatique de la TVA par default
+		.on("change", "select[name='categories_id']", function() {
+			var form = $(this);
+			$.post(
+				"index.php?content=categories.ajax.php",
+				{ method: "json", action: "filter", value: $(this).val() },
+				function(data){
+					form.parent().parent().parent().find("#vat").val(data).change();
+				}
+			);
+		})
+		
 		.find(".merged").delay('6000').queue(function(next){
 			$(this).removeClass('merged');
 		})
+		
 		
 });
 

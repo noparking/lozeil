@@ -10,23 +10,31 @@
 
 if (isset($_POST['submit'])) {
 	$categories = $_POST;
-	unset($categories['submit']);
 	
 	if(!empty($categories['name_new'])) {
 		$category = new Category();
 		$category->name = $categories['name_new'];
+		if(isset($categories['vat_new'])) {
+			$categories['vat_new'] = str_replace(",", ".", $categories['vat_new']);
+			$category->vat = $categories['vat_new'];
+		}
 		$category->save();
 	}
-	unset($categories['name_new']);
 	
-	foreach ($categories as $id => $name) {
-		$category = new Category();
-		$category->load($id);
-		if ($category->name != $name and !empty($name)) {
-			$category->name = $name;
-			$category->save();
-		} elseif (empty($name) and $category->is_deletable()) {
-			$category->delete();
+	if (isset($categories['category'])) {
+		foreach ($categories['category'] as $id => $values) {
+			$category = new Category();
+			$category->load($id);
+			if (!empty($values['name'])) {
+				$category->name = $values['name'];
+				$values['vat'] = str_replace(",", ".", $values['vat']);
+				if (!empty($values['vat']) and is_numeric($values['vat'])) {
+					$category->vat = $values['vat'];
+				}
+				$category->save();
+			} elseif (empty($values['name']) and $category->is_deletable()) {
+				$category->delete();
+			}
 		}
 	}
 }

@@ -354,6 +354,7 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_form() {
+		$_SESSION['timestamp'] = time();
 		$writing = new Writing();
 		$form = $writing->form();
 		$this->assertPattern("/".date('m')."/", $form);

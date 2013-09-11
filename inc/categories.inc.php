@@ -31,8 +31,28 @@ class Categories extends Collector  {
 		return $names;
 	}
 	
+	function grid_header() {
+		$grid = array(
+			'header' => array(
+				'cells' => array(
+					array(
+						'type' => "th",
+						'value' => __('name')
+					),
+					array(
+						'type' => "th",
+						'value' => __('default VAT')
+					),
+				)
+			)
+		);
+		return $grid;
+	}
+		
+	
 	function grid_body() {
 		$input = new Html_Input("name_new");
+		$input_vat = new Html_Input("vat_new");
 		$grid[0] =  array(
 			'id' => 0,
 			'cells' => array(
@@ -40,16 +60,25 @@ class Categories extends Collector  {
 					'type' => "td",
 					'value' => $input->item(""),
 				),
+				array(
+					'type' => "td",
+					'value' => $input_vat->item(""),
+				),
 			)
 		);
 		
 		foreach ($this as $category) {
-			$input = new Html_Input($category->id, $category->name);
+			$input = new Html_Input("category[".$category->id."][name]", $category->name);
+			$input_vat = new Html_Input("category[".$category->id."][vat]", $category->vat);
 			$grid[$category->id] =  array(
 				'cells' => array(
 					array(
 						'type' => "td",
 						'value' => $input->item(""),
+					),
+					array(
+						'type' => "td",
+						'value' => $input_vat->item(""),
 					),
 				)
 			);
@@ -67,8 +96,12 @@ class Categories extends Collector  {
 		return $grid;
 	}
 	
+	function grid() {
+		return $this->grid_header() + $this->grid_body();
+	}
+	
 	function show() {
-		$html_table = new Html_table(array('lines' => $this->grid_body()));
+		$html_table = new Html_table(array('lines' => $this->grid()));
 		return $html_table->show();
 	}
 	

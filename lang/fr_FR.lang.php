@@ -34,6 +34,7 @@ $__['date'] = "date";
 $__['day'] = "jour";
 $__['deletion OK'] = "suppression OK";
 $__['deletions OK'] = "suppressions OK";
+$__['default VAT'] = "TVA par default";
 $__['display'] = "afficher";
 $__['end date'] = "date de fin";
 $__['error while creating'] = "erreur pendant la création";
