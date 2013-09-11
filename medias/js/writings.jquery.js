@@ -93,16 +93,14 @@ $(document).ready(function() {
 		
 		//Affichage des opérations
 		.on("mouseenter", "tr", function() {
-			console.log($(this).find(".operations > div"));
 			$(this).find(".operations > div").css("display", "inline-block");
 		})
 		
 		.on("mouseleave", "tr", function() {
-			console.log($(this).find(".operations > div"));
 			$(this).find(".operations > div").hide();
 		})
 		
-		.find(".merged").delay('8000').queue(function(next){
+		.find(".merged").delay('6000').queue(function(next){
 			$(this).removeClass('merged');
 		})
 		
@@ -143,7 +141,7 @@ function make_drag_and_drop() {
 		}
 	});
 	
-	$("body").find(".modified").delay('8000').queue(function(next){
+	$("body").find(".modified").delay('6000').queue(function(next){
 		$(this).removeClass('modified');
 	})
 }

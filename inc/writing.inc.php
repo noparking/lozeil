@@ -23,6 +23,7 @@ class Writing extends Record {
 	public $number = "";
 	public $unique_key = "";
 	public $vat = 0;
+	public $timestamp = 0;
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -91,7 +92,8 @@ class Writing extends Record {
 		paid = ".(int)$this->paid.",
 		day = ".(int)$this->day.",
 		unique_key = ".$this->db->quote($this->unique_key).",	
-		search_index = ".$this->db->quote($this->search_index())."
+		search_index = ".$this->db->quote($this->search_index()).",
+		timestamp = ".time()."
 		WHERE id = ".(int)$this->id;
 		
 		$result = $this->db->query($query);
@@ -115,7 +117,8 @@ class Writing extends Record {
 			day = ".(int)$this->day.",
 			search_index = ".$this->db->quote($this->search_index()).",
 			unique_key = ".$this->db->quote($this->unique_key).",
-			paid = ".(int)$this->paid
+			paid = ".(int)$this->paid.",
+			timestamp = ".time()
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('writing'));
@@ -506,5 +509,12 @@ class Writing extends Record {
 	
 	function show_operations() {
 		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_forward().$this->form_delete();
+	}
+	
+	function is_recently_modified(){
+		if($this->timestamp > (time() - 10)) {
+			return true;
+		}
+		return false;
 	}
 }

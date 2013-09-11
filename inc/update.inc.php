@@ -22,6 +22,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_9() {
+		$this->db->query("ALTER TABLE `writings` ADD `timestamp` INT(10)  NULL  DEFAULT NULL  AFTER `vat`;");
+	}
+	
 	function to_8() {
 		$this->db->query("ALTER TABLE `writingssimulations` DROP `duration`;");
 		$this->db->query("ALTER TABLE `writingssimulations` ADD `date_start` INT(10)  NOT NULL AFTER `periodicity`;");

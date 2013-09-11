@@ -8,9 +8,8 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-class Writings extends Collector  {
+class Writings extends Collector {
 	public $filters = null;
-	public $modified = array();
 	
 	private $month = 0;
 	
@@ -153,7 +152,7 @@ class Writings extends Collector  {
 			if (!empty($informations)) {
 				$class_comment = "table_writings_comment";
 			}
-			if (in_array($writing->id, $this->modified)) {
+			if ($writing->is_recently_modified()) {
 				$class = "draggable modified";
 			} else {
 				$class = "draggable";

@@ -31,14 +31,13 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				$writing->load($_POST['id']);
 				$writing->fill($_POST);
 				$writing->save();
-				$writings->modified[] = $_POST['id'];
 			}
 			break;
 			
 		case 'insert':
 			$writing = new Writing();
 			$writing->fill($_POST);
-			$writings->modified[] = $writing->save();
+			$writing->save();
 			break;
 		
 		case 'delete':
@@ -54,8 +53,7 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				if (is_numeric($amount)) {
 					$writing = new Writing();
 					$writing->load((int)$_POST['table_writings_split_id']);
-					$writings->modified[] = $writing->split($amount);
-					$writings->modified[] = (int)$_POST['table_writings_split_id'];
+					$writing->split($amount);
 				}
 			}
 			break;

@@ -46,6 +46,7 @@ $queries = array(
 		  number INT(20),
 		  unique_key TEXT,
 		  vat DECIMAL(5,2),
+		  timestamp INT(10),
 		  PRIMARY KEY (`id`),
 		  KEY categories_id (categories_id),
 		  KEY sources_id (sources_id),
