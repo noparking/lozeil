@@ -378,9 +378,7 @@ class Writing extends Record {
 	}
 	
 	function form_delete() {
-		if ($this->banks_id > 0) {
-			return "<div class=\"table_writings_delete disabled\"></div>";
-		} else {
+		if ($this->banks_id == 0) {
 			$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
 			$input_hidden_action = new Html_Input("action", "delete");
@@ -404,6 +402,20 @@ class Writing extends Record {
 		$form .= "</form></div>";
 		
 		return $form;
+	}
+	
+	function form_forward() {
+		if ($this->banks_id == 0) {
+			$form = "<div class=\"table_writings_forward\"><form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">";
+			$input_hidden_id = new Html_Input("table_writings_forward_id", $this->id);
+			$input_hidden_action = new Html_Input("action", "forward");
+			$submit = new Html_Input("table_writings_forward_submit", "", "submit");
+			$input_hidden_value = new Html_Input("table_writings_forward_amount", "");
+			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
+			$form .= "</form></div>";
+		
+			return $form;
+		}
 	}
 	
 	function form_modify() {
@@ -464,6 +476,27 @@ class Writing extends Record {
 		}
 	}
 	
+	function forward($amount) {
+		if (is_numeric($amount) and $amount > 0) {
+			$this->day = strtotime('+'.$amount.' months', $this->day);
+			$this->save();
+		} else {
+			$split = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			if (count($split) == 2 and is_numeric($split[0])) {
+				if(preg_match("/(m)/i", $split[1])) {
+					$this->day = strtotime('+'.$split[0].' months', $this->day);
+					$this->save();
+				} elseif(preg_match("/(q)|(t)/i", $split[1])) {
+					$this->day = strtotime('+'.($split[0] * 3).' months', $this->day);
+					$this->save();
+				} elseif(preg_match("/(a)|(y)/i", $split[1])) {
+					$this->day = strtotime('+'.$split[0].' year', $this->day);
+					$this->save();
+				}
+			}
+		}
+	}
+	
 	function show_further_information() {
 		if (!empty($this->information)) {
 			return "<div class=\"table_writings_comment_further_information\">".nl2br($this->information)."</div>";
@@ -472,6 +505,6 @@ class Writing extends Record {
 	}
 	
 	function show_operations() {
-		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_delete();
+		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_forward().$this->form_delete();
 	}
 }

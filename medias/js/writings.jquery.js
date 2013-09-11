@@ -38,7 +38,7 @@ $(document).ready(function() {
 			return false;
 		})
 		//Toggle input split & duplicate
-		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit", function() {
+		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function() {
 			var next = "";
 			if ($(this).next().val() == "") {
 				event.preventDefault();
@@ -47,7 +47,7 @@ $(document).ready(function() {
 				} else {
 					next = "hidden";
 				}
-			$("input#table_writings_split_submit, input#table_writings_duplicate_submit").next().attr("type", "hidden");
+			$("input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit").next().attr("type", "hidden");
 					$(this).next().attr("type", next);
 			}
 		})

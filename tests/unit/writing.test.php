@@ -652,5 +652,156 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/19.6/", $writing->search_index());
 		$this->assertPattern("/167.22/", $writing->search_index());
 		$this->assertPattern("/200/", $writing->search_index());
+		
+		$this->truncateTable("writings");
+		$this->truncateTable("sources");
+		$this->truncateTable("categories");
+		$this->truncateTable("banks");
+	}
+	
+	function test_forward() {
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward(1);
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 9, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward(3);
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("1m");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 9, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("3M");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("1t");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("3T");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 5, 11, 2014), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("1q");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("3Q");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 5, 11, 2014), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("1y");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2014), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("3Y");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2016), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("1a");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2014), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 8, 11, 2013);
+		$writing->save();
+		$writing->forward("3A");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2016), $writing->day);
+		
+		$this->truncateTable("writings");
 	}
 }

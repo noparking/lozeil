@@ -154,7 +154,8 @@ table {
 }
 
 #table_writings .table_writings_split input[type="text"],
-#table_writings .table_writings_duplicate input[type="text"]{
+#table_writings .table_writings_duplicate input[type="text"],
+#table_writings .table_writings_forward input[type="text"]{
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
@@ -206,7 +207,10 @@ table {
 	width: 80px;
 }
 
-.table_writings_modify, .table_writings_delete, .table_writings_duplicate {
+.table_writings_modify,
+.table_writings_delete,
+.table_writings_duplicate,
+.table_writings_forward{
 	vertical-align: middle;
 	display: inline-block;
 }
@@ -279,6 +283,17 @@ table {
 	width: 16px;
 	height: 16px;
 	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.table_writings_forward input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/forward.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
