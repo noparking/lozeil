@@ -106,4 +106,15 @@ class Banks extends Collector  {
 		return "<div id=\"edit_banks\"><form method=\"post\" name=\"banks_id\" action=\"\" enctype=\"multipart/form-data\">".
 				$this->show()."</form></div>";
 	}
+	
+	function get_id_from_name($name) {
+		$id = 0;
+		$this->select();
+		foreach ($this as $instance) {
+			if (preg_match("/".$name."/", $instance->name) and $instance->selected) {
+				$id = $instance->id;
+			}
+		}
+		return $id;
+	}
 }

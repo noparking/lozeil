@@ -21,27 +21,14 @@ class tests_Writings_Data_File extends TableTestCase {
 	
 	function test_is_line_cic() {
 		$import = new Writings_Data_File();
-		$mydata =array(
-			'day' => "01/07/2013",
-			'debit' => "",
-			'credit' => "152,20",
-			'comment' => "test de libellé"
-			);
-		$mydata2 =array(
-			'day' => "01/07/2013",
-			'debit' => "",
-			'credit' => "",
-			'comment' => "test de libellé"
-			);
-		$mydata3 =array(
-			'day' => "1275412300",
-			'debit' => "",
-			'credit' => "",
-			'comment' => "test de libellé"
-			);
+		$mydata =array("01/07/2013", "01/07/2013", "", "152,20", "test de libellé", "123456");
+		$mydata2 =array("01/07/2013", "01/07/2013", "-251", "152,20", "test de libellé", "123456");
+		$mydata3 =array("01/07/2013", "01/07/2013", "", "", "test de libellé", "123456");
+		$mydata4 =array("01/07/2013", "01/07/2013", "-25", "", "test de libellé", "123456");
 		$this->assertTrue($import->is_line_cic($mydata));
 		$this->assertFalse($import->is_line_cic($mydata2));
 		$this->assertFalse($import->is_line_cic($mydata3));
+		$this->assertTrue($import->is_line_cic($mydata4));
 	}
 	
 	
@@ -65,11 +52,10 @@ class tests_Writings_Data_File extends TableTestCase {
 		$data = new Writings_Data_File();
 		$row = 0;
 		foreach ($mydata as $line) {
-				$data->csv_data[$row]['day'] = trim($line[1]);
-                $data->csv_data[$row]['debit'] = trim($line[2]);
-                $data->csv_data[$row]['credit'] = trim($line[3]);
-                $data->csv_data[$row]['comment'] = trim($line[4]);
-                $row++;
+			foreach ($line as $key => $value) {
+				$data->csv_data[$row][$key] = trim($value);
+			}
+			$row++;
 		}
 		$this->assertTrue($data->is_cic($data->csv_data));
 	}
@@ -111,10 +97,11 @@ class tests_Writings_Data_File extends TableTestCase {
 	function test_import_as_cic() {
 		$name = tempnam('/tmp', 'csv');
 		
-		$mydata =array(
+		$mydata = array(
 			array("Date d'opération","Date de valeur","Débit","Crédit","Libellé","Solde"),
 			array("02/07/2013", "01/07/2013", "", "152,20", "test de libellé", "1252,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "test de libellé 2", "1300,20"),
+			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20"),
 			array("05/07/2013", "04/07/2013", "-120,50", "", "", "1300,20")
 			);
 		
@@ -125,6 +112,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		}
 		
 		$data = new Writings_Data_File($name, 1);
+		$data->prepare_csv_data();
 		$data->import_as_cic();
 		
 		$this->assertRecordExists(
@@ -160,12 +148,25 @@ class tests_Writings_Data_File extends TableTestCase {
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
 			)
 		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 4,
+				'amount_inc_vat' => "-120.5000000",
+				'banks_id' => 1,
+				'comment' => "",
+				'day' => mktime(0, 0, 0, 7, 4, 2013),
+				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
+			)
+		);
+		$data = new Writings_Data_File($name, 1);
+		$data->prepare_csv_data();
 		$data->import_as_cic();
 		
 		fclose($handle);
 		unlink($name);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(4));
+		$this->assertFalse($writing->load(5));
 		$this->truncateTable("writings");
 	}
 	
@@ -184,6 +185,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				"Nom du tiers débiteur 1","Identifiant du tiers débiteur 1","Nom du tiers créancier 1","Identifiant du tiers créancier 1",
 				"Libellé de Client à Client - Motif 1","Référence de Client à Client 1","Référence de la Remise 1","Référence de la Transaction 1",
 				"Référence Unique du Mandat 1","Séquence de Présentation 1"),
+			array("03/07/2013", "", "", "152,20", "CREDIT"),
 			array("03/07/2013", "", "", "152,20", "CREDIT")
 			);
 		
@@ -194,6 +196,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		}
 		
 		$data = new Writings_Data_File($name, 2);
+		$data->prepare_csv_data();
 		$data->import_as_coop();
 		
 		$this->assertRecordExists(
@@ -235,35 +238,33 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				)
 		);
 		
-		$data->import_as_coop();
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 3,
+				'amount_inc_vat' => "152.200000",
+				'banks_id' => 2,
+				'day' => mktime(0, 0, 0, 7, 3, 2013),
+				)
+		);
 		
+		$data = new Writings_Data_File($name, 2);
+		$data->prepare_csv_data();
+		$data->import_as_coop();
 		fclose($handle);
 		unlink($name);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(3));
+		$this->assertFalse($writing->load(4));
 		$this->truncateTable("writings");
 	}
 	
 	function test_form_import() {
-		$bank = new Bank();
-		$bank->name = "Bank 1";
-		$bank->selected = 1;
-		$bank->save();
-		
-		$bank2 = new Bank();
-		$bank2->name = "Bank 2";
-		$bank2->selected = 0;
-		$bank2->save();
-		
 		$data = new Writings_Data_File();
 		$form_import = $data->form_import("label");
 		$this->assertPattern("/id=\"menu_actions_import\"/", $form_import);
 		$this->assertPattern("/label/", $form_import);
 		$this->assertPattern("/menu_actions_import_file/", $form_import);
-		$this->assertPattern("/bank_id/", $form_import);
 		$this->assertPattern("/menu_actions_import_submit/", $form_import);
-		$this->assertPattern("/Bank 1/", $form_import);
-		$this->assertNoPattern("/Bank 2/", $form_import);
 		
 		$this->truncateTable("banks");
 	}

@@ -474,11 +474,4 @@ class Writing extends Record {
 	function show_operations() {
 		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_delete();
 	}
-	
-	function is_insertable() {
-		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
-		" WHERE unique_key = '".$this->unique_key."'";
-		$result = $this->db->value_exists($query);
-		return !$result;
-	}
 }
