@@ -202,6 +202,7 @@ class Writings extends Collector  {
 					),
 					array(
 						'type' => "td",
+						'class' => "operations",
 						'value' => $writing->show_operations(),
 					),
 				),

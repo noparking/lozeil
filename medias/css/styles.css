@@ -160,6 +160,10 @@ table {
 	width: 40px;
 }
 
+#table_writings td {
+	height: 25px;
+}
+
 #heading_timeline a,
 #heading_timeline a {
     font-size:0.9em;
@@ -354,6 +358,7 @@ table {
 	background-repeat: no-repeat;
 	background-position: right;
 	cursor: pointer;
+	width: 350px;
 }
 
 #menu_handle_show {
@@ -642,4 +647,8 @@ tr.modified {
 .input-date-calendar a:hover {
 	background:url(../images/futura/btn-grey-hover.png) repeat-x left top;
 	border:1px solid #bebebe;  
+}
+
+.operations > div {
+	display: none;
 }
