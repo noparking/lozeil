@@ -101,6 +101,7 @@ $__['start date'] = "date de début";
 $__['Start updating application'] = "Début de la mise à jour de l'application";
 $__['Start updating Lozeil'] = "Début de la mise à jour de Lozeil";
 $__['Start updating SVN'] = "Début de la mise à jour du SVN";
+$__['stop date'] = "date de fin";
 $__['success'] = "succès";
 $__['type'] = "type";
 $__['types'] = "types";

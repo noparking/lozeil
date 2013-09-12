@@ -11,23 +11,6 @@
 		Projet : lozeil
 		Website : http://www.lozeil.fr/
 		Auteur : noParking
-
-		Sommaire :  Reset
-					General
-					Menu
-					Contenu :
-						Timeline
-						
-					Tableaux :
-						Form area
-						Calendrier
-						
-					Formulaires :
-						Boutons
-						Input date (calendrier)
-	
-					Footer : 
-						Copyright
 					
 -------------------------------------------------------------------------------------------------------*/
 
@@ -36,9 +19,19 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /* --- General --- */
 
-ul,li{list-style:none; margin: 0 20px;}
-a{color:#000;text-decoration:none;}
-a:hover{color:#828282;text-decoration:underline;}
+ul,li {
+	list-style:none;
+	margin: 0 20px;
+}
+
+a {
+	color:#000;
+	text-decoration:none;
+}
+a:hover {
+	color:#828282;
+	text-decoration:underline;
+}
 
 body {
 	color: #000;
@@ -69,17 +62,19 @@ th {
 	color: #333333;
 	text-align: left;
 	text-shadow: 0 1px 0 #F6F6F6;
-}
-
-th:hover {
-	background: #f6f5f3;
-	text-shadow: 0 1px 0 #fff;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-tr.draggable {
+th:hover {
+	background: #f6f5f3;
+}
+
+tr {
 	background: white;
+}
+
+tr.draggable {
 	cursor: move;
 }
 
@@ -102,13 +97,64 @@ table {
 	background-color: lightgray !important;
 }
 
-.content tr th:last-of-type {
+input[type="file"] {
+	margin: 0 20px 0 20px;
+}
+
+input[type="submit"] {
+	border: black thin solid;
+	cursor: pointer;
+	padding: 3px;
+	background-color: white;
+	font-size: 80%;
+}
+input[type="submit"]:hover {
+	background-color: #F6F6F6;
+}
+
+.hidden_field {
+	display: inline-block;
+}
+
+
+/* Itemsform */
+
+.itemsform li{
+	clear: left;
+	margin: 0;
+	padding: 8px 0 4px 0;
+	position: relative;
+	list-style: none;
+}
+
+.itemsform label {
+	width: 150px;
+	padding: 8px 20px 8px 0;
+	line-height: 1em;
+	display: block;
+	text-align: right;
+	float: left;
+}
+
+/* --- Table writings --- */
+
+.forward input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/forward.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+#table_writings th:last-of-type {
 	min-width: 120px;
 }
 
-.table_writings_split_amount {
-	display: inline-block;
-	margin-left: 9px;
+#table_header_dragged {
+	visibility: collapse;
 }
 
 .sortedup, .sortedup:hover {
@@ -131,11 +177,29 @@ table {
 	text-decoration: none;
 }
 
-#table_header_dragged {
-	visibility: collapse;
+.table_writings_comment_further_information {
+	font-size: 90%;
+	display: none;
 }
 
-.table_writings_split{
+.table_writings_comment {
+	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	cursor: pointer;
+}
+
+.table_writings #comment {
+	width: 600px;
+}
+
+/* --- Tables writings & writingssimulations --- */
+#table_writings_split_amount {
+	display: inline-block;
+	margin-left: 9px;
+}
+
+.split{
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
@@ -146,25 +210,126 @@ table {
 	background-position: left center;
 }
 
-.table_writings_split input[type="submit"], .table_writings_split input[type="submit"]:hover {
+.split input[type="submit"], .split input[type="submit"]:hover {
 	width: 16px;
 	cursor: pointer;
 	border: 0;
 	background: transparent;
 }
 
-#table_writings .table_writings_split input[type="text"],
-#table_writings .table_writings_duplicate input[type="text"],
-#table_writings .table_writings_forward input[type="text"]{
+.split input[type="text"],
+.duplicate input[type="text"],
+.forward input[type="text"] {
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
 }
 
-#table_writings td {
+#table_writings td,
+#simulation td{
 	height: 25px;
 }
 
+.modify,
+.delete,
+.duplicate{
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.modify a{
+	display: inline-block;
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/bullet-wrench.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.delete input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/delete.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.duplicate input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 16px;
+	height: 16px;
+	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+#edit_writings_cancel,
+#edit_writingssimulation_cancel {
+	margin-left: 20px;
+	display: none;
+}
+
+#table_edit_writings_cancel,
+#table_edit_writingssimulation_cancel {
+	display: inline-block;
+	margin-top: 5px;
+	margin-left: 120px;
+}
+
+#edit_writings_hide,
+#edit_writingssimulation_hide{
+	display: none;
+}
+
+.edit_writings_form,
+.edit_writingssimulation_form{
+	margin-top: 20px;
+	display: none;
+}
+
+#edit_writings,
+#edit_writingssimulation{
+	padding: 15px;
+}
+
+.table_edit_writings_form {
+	margin-top: 15px;
+}
+
+tr.modified {
+	background-color: #FFFF78;
+}
+
+#table_edit_writings,
+#table_edit_writingssimulation{
+	display: none;
+}
+
+.operations > div {
+	display: none;
+}
+
+/* --- Heading --- */
+
+.heading {
+	padding-top: 35px;
+}
+
+.heading h2 {
+	font-size: 1.2em;
+	padding: 5px 0;
+	margin: 5px 0;
+}
+
+/*Timeline*/
 #heading_timeline a,
 #heading_timeline a {
     font-size:0.9em;
@@ -207,105 +372,39 @@ table {
 	width: 80px;
 }
 
-.table_writings_modify,
-.table_writings_delete,
-.table_writings_duplicate,
-.table_writings_forward{
-	vertical-align: middle;
+.negative_balance {
+	color: #BF0000;
+}
+
+.positive_balance {
+	color: #016B01;
+}
+
+.extra_filter_writings {
 	display: inline-block;
 }
 
-.itemsform li {
-	clear: left;
-	margin: 0;
-	padding: 8px 0 4px 0;
-	position: relative;
-	list-style: none;
-}
-
-.itemsform label {
-	width: 125px;
-	padding: 8px 20px 8px 0;
-	line-height: 1em;
-	display: block;
-	text-align: right;
-	float: left;
-}
-
-.table_writings_modify a {
+.extra_cancel_writings {
 	display: inline-block;
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/bullet-wrench.png);
-	background-repeat: no-repeat;
-	cursor: pointer;
+	float: right;
 }
 
-.table_writings_modify.disabled {
-	display: inline-block;
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/bullet-wrench-disabled.png);
-	background-repeat: no-repeat;
+.extra_cancel_writings input{
+	border: none;
 }
 
-.table_writings_delete input[type='submit'] {
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/delete.png);
-	background-repeat: no-repeat;
-	cursor: pointer;
+/*Extra*/
+
+.extra {
+	margin-bottom: 10px;
 }
 
-.table_writings_delete.disabled {
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/delete-disabled.png);
-	background-repeat: no-repeat;
-}
+/* --- Menu --- */
 
-.table_writings_duplicate input[type='submit'] {
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/more.png);
-	background-repeat: no-repeat;
-	cursor: pointer;
-}
-
-.table_writings_forward input[type='submit'] {
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/forward.png);
-	background-repeat: no-repeat;
-	cursor: pointer;
-}
-
-.table_writings_duplicate.disabled {
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
-	width: 16px;
-	height: 16px;
-	background-image :  url(../images/more-disabled.png);
-	background-repeat: no-repeat;
+.menu {
+	position: absolute;
+	left: 50px;
+	right: 50px;;
 }
 
 .menu_header, .menu_handle, .menu_actions {
@@ -359,115 +458,64 @@ table {
 	list-style: circle;
 }
 
-#menu_actions_import .hidden_field {
-	display: inline-block;
-}
-
-.table_writings_comment_further_information {
-	font-size: 90%;
-	display: none;
-}
-
-.table_writings_comment {
-	background-image :  url(../images/more.png);
-	background-repeat: no-repeat;
-	background-position: right;
-	cursor: pointer;
-	width: 350px;
-}
-
 #menu_handle_show {
 	display: none;
 }
 
-.menu {
-	position: absolute;
-	left: 50px;
-	right: 50px;;
+#menu_actions_export, #menu_actions_export form, .show {
+	display: inline-block;
 }
 
-.heading {
-	padding-top: 35px;
+#menu_actions_export {
+	margin-left: 20px;
 }
 
-.negative_balance {
-	color: #BF0000;
+#menu_header_balance a{
+	color: white;
 }
 
-.positive_balance {
-	color: #016B01;
+#menu_header_logout {
+	display:inline-block;
+	float: right;
+	margin-top: 1px;
+	margin-right: 10px;
 }
 
-#edit_writings_hide, #edit_writings_show, #edit_writings_cancel, #table_edit_writings_cancel {
+#menu_header_logout a {
+	color: white;
+	font-size: 0.75em;
+	text-decoration: none;
+}
+
+/* --- Button --- */
+
+.button {
 	border: black thin solid;
 	cursor: pointer;
 	padding: 3px;
 }
 
-#edit_writings_cancel {
-	margin-left: 20px;
-	display: none;
-}
-
-#table_edit_writings_cancel {
-	display: inline-block;
-	margin-top: 5px;
-	margin-left: 120px;
-}
-
-#edit_writings_cancel a, #table_edit_writings_cancel a{
+.button a {
 	text-decoration: none;
 	color: black;
 }
 
-#edit_writings_hide:hover, #edit_writings_show:hover, #edit_writings_cancel:hover, #table_edit_writings_cancel:hover {
+.button:hover {
 	background-color: #F6F6F6;
 }
 
-#edit_writings_hide {
-	display: none;
-}
+/* --- Statistiques --- */
 
-.edit_writings_form {
-	margin-top: 20px;
-	display: none;
-}
-
-input[type="file"] {
-	margin: 0 20px 0 20px;
-}
-
-#edit_writings {
-	padding: 15px;
-}
-
-.extra .hidden_field {
+#followupwritings_year div{
 	display: inline-block;
 }
 
-.extra {
-	margin-bottom: 10px;
-}
-
-.table_writings #comment {
-	width: 600px;
-}
-
-input[type="submit"] {
-	border: black thin solid;
-	cursor: pointer;
-	padding: 3px;
-	background-color: white;
-	font-size: 80%;
-}
-input[type="submit"]:hover {
-	background-color: #F6F6F6;
-}
-
-
-.edit_writings_form {
+#table_followupwritings {
 	width: 50%;
+	margin-top: 10px;
 }
+
+/*Sparkline*/
 
 .sparkline, .sparkline_header th {
 	margin: 10px;
@@ -493,87 +541,6 @@ input[type="submit"]:hover {
 	padding-left: 0.3em;
 }
 
-#followupwritings_year div{
-	display: inline-block;
-}
-
-#table_followupwritings {
-	width: 50%;
-	margin-top: 10px;
-}
-
-h2 {
-	font-size: 1.2em;
-	padding: 5px 0;
-	margin: 5px 0;
-}
-
-#menu_actions_export, #menu_actions_export form, .show {
-	display: inline-block;
-}
-
-#menu_actions_export {
-	margin-left: 20px;
-}
-
-#menu_header_balance a{
-	color: white;
-}
-
-#form_login {
-	width: 400px;
-	padding-top: 200px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#form_login ul {
-	border: solid black thin;
-}
-
-#form_login label {
-	width: 150px;
-}
-
-#form_login .itemsform-submit {
-	width: 90px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#menu_header_logout {
-	display:inline-block;
-	float: right;
-	margin-top: 1px;
-	margin-right: 10px;
-}
-
-#menu_header_logout a {
-	color: white;
-	font-size: 0.75em;
-	text-decoration: none;
-}
-
-.hidden_field {
-	display: inline-block;
-}
-
-#edit_banks {
-	width: 400px;
-}
-
-.table_edit_writings_form {
-	margin-top: 15px;
-}
-
-tr.modified {
-	background-color: #FFFF78;
-}
-
-#table_edit_writings {
-	display: none;
-}
-
 #submit_sparklines {
 	color: #000;
 	border: none;
@@ -592,6 +559,38 @@ tr.modified {
 	text-decoration:underline;
 }
 
+/* --- Banques --- */
+
+#edit_banks {
+	width: 400px;
+}
+
+/* --- login --- */
+
+.body-login #form_login {
+	width: 400px;
+	padding-top: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.body-login form ul {
+	border: solid black thin;
+}
+
+.body-login .itemsform-submit {
+	width: 90px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.body-login .content_error_status {
+	text-align: center;
+	display: none;
+	color: #BF0000;
+}
+
+/* --- Calendar --- */
 
 .input-date-calendar {
 	z-index:999;
@@ -662,21 +661,4 @@ tr.modified {
 .input-date-calendar a:hover {
 	background:url(../images/futura/btn-grey-hover.png) repeat-x left top;
 	border:1px solid #bebebe;  
-}
-
-.operations > div {
-	display: none;
-}
-
-.extra_filter_writings {
-	display: inline-block;
-}
-
-.extra_cancel_writings {
-	display: inline-block;
-	float: right;
-}
-
-.extra_cancel_writings input{
-	border: none;
 }

@@ -12,7 +12,10 @@ if (isset($_SESSION)) {
 	session_destroy();
 }
 $auth = new User_Authentication();
-echo $auth->form();
-if (isset($status)) {
-	echo $status['value'];
+$html = $auth->form();
+
+if (isset($_SESSION['global_status'][0])) {
+	$html.= $_SESSION['global_status'][0]['value'];
 }
+
+echo "<div id=\"form_login\">".$html."</div>";

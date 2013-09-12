@@ -1,5 +1,9 @@
 $(document)
 	.ready(function() {
+		$("body").find(".modified").delay('6000').queue(function(next){
+			$(this).removeClass('modified');
+		})
+		
 		$("#menu_actions_export").hide();
 		$("#menu_actions_import_label").nextAll().hide();
 		if($(".edit_writings_form #id").attr("value") > 0) {

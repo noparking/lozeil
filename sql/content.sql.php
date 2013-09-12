@@ -70,6 +70,7 @@ $queries = array(
 		`date_start` int(10) NOT NULL,
 		`date_stop` int(10) NOT NULL,
 		`display` tinyint(1) NOT NULL,
+		`timestamp` INT(10),
 		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );

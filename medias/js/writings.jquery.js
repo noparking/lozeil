@@ -2,7 +2,7 @@ $(document).ready(function() {
 	make_drag_and_drop();
 	$("body")
 	//Edition des enregistrements
-		.on("click", ".table_writings_modify a", function() {
+		.on("click", ".modify a", function() {
 			var row = $(this).parent().parent().parent();
 			var id = row.attr("id").substr(6);
 			if (row.next().hasClass("table_writings_form_modify")) {
@@ -112,8 +112,8 @@ $(document).ready(function() {
 			);
 		})
 		
-		.find(".merged").delay('6000').queue(function(next){
-			$(this).removeClass('merged');
+		.find(".modified").delay('6000').queue(function(next){
+			$(this).removeClass('modified');
 		})
 		
 		
@@ -153,10 +153,6 @@ function make_drag_and_drop() {
 			return "<div class=\"dragged\"><table><tr id=\""+id+"\">"+html+"</tr><tr id=\"table_header_dragged\">"+table_header+"</tr></table></div>";
 		}
 	});
-	
-	$("body").find(".modified").delay('6000').queue(function(next){
-		$(this).removeClass('modified');
-	})
 }
 
 $(document).ajaxStop(function() {

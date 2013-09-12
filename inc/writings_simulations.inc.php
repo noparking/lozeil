@@ -94,6 +94,10 @@ class Writings_Simulations extends Collector  {
 					array(
 						'type' => "th",
 						'value' => utf8_ucfirst(__("display")),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__("operations")),
 					)
 				)
 			)
@@ -102,79 +106,51 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function grid_body() {
+		$grid = array();
 		foreach ($this as $simulation) {
-			$name = new Html_Input("simulation[".$simulation->id."][name]", $simulation->name);
-			$amount_inc_vat = new Html_Input("simulation[".$simulation->id."][amount_inc_vat]", $simulation->amount_inc_vat);
-			$datepicker_start = new Html_Input_Date("datepicker_start__".$simulation->id, $simulation->date_start);
-			$datepicker_stop = new Html_Input_Date("datepicker_stop__".$simulation->id, $simulation->date_stop);
-			$periodicity = new Html_Input("periodicity__".$simulation->id, $simulation->periodicity);
-			$display = new Html_Checkbox("display__".$simulation->id, " ", $simulation->display);
-		
+			
+			if ($simulation->is_recently_modified()) {
+				$class = "modified";
+			} else {
+				$class = "";
+			}
+			
 			$grid[$simulation->id] =  array(
+			'id' => 'table_'.$simulation->id,
+			'class' => $class,
 			'cells' => array(
 					array(
 						'type' => "td",
-						'value' => $name->item(""),
+						'value' => $simulation->name,
 					),
 					array(
 						'type' => "td",
-						'value' => $amount_inc_vat->item(""),
+						'value' => round($simulation->amount_inc_vat, 2),
 					),
 					array(
 						'type' => "td",
-						'value' => $datepicker_start->input(),
+						'value' => date("d/m/Y", $simulation->date_start),
 					),
 					array(
 						'type' => "td",
-						'value' => $datepicker_stop->input(),
+						'value' => date("d/m/Y", $simulation->date_stop),
 					),
 					array(
 						'type' => "td",
-						'value' => $periodicity->item(""),
+						'value' => $simulation->periodicity,
 					),
 					array(
 						'type' => "td",
-						'value' => $display->item(""),
+						'value' => $simulation->display,
+					),
+					array(
+						'type' => "td",
+						'class' => 'operations',
+						'value' => $simulation->show_operations()
 					)
 				)
 			);
 		}
-
-		$name = new Html_Input("name__0");
-		$amount_inc_vat = new Html_Input("amount_inc_vat__0");
-		$datepicker_start = new Html_Input_Date("datepicker_start__0");
-		$datepicker_stop = new Html_Input_Date("datepicker_stop__0");
-		$periodicity = new Html_Input("periodicity__0");
-		$display = new Html_Checkbox("display__0", " ");
-		$grid[0] =  array(
-			'id' => 0,
-			'cells' => array(
-				array(
-					'type' => "td",
-					'value' => $name->item(""),
-				),
-				array(
-					'type' => "td",
-					'value' => $amount_inc_vat->item(""),
-				),
-				array(
-					'type' => "td",
-					'value' => $datepicker_start->input(),
-				),
-				array(
-					'type' => "td",
-					'value' => $datepicker_stop->input(),
-				),
-				array(
-					'type' => "td",
-					'value' => $periodicity->item(""),
-				),
-				array(
-					'type' => "td",
-					'value' => $display->item(""),
-				)
-			)
-		);
 	return $grid;
 	}
 	
@@ -188,8 +164,6 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function display() {
-		$submit = new Html_Input("submit", __('save'), "submit");
-		return "<div id=\"simulation\"><form method=\"post\" name=\"simulation\" action=\"\" enctype=\"multipart/form-data\">".
-				$this->show().$submit->item("")."</form></div>";
+		return "<div id=\"simulation\">".$this->show()."</div>";
 	}
 }

@@ -8,7 +8,7 @@
 	Copyright (C) No Parking 2013 - 2013
 */
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 ob_start();
 require dirname(__FILE__)."/inc/require.inc.php";
@@ -16,12 +16,10 @@ require dirname(__FILE__)."/inc/require.inc.php";
 if(!isset($_SESSION)) {
 	session_start();
 }
-if (isset($_POST['loginname']) and $_POST['loginname'] != '') {
+if (isset($_POST['username']) and $_POST['username'] != '') {
 	$auth = new User_Authentication();
-	if ($auth->is_authorized($_POST['loginname'], $_POST['password'])) {
-		$_SESSION['username'] = $_POST['loginname'];
-	} else {
-		$status = $_SESSION['global_status'][0];
+	if ($auth->is_authorized($_POST['username'], $_POST['password'])) {
+		$_SESSION['username'] = $_POST['username'];
 	}
 }
 
@@ -39,7 +37,7 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 
 		echo $theme->html_top();
 		echo $theme->head();
-		echo $theme->body_top($location);
+		echo $theme->body_top($location, $content);
 
 		echo $theme->content_top();
 
@@ -58,7 +56,7 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	$theme = new Theme_Default();
 	echo $theme->html_top();
 	echo $theme->head();
-	echo $theme->body_top($location);
+	echo $theme->body_top($location, $GLOBALS['content']);
 
 	echo $theme->content_top();
 	include("contents/login.php");

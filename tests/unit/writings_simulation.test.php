@@ -77,4 +77,94 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation->delete();
 		$this->assertFalse($simulation_loaded->load(1));
 	}
+	
+	function test_is_form_valid() {
+		$writingssimulation = new Writings_Simulation();
+		$invalid_form = array(
+			'name' => 'salarié',
+			'amount_inc_vat' => '',
+			'date_start' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2013'
+			),
+			'date_stop' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2014'
+			),
+			'periodicity' => '3m'
+		);
+		
+		$invalid_form2 = array(
+			'name' => 'salarié',
+			'amount_inc_vat' => '251',
+			'date_start' => array(
+				'd' => '5',
+				'm' => '',
+				'Y' => '2013'
+			),
+			'date_stop' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2014'
+			),
+			'periodicity' => '3m'
+		);
+		
+		$invalid_form3 = array(
+			'name' => 'salarié',
+			'amount_inc_vat' => '120',
+			'date_start' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2013'
+			),
+			'date_stop' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => ''
+			),
+			'periodicity' => '3m'
+		);
+		
+		$invalid_form4 = array(
+			'name' => 'salarié',
+			'amount_inc_vat' => '250',
+			'date_start' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2013'
+			),
+			'date_stop' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2014'
+			),
+			'periodicity' => ''
+		);
+		
+		
+		$valid_form = array(
+			'name' => 'salarié',
+			'amount_inc_vat' => '250',
+			'date_start' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2013'
+			),
+			'date_stop' => array(
+				'd' => '5',
+				'm' => '11',
+				'Y' => '2014'
+			),
+			'periodicity' => '3Y'
+		);
+		
+		$this->assertFalse($writingssimulation->is_form_valid($invalid_form));
+		$this->assertFalse($writingssimulation->is_form_valid($invalid_form2));
+		$this->assertFalse($writingssimulation->is_form_valid($invalid_form3));
+		$this->assertFalse($writingssimulation->is_form_valid($invalid_form4));
+		$this->assertTrue($writingssimulation->is_form_valid($valid_form));
+	}
 }

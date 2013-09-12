@@ -22,6 +22,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_11() {
+		$this->db->query("ALTER TABLE `writingssimulations` ADD `timestamp` INT(10)  NULL  DEFAULT NULL  AFTER `display`;");
+	}
+	
 	function to_10() {
 		$this->db->query("ALTER TABLE `categories` ADD `vat` DECIMAL(5,2) NOT NULL DEFAULT 0 AFTER `name`;");
 	}

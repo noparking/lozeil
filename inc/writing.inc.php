@@ -179,9 +179,9 @@ class Writing extends Record {
 	
 	function form() {
 		$form = "<div id=\"edit_writings\">
-			<span id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span>
-			<span id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span>
+			<span class=\"button\" id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
+			<span class=\"button\" id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"edit_writings_form\">
 			<form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -276,7 +276,7 @@ class Writing extends Record {
 	
 	function form_in_table() {
 		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"10\" ><div id=\"table_edit_writings\">
-			<span id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
 		
@@ -370,7 +370,7 @@ class Writing extends Record {
 	}
 	
 	function form_duplicate() {
-		$form = "<div class=\"table_writings_duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
+		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
 		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
@@ -382,7 +382,7 @@ class Writing extends Record {
 	
 	function form_delete() {
 		if ($this->banks_id == 0) {
-			$form = "<div class=\"table_writings_delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
+			$form = "<div class=\"delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
 			$input_hidden_action = new Html_Input("action", "delete");
 			$submit = new Html_Input("table_writings_delete_submit", "", "submit");
@@ -396,7 +396,7 @@ class Writing extends Record {
 	}
 	
 	function form_split() {
-		$form = "<div class=\"table_writings_split\"><form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">";
+		$form = "<div class=\"split\"><form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("table_writings_split_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "split");
 		$submit = new Html_Input("table_writings_split_submit", "", "submit");
@@ -409,7 +409,7 @@ class Writing extends Record {
 	
 	function form_forward() {
 		if ($this->banks_id == 0) {
-			$form = "<div class=\"table_writings_forward\"><form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">";
+			$form = "<div class=\"forward\"><form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_hidden_id = new Html_Input("table_writings_forward_id", $this->id);
 			$input_hidden_action = new Html_Input("action", "forward");
 			$submit = new Html_Input("table_writings_forward_submit", "", "submit");
@@ -422,7 +422,7 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		return "<div class=\"table_writings_modify\">".
+		return "<div class=\"modify\">".
 			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
 			"</div>";
 	}

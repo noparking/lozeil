@@ -23,8 +23,8 @@ class Theme_Default {
 		</head>";
 	}
 	
-	function body_top($location) {
-		return "<body class=\"".Format::body_class($location)."\">";
+	function body_top($location, $content = "") {
+		return "<body class=\"".Format::body_class($location)." ".Format::body_class($content)."\">";
 	}
 	
 	function css_files() {
@@ -63,6 +63,12 @@ class Theme_Default {
 		if ($GLOBALS['content'] == "followupwritings.php") {
 			$js_files[] = "medias/js/sparkline.jquery.min.js";
 			$js_files[] = "medias/js/sparkline.jquery.js";
+		}
+		if ($GLOBALS['content'] == "writingssimulations.php") {
+			$js_files[] = "medias/js/writingssimulations.jquery.js";
+		}
+		if ($GLOBALS['content'] == "login.php") {
+			$js_files[] = "medias/js/login.jquery.js";
 		}
 		
 		$html = "";
