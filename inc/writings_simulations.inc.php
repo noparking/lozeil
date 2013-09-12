@@ -29,13 +29,8 @@ class Writings_Simulations extends Collector  {
 		$grid = array();
 		$this->month = determine_first_day_of_month($timestamp);
 		
-		$writings = new Writings();
-		$writings->filter_with(array('stop' => strtotime('+11 months', $this->month)));
-		$writings->select_columns('amount_inc_vat', 'day');
-		$writings->select();
-
 		$timeline_iterator = strtotime('-2 months', $this->month);
-
+		$writingssimulations = new Writings_Simulations();
 		while ($timeline_iterator <= strtotime('+10 months', $this->month)) {
 			$class = "navigation";
 			if ($timeline_iterator == $this->month) {
@@ -43,9 +38,7 @@ class Writings_Simulations extends Collector  {
 			} 
 			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
 			$next_month = determine_first_day_of_next_month($timeline_iterator);
-			$balance = $writings->show_balance_at($next_month);
-			
-			$balance += 5000;
+			$balance = $writingssimulations->show_balance_at($next_month);
 			
 			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
 			
@@ -165,5 +158,80 @@ class Writings_Simulations extends Collector  {
 	
 	function display() {
 		return "<div id=\"simulation\">".$this->show()."</div>";
+	}
+	
+	function get_amounts_in_array() {
+		$amounts = array();
+		foreach ($this as $writingssimulation) {
+			if ($writingssimulation->display == 1) {
+				$first = determine_first_day_of_month($writingssimulation->date_start);
+				$last = determine_first_day_of_month($writingssimulation->date_stop);
+				$amount = $writingssimulation->amount_inc_vat;
+				$periodicity = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $writingssimulation->periodicity, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+				if (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
+					if(preg_match("/(m)/i", $periodicity[0])) {
+						while ($first < $last) {
+							$first = strtotime('+1 months', $first);
+							$amounts[$first][] = $amount;
+						}
+					} elseif(preg_match("/(t)|(q)/i", $periodicity[0])) {
+						while ($first < $last) {
+							$first = strtotime('+3 months', $first);
+							$amounts[$first][] = $amount;
+						}
+					} elseif(preg_match("/(y)|(a)/i", $periodicity[0])) {
+						while ($first < $last) {
+							$first = strtotime('+1 year', $first);
+							$amounts[$first][] = $amount;
+						}
+					}
+				} elseif (count($periodicity) == 2 and is_numeric($periodicity[0])) {
+					if(preg_match("/(m)/i", $periodicity[1])) {
+						while ($first < $last) {
+							$first = strtotime('+'.$periodicity[0].' months', $first);
+							$amounts[$first][] = $amount;
+						}
+					} elseif(preg_match("/(t)|(q)/i", $periodicity[1])) {
+						while ($first < $last) {
+							$first = strtotime('+'.($periodicity[0] * 3).' months', $first);
+							$amounts[$first][] = $amount;
+						}
+					} elseif(preg_match("/(y)|(a)/i", $periodicity[1])) {
+						while ($first < $last) {
+							$first = strtotime('+'.$periodicity[0].' year', $first);
+							$amounts[$first][] = $amount;
+						}
+					}
+				}
+			}
+		}
+		return $amounts;
+	}
+	
+	function show_balance_at($timestamp) {
+		$writings = new Writings();
+		$writings->filter_with(array('stop' => strtotime('+11 months', determine_first_day_of_month($timestamp))));
+		$writings->select_columns('amount_inc_vat', 'day');
+		$writings->select();
+		
+		$this->select();
+		$simulation_amounts = $this->get_amounts_in_array();
+		
+		$amount = 0;
+		foreach ($writings->instances as $writing) {
+			if($writing->day < $timestamp) {
+				$amount += $writing->amount_inc_vat;
+			}
+		}
+		
+		foreach ($simulation_amounts as $month => $values) {
+			if($month < $timestamp) {
+				foreach ($values as $value) {
+					$amount += $value;
+				}
+			}
+		}
+		return round($amount, 2);
 	}
 }

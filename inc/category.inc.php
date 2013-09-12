@@ -51,7 +51,7 @@ class Category extends Record {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_categories']."
 			SET name = ".$this->db->quote($this->name).",
-				vat = ".$this->vat
+				vat = ".(float)$this->vat
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('category'));
@@ -62,7 +62,7 @@ class Category extends Record {
 	function update() {
 		$query = "UPDATE ".$this->db->config['table_categories'].
 		" SET name = ".$this->db->quote($this->name).", 
-		vat = ".$this->vat."
+		vat = ".(float)$this->vat."
 		WHERE id = ".(int)$this->id;
 		$result = $this->db->query($query);
 		$this->db->status($result[1], "u", __('category'));
