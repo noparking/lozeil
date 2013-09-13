@@ -11,9 +11,9 @@
 class Html_Input_Date extends Html_Input {
 	public $name = "";
 	public $value = 0;
-	public $img_width = 14;
-	public $img_height = 14;
-	public $img_src = "medias/images/link_calendar.gif";
+	public $img_width = 20;
+	public $img_height = 24;
+	public $img_src = "medias/images/link_calendar.png";
 	
 	function __construct($name, $value = 0) {
 		$this->name = $name;

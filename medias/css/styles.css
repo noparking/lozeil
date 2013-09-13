@@ -64,6 +64,7 @@ th {
 	text-shadow: 0 1px 0 #F6F6F6;
 	text-decoration: none;
 	cursor: pointer;
+	padding-right: 18px;
 }
 
 th:hover {
@@ -143,10 +144,12 @@ input[type="submit"]:hover {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
-	width: 16px;
-	height: 16px;
+	width: 20px;
+	height: 18px;
 	background-image :  url(../images/forward.png);
+	background-position-y: center;
 	background-repeat: no-repeat;
+	background-size: 20px;
 	cursor: pointer;
 }
 
@@ -162,6 +165,7 @@ input[type="submit"]:hover {
 	background-image :  url(../images/up.png)!important;
 	background-position: right center;
 	background-position-x: 90%;
+	background-size: 8px;
 	background-repeat: no-repeat;
 	background-color: #f6f5f3;
 	text-shadow: 0 1px 0 #f6f5f3;
@@ -172,6 +176,7 @@ input[type="submit"]:hover {
 	background-image :  url(../images/down.png)!important;
 	background-position: right center;
 	background-position-x: 90%;
+	background-size: 8px;
 	background-repeat: no-repeat;
 	background-color: #f6f5f3;
 	text-shadow: 0 1px 0 #f6f5f3;
@@ -184,7 +189,7 @@ input[type="submit"]:hover {
 }
 
 .table_writings_comment {
-	background-image :  url(../images/more.png);
+	background-image :  url(../images/more_comment.png);
 	background-repeat: no-repeat;
 	background-position: right;
 	cursor: pointer;
@@ -200,22 +205,19 @@ input[type="submit"]:hover {
 	margin-left: 9px;
 }
 
-.split{
+
+.split input[type="submit"], .split input[type="submit"]:hover {
+	border: 0;
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
-	width: auto;
-	height: 25px;
+	height: 18px;
+	width: 18px;
+	background: transparent;
 	background-image :  url(../images/arrow_split.png);
 	background-repeat: no-repeat;
 	background-position: left center;
-}
-
-.split input[type="submit"], .split input[type="submit"]:hover {
-	width: 16px;
-	cursor: pointer;
-	border: 0;
-	background: transparent;
+	background-size: 18px;
 }
 
 .split input[type="text"],
@@ -243,10 +245,11 @@ input[type="submit"]:hover {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
-	width: 16px;
-	height: 16px;
+	width: 18px;
+	height: 18px;
 	background-image :  url(../images/bullet-wrench.png);
 	background-repeat: no-repeat;
+	background-size: 18px;
 	cursor: pointer;
 }
 
@@ -254,10 +257,11 @@ input[type="submit"]:hover {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
-	width: 16px;
-	height: 16px;
+	width: 18px;
+	height: 18px;
 	background-image :  url(../images/delete.png);
 	background-repeat: no-repeat;
+	background-size: 18px;
 	cursor: pointer;
 }
 
@@ -265,10 +269,12 @@ input[type="submit"]:hover {
 	margin-left: 5px;
 	border: 0;
 	background: transparent;
-	width: 16px;
-	height: 16px;
+	width: 18px;
+	height: 18px;
 	background-image :  url(../images/more.png);
 	background-repeat: no-repeat;
+	background-position-y: center;
+	background-size: 14px;
 	cursor: pointer;
 }
 
@@ -662,4 +668,10 @@ tr.modified {
 .input-date-calendar a:hover {
 	background:url(../images/futura/btn-grey-hover.png) repeat-x left top;
 	border:1px solid #bebebe;  
+}
+
+.hand {
+	cursor: pointer;
+	vertical-align: middle;
+	margin-left: 5px;
 }

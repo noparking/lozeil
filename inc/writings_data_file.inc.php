@@ -130,6 +130,8 @@ class Writings_Data_File {
 	function form_export() {
 		$date_picker_from = new Html_Input_Date('date_picker_from');
 		$date_picker_to = new Html_Input_Date('date_picker_to');
+		$date_picker_from->img_src = "medias/images/link_calendar_white.png";
+		$date_picker_to->img_src = "medias/images/link_calendar_white.png";
 		$form = "<div id=\"menu_actions_export\"><form method=\"post\" name=\"menu_actions_export_form\" action=\"".link_content("content=writingsexport.php")."\" enctype=\"multipart/form-data\">";
 		$submit = new Html_Input("menu_actions_export_submit", "Ok", "submit");
 		$form .= $date_picker_from->input().$date_picker_to->input().$submit->input();
