@@ -60,11 +60,11 @@ class Category extends Record {
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_categories'].
-		" SET name = ".$this->db->quote($this->name).", 
-		vat = ".(float)$this->vat."
-		WHERE id = ".(int)$this->id;
-		$result = $this->db->query($query);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_categories'].
+			" SET name = ".$this->db->quote($this->name).", 
+			vat = ".(float)$this->vat."
+			WHERE id = ".(int)$this->id
+		);
 		$this->db->status($result[1], "u", __('category'));
 
 		return $this->id;
@@ -72,25 +72,25 @@ class Category extends Record {
 
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_categories'].
-		" WHERE id = '".$this->id."'";
-		$result = $this->db->query($query);
+		$result = $this->db->query("DELETE FROM ".$this->db->config['table_categories'].
+			" WHERE id = '".$this->id."'"
+		);
 		$this->db->status($result[1], "u", __('category'));
 
 		return $this->id;
 	}
 	
 	function is_deletable() {
-		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
-		" WHERE categories_id = '".$this->id."'";
-		$result = $this->db->value_exists($query);
+		$result = $this->db->value_exists("SELECT count(1) FROM ".$this->db->config['table_writings'].
+			" WHERE categories_id = '".$this->id."'"
+		);
 		return !$result;
 	}
 	
 	function is_in_use() {
-		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
-		" WHERE categories_id = '".$this->id."'";
-		$result = $this->db->value_exists($query);
+		$result = $this->db->value_exists("SELECT count(1) FROM ".$this->db->config['table_writings'].
+			" WHERE categories_id = '".$this->id."'"
+		);
 		return $result;
 	}
 	

@@ -70,33 +70,32 @@ class Writing extends Record {
 	}
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_writings'].
-		" WHERE id = '".$this->id."'";
-		$result = $this->db->query($query);
+		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writings'].
+			" WHERE id = '".$this->id."'"
+		);
 		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_writings'].
-		" SET categories_id = ".(int)$this->categories_id.",
-		banks_id = ".(int)$this->banks_id.",
-		sources_id = ".(int)$this->sources_id.",
-		amount_inc_vat = ".$this->amount_inc_vat.",
-		number  = ".(int)$this->number.",
-		vat = ".$this->vat.",
-		amount_excl_vat = ".$this->amount_excl_vat.",
-		comment = ".$this->db->quote($this->comment).",
-		information = ".$this->db->quote($this->information).",
-		paid = ".(int)$this->paid.",
-		day = ".(int)$this->day.",
-		unique_key = ".$this->db->quote($this->unique_key).",	
-		search_index = ".$this->db->quote($this->search_index()).",
-		timestamp = ".time()."
-		WHERE id = ".(int)$this->id;
-		
-		$result = $this->db->query($query);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_writings'].
+			" SET categories_id = ".(int)$this->categories_id.",
+			banks_id = ".(int)$this->banks_id.",
+			sources_id = ".(int)$this->sources_id.",
+			amount_inc_vat = ".$this->amount_inc_vat.",
+			number  = ".(int)$this->number.",
+			vat = ".$this->vat.",
+			amount_excl_vat = ".$this->amount_excl_vat.",
+			comment = ".$this->db->quote($this->comment).",
+			information = ".$this->db->quote($this->information).",
+			paid = ".(int)$this->paid.",
+			day = ".(int)$this->day.",
+			unique_key = ".$this->db->quote($this->unique_key).",	
+			search_index = ".$this->db->quote($this->search_index()).",
+			timestamp = ".time()."
+			WHERE id = ".(int)$this->id
+		);
 		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;

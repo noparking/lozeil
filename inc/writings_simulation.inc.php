@@ -52,41 +52,39 @@ class Writings_Simulation extends Record {
 	}
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_writingssimulations'].
-		" WHERE id = '".$this->id."'";
-		$result = $this->db->query($query);
+		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writingssimulations'].
+			" WHERE id = '".$this->id."'"
+		);
 		$this->db->status($result[1], "u", __('writings simulations'));
 
 		return $this->id;
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_writingssimulations'].
-		" SET name = ".$this->db->quote($this->name).",
-		amount_inc_vat = ".$this->amount_inc_vat.",
-		periodicity = ".$this->db->quote($this->periodicity).",
-		date_start = ".(int)$this->date_start.",
-		date_stop = ".(int)$this->date_stop.",
-		display = ".(int)$this->display.",
-		timestamp = ".time()."
-		WHERE id = ".(int)$this->id;
-		
-		$result = $this->db->query($query);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_writingssimulations'].
+			" SET name = ".$this->db->quote($this->name).",
+			amount_inc_vat = ".$this->amount_inc_vat.",
+			periodicity = ".$this->db->quote($this->periodicity).",
+			date_start = ".(int)$this->date_start.",
+			date_stop = ".(int)$this->date_stop.",
+			display = ".(int)$this->display.",
+			timestamp = ".time()."
+			WHERE id = ".(int)$this->id
+		);
 		$this->db->status($result[1], "u", __('writings simulations'));
 
 		return $this->id;
 	}
 	
 	function insert() {
-		$result = $this->db->id("
-			INSERT INTO ".$this->db->config['table_writingssimulations'].
-		" SET name = ".$this->db->quote($this->name).",
-		amount_inc_vat = ".$this->amount_inc_vat.",
-		periodicity = ".$this->db->quote($this->periodicity).",
-		date_start = ".(int)$this->date_start.",
-		date_stop = ".(int)$this->date_stop.",
-		display = ".(int)$this->display.",
-		timestamp = ".time()
+		$result = $this->db->id(" INSERT INTO ".$this->db->config['table_writingssimulations'].
+			" SET name = ".$this->db->quote($this->name).",
+			amount_inc_vat = ".$this->amount_inc_vat.",
+			periodicity = ".$this->db->quote($this->periodicity).",
+			date_start = ".(int)$this->date_start.",
+			date_stop = ".(int)$this->date_stop.",
+			display = ".(int)$this->display.",
+			timestamp = ".time()
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('writings simulations'));

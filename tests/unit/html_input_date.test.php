@@ -19,9 +19,9 @@ class tests_Html_Input_Date extends UnitTestCase {
 		$this->assertEqual($field->value, $day);
 		$this->assertEqual($field->name, $name);
 		$this->assertEqual($field->id, $name."[d]");
-		$this->assertEqual($field->img_width, 14);
-		$this->assertEqual($field->img_height, 14);
-		$this->assertEqual($field->img_src, "medias/images/link_calendar.gif");
+		$this->assertEqual($field->img_width, 20);
+		$this->assertEqual($field->img_height, 24);
+		$this->assertEqual($field->img_src, "medias/images/link_calendar.png");
 	}
 	
 	function test_input__avec_disabled() {
@@ -68,10 +68,10 @@ class tests_Html_Input_Date extends UnitTestCase {
 	function test__construct__avec_layout_mediaserver() {
 		$GLOBALS['config']['layout_mediaserver'] = "http://ailleurs.com/";
 		$field = new Html_Input_Date("nouvelle-date", time());
-		$this->assertEqual($field->img_src, "http://ailleurs.com/medias/images/link_calendar.gif");
+		$this->assertEqual($field->img_src, "http://ailleurs.com/medias/images/link_calendar.png");
 
 		$GLOBALS['config']['layout_mediaserver'] = "";
 		$field = new Html_Input_Date("nouvelle-date", time());
-		$this->assertEqual($field->img_src, "medias/images/link_calendar.gif");
+		$this->assertEqual($field->img_src, "medias/images/link_calendar.png");
 	}
 }

@@ -58,28 +58,28 @@ class Source extends Record {
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_sources'].
-		" SET name = ".$this->db->quote($this->name)."
-		WHERE id = ".(int)$this->id;
-		$result = $this->db->query($query);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_sources'].
+			" SET name = ".$this->db->quote($this->name)."
+			WHERE id = ".(int)$this->id
+		);
 		$this->db->status($result[1], "u", __('source'));
 
 		return $this->id;
 	}
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_sources'].
-		" WHERE id = '".$this->id."'";
-		$result = $this->db->query($query);
+		$result = $this->db->query("DELETE FROM ".$this->db->config['table_sources'].
+			" WHERE id = '".$this->id."'"
+		);
 		$this->db->status($result[1], "u", __('source'));
 
 		return $this->id;
 	}
 	
 	function is_deletable() {
-		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
-		" WHERE sources_id = '".$this->id."'";
-		$result = $this->db->value_exists($query);
+		$result = $this->db->value_exists("SELECT count(1) FROM ".$this->db->config['table_writings'].
+			" WHERE sources_id = '".$this->id."'"
+		);
 		return !$result;
 	}
 	

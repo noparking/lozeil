@@ -60,11 +60,11 @@ class Bank extends Record {
 	}
 	
 	function update() {
-		$query = "UPDATE ".$this->db->config['table_banks'].
-		" SET name = ".$this->db->quote($this->name).", ".
-		"selected = ".$this->selected."
-		WHERE id = ".(int)$this->id;
-		$result = $this->db->query($query);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_banks'].
+			" SET name = ".$this->db->quote($this->name).", ".
+			"selected = ".$this->selected."
+			WHERE id = ".(int)$this->id
+		);
 		$this->db->status($result[1], "u", __('bank'));
 
 		return $this->id;
@@ -72,18 +72,18 @@ class Bank extends Record {
 
 
 	function delete() {
-		$query = "DELETE FROM ".$this->db->config['table_banks'].
-		" WHERE id = '".$this->id."'";
-		$result = $this->db->query($query);
+		$result = $this->db->query("DELETE FROM ".$this->db->config['table_banks'].
+			" WHERE id = '".$this->id."'"
+		);
 		$this->db->status($result[1], "u", __('bank'));
 
 		return $this->id;
 	}
 	
 	function is_deletable() {
-		$query = "SELECT count(1) FROM ".$this->db->config['table_writings'].
-		" WHERE banks_id = '".$this->id."'";
-		$result = $this->db->value_exists($query);
+		$result = $this->db->value_exists("SELECT count(1) FROM ".$this->db->config['table_writings'].
+			" WHERE banks_id = '".$this->id."'"
+		);
 		return !$result;
 	}
 	

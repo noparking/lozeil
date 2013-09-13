@@ -405,7 +405,7 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->id = 40;
 		$form_duplicate = $writing->form_duplicate();
-		$this->assertPattern("/class=\"table_writings_duplicate\"/", $form_duplicate);
+		$this->assertPattern("/class=\"duplicate\"/", $form_duplicate);
 		$this->assertPattern("/value=\"40\"/", $form_duplicate);
 		$this->assertPattern("/table_writings_duplicate_submit/", $form_duplicate);
 		$this->assertPattern("/table_writings_duplicate_amount/", $form_duplicate);
@@ -415,7 +415,7 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->id = 40;
 		$form_delete = $writing->form_delete();
-		$this->assertPattern("/class=\"table_writings_delete\"/", $form_delete);
+		$this->assertPattern("/class=\"delete\"/", $form_delete);
 		$this->assertPattern("/value=\"40\"/", $form_delete);
 		$this->assertPattern("/table_writings_delete_submit/", $form_delete);
 		$this->assertPattern("/javascript:return confirm/", $form_delete);
@@ -425,7 +425,7 @@ class tests_Writing extends TableTestCase {
 		$writing = new Writing();
 		$writing->id = 40;
 		$form_split = $writing->form_split();
-		$this->assertPattern("/class=\"table_writings_split\"/", $form_split);
+		$this->assertPattern("/class=\"split\"/", $form_split);
 		$this->assertPattern("/value=\"40\"/", $form_split);
 		$this->assertPattern("/table_writings_split_submit/", $form_split);
 		$this->assertPattern("/table_writings_split_amount/", $form_split);
