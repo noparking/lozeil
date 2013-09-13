@@ -22,26 +22,41 @@ class tests_Category extends TableTestCase {
 	function test_save_load() {
 		$category = new Category();
 		$category->name = "première category";
+		$category->vat = "";
+		$category->save();
+		$category = new Category();
+		$category->name = "première category";
+		$category->vat = "15.26";
+		$category->save();
+		$category = new Category();
+		$category->name = "première category";
 		$category->save();
 		$category_loaded = new Category();
-		$category_loaded->id = 1;
-		$category_loaded->load();
+		$this->assertTrue($category_loaded->load(1));
 		$this->assertEqual($category_loaded->name, $category->name);
+		$this->assertTrue($category_loaded->vat == 0	);
+		$this->assertTrue($category_loaded->load(2));
+		$this->assertTrue($category_loaded->vat == 15.26);
+		$this->assertTrue($category_loaded->load(3));
+		$this->assertTrue($category_loaded->vat == 0);
+		$this->assertFalse($category_loaded->load(4));
 		$this->truncateTable("categories");
 	}
 	
 	function test_update() {
 		$category = new Category();
 		$category->name = "premier category";
+		$category->vat = "20.56";
 		$category->save();
 		$category_loaded = new Category();
 		$category_loaded->id = 1;
 		$category_loaded->name = "changement de nom";
+		$category_loaded->vat = "";
 		$category_loaded->update();
 		$category_loaded2 = new Category();
-		$category_loaded2->id = 1;
-		$category_loaded2->load();
+		$this->assertTrue($category_loaded2->load(1));
 		$this->assertNotEqual($category_loaded2->name, $category->name);
+		$this->assertNotEqual($category_loaded2->vat, $category->vat);
 		$this->truncateTable("categories");
 	}
 	
