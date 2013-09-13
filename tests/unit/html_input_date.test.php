@@ -19,8 +19,8 @@ class tests_Html_Input_Date extends UnitTestCase {
 		$this->assertEqual($field->value, $day);
 		$this->assertEqual($field->name, $name);
 		$this->assertEqual($field->id, $name."[d]");
-		$this->assertEqual($field->img_width, 20);
-		$this->assertEqual($field->img_height, 24);
+		$this->assertEqual($field->img_width, 18);
+		$this->assertEqual($field->img_height, 22);
 		$this->assertEqual($field->img_src, "medias/images/link_calendar.png");
 	}
 	
