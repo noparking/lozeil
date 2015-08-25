@@ -16,6 +16,12 @@ if (isset($_REQUEST) and $_REQUEST['action']) {
 		$data = $category->form_add();
 		$status = "true";
 		break;
+	case "fill_vat":
+		$category = new Category();
+		$category->load(array('id' => $_REQUEST['value']));
+		$data = $category->vat;
+		$status = "true";
+		break;
 	default : ;
 	}
  }

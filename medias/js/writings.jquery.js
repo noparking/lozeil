@@ -190,7 +190,8 @@ $(document).ready(function() {
 				"index.php?content=categories.ajax.php",
 				{ method: "json", action: "fill_vat", value: $(this).val() },
 				function(data){
-					select.parent().parent().parent().find("#vat").val(data).change();
+					var result = jQuery.parseJSON(data);
+					select.parent().parent().parent().find("#vat").val(result.data).change();
 				}
 			);
 		})
