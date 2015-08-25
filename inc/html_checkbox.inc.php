@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Checkbox {
 	public $name;
@@ -88,6 +81,31 @@ class Html_Checkbox {
 		return $html;
 	}
 	
+	function input_readonly() {
+		$extra = "";
+		if ($this->selected) {
+			$extra .= " checked=\"checked\"";
+		}
+		if (isset($this->properties['tip'])) {
+			$this->properties['onFocus'] = "show_obj('tip_".$this->id."');";
+			$this->properties['onBlur'] = "hide_obj('tip_".$this->id."');";
+		}
+		foreach ($this->properties as $property => $value) {
+			if ($property != "tip") {
+				$extra .= " ".$property."=\"".$value."\"";
+			}
+		}
+
+		$html = "<input id=\"".$this->id."\" name=\"".$this->name."\"".
+		" value=\"".$this->value."\"".
+		" type=\"checkbox\"".
+		" disabled=\"disabled\"".
+		$extra.
+		" />";
+
+		return $html;
+	}
+
 	function item($label, $display = "", $complement = "") {
 		$html = $this->label($label);
 		if (empty($display) or !empty($this->selected)) {

@@ -1,16 +1,9 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
-class tests_Writings_simulation extends TableTestCase {
+class tests_Writings_Simulation extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
@@ -28,8 +21,7 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation->display = 1;
 		$simulation->save();
 		$simulation_loaded = new Writings_Simulation();
-		$simulation_loaded->id = 1;
-		$simulation_loaded->load();
+		$simulation_loaded->load(array('id' => 1));
 		$this->assertEqual($simulation_loaded->name, $simulation->name);
 		$this->assertEqual($simulation_loaded->amount_inc_vat, $simulation->amount_inc_vat);
 		$this->assertEqual($simulation_loaded->periodicity, $simulation->periodicity);
@@ -49,7 +41,7 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation->display = 1;
 		$simulation->save();
 		$simulation_loaded = new Writings_Simulation();
-		$simulation_loaded->load(1);
+		$simulation_loaded->load(array('id' => 1 ));
 		$simulation_loaded->name = "changement de nom";
 		$simulation_loaded->amount_inc_vat = 15;
 		$simulation_loaded->periodicity = "3m";
@@ -58,7 +50,7 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation_loaded->display = 0;
 		$simulation_loaded->update();
 		$simulation_loaded2 = new Writings_Simulation();
-		$simulation_loaded2->load(1);
+		$simulation_loaded2->load(array('id' => 1 ));
 		$this->assertNotEqual($simulation_loaded2->name, $simulation->name);
 		$this->assertEqual($simulation_loaded2->amount_inc_vat, 15);
 		$this->assertEqual($simulation_loaded2->periodicity, "3m");
@@ -73,9 +65,9 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation->name = "premier simulation";
 		$simulation->save();
 		$simulation_loaded = new Writings_Simulation();
-		$this->assertTrue($simulation_loaded->load(1));
+		$this->assertTrue($simulation_loaded->load(array('id' => 1 )));
 		$simulation->delete();
-		$this->assertFalse($simulation_loaded->load(1));
+		$this->assertFalse($simulation_loaded->load(array('id' => 1 )));
 	}
 	
 	function test_is_form_valid() {
@@ -164,7 +156,7 @@ class tests_Writings_simulation extends TableTestCase {
 		$this->assertFalse($writingssimulation->is_form_valid($invalid_form));
 		$this->assertFalse($writingssimulation->is_form_valid($invalid_form2));
 		$this->assertFalse($writingssimulation->is_form_valid($invalid_form3));
-		$this->assertFalse($writingssimulation->is_form_valid($invalid_form4));
+		$this->assertTrue($writingssimulation->is_form_valid($invalid_form4));
 		$this->assertTrue($writingssimulation->is_form_valid($valid_form));
 	}
 }

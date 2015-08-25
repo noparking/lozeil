@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -17,7 +10,7 @@ class tests_Categories extends TableTestCase {
 			"categories"
 		);
 	}
-	
+
 	function test_names() {
 		$category = new Category();
 		$category->name = "premier category";
@@ -45,6 +38,5 @@ class tests_Categories extends TableTestCase {
 		$this->assertPattern("/premier category/", $form);
 		$this->assertPattern("/deuxième category/", $form);
 		$this->assertPattern("/troisième category/", $form);
-		$this->assertPattern("/name_new/", $form);
 	}
 }

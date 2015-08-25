@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 class Message {
 	static function file() {

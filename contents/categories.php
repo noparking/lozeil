@@ -1,51 +1,59 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
-	Copyright (C) No Parking 2013 - 2013
-*/
+$menu = Plugins::factory("Menu_Area");
+echo $menu->show();
 
-if (isset($_POST['submit'])) {
-	$categories = $_POST;
-	
-	if(!empty($categories['name_new'])) {
-		$category = new Category();
-		$category->name = $categories['name_new'];
-		if(isset($categories['vat_new'])) {
-			$categories['vat_new'] = str_replace(",", ".", $categories['vat_new']);
-			$category->vat = $categories['vat_new'];
-		}
-		$category->save();
-	}
-	
-	if (isset($categories['category'])) {
-		foreach ($categories['category'] as $id => $values) {
+
+if (isset($_POST['name_new'])) {
+	$category = new Category();
+	$data['name'] = $_POST['name_new'];
+	if (isset($_POST['vat_new']))
+		$data['vat'] = $_POST['vat_new'];
+	$cleaned = $category->clean_str($data);
+	$category->fill($cleaned);
+	(isset($_POST['vat_category'])) ? $category->vat_category = 1 : $category->vat_category = 0;
+
+	$category->save();
+ } 
+
+if (isset($_POST['category'])) {
+	foreach($_POST['category'] as $id => $data) {
+		if (isset($data['checked']) or isset($data['submit'])) {
 			$category = new Category();
-			$category->load($id);
-			if (!empty($values['name'])) {
-				$category->name = $values['name'];
-				$values['vat'] = str_replace(",", ".", $values['vat']);
-				if (!empty($values['vat']) and is_numeric($values['vat'])) {
-					$category->vat = $values['vat'];
+			$category->load(array('id'=>$id));
+			if ($category->id > 0) { 
+				switch ($_POST['action']) {
+				case "delete":
+					$category->delete();
+					break;
+				case "add":
+					echo $category->form_add();
+					break;
+				case "modify":
+					echo $category->show_form_modification();
+					break;
+				case "save":
+					$cleaned = $category->clean_str($data);
+					$category->fill($cleaned);
+					(isset($data['vat_category'])) ? $category->vat_category = 1 : $category->vat_category = 0;
+
+					$category->save();
+					break;
+				default:;
 				}
-				$category->save();
-			} elseif (empty($values['name']) and $category->is_deletable()) {
-				$category->delete();
 			}
 		}
 	}
-}
-
-$menu = new Menu_Area();
-$menu->prepare_navigation(__FILE__);
-echo $menu->show();
+ }
 
 $heading = new Heading_Area(utf8_ucfirst(__('manage the categories')));
 echo $heading->show();
 
 $categories = new Categories();
+echo $categories->add_category();
 $categories->select();
-echo $categories->show_form();
+
+$working = $categories->display();
+$area = new Working_Area($working);
+echo $area->show();

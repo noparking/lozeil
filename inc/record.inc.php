@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: perrick $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 abstract class Record {
 	public $id = 0;
@@ -45,39 +38,7 @@ abstract class Record {
 		return $this;
 	}
 
-	protected function match_existing($table, array $patterns, $db = null) {
-		$this->id = null;
-
-		if (sizeof($patterns) > 0) {
-			if ($db === null) {
-				$db = new db();
-			} else {
-				$db = $this->db;
-			}
-
-			$where = array();
-
-			foreach ($patterns as $field => $pattern) {
-				if (is_numeric($field)) {
-					$where[] = $this->object_property_to_db_column($pattern)." = ".$db->quote($this->$pattern);
-				} else {
-					$where[] = $this->object_property_to_db_column($field)." = ".$db->quote($pattern);
-				}
-			}
-
-			$this->id = $db->getValue("
-				SELECT id
-				FROM ".$db->config['table_'.$table]."
-				WHERE " . join(" AND ", $where)."
-				ORDER BY id DESC
-				LIMIT 0, 1
-			");
-		}
-
-		return $this->id !== null;
-	}
-
-	protected function load($table, array $key, $columns = null) {
+	protected function load(array $key, $table, $columns = null) {
 		if ($columns === null) {
 			$columns = $this->get_db_columns();
 		}
@@ -90,7 +51,7 @@ abstract class Record {
 
 		$row = $this->db->fetchArray($result[0]);
 
-		if ($row === false) {
+		if ($row === false or $row === null) {
 			return false;
 		} else {
 			foreach ($row as $column => $value) {
@@ -156,7 +117,7 @@ abstract class Record {
 
 		return $columns[$class_name];
 	}
-
+	
 	private function get_sql_key(array $key) {
 		$sql = array();
 

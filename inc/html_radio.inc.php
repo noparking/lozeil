@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Radio {
 	public $id;

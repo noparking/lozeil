@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Writings_Simulation extends Record {
 	public $name = "";
@@ -16,10 +9,18 @@ class Writings_Simulation extends Record {
 	public $date_stop = 0;
 	public $display = 0;
 	public $timestamp = 0;
+	public $evolution = "";
+	
+	private $evolutions = array();
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
 		$this->id = $id;
+		
+		$this->evolutions = array(
+			"none" => __('none'),
+			"linear" => __('linear')
+		);
 	}
 
 	function db($db) {
@@ -28,16 +29,8 @@ class Writings_Simulation extends Record {
 		}
 	}
 	
-	function load($id = null) {
-		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
-			return false;
-
-		} else {
-			if ($id === null) {
-				$id = $this->id;
-			}
-			return parent::load($this->db->config['table_writingssimulations'], array('id' => (int)$id));
-		}
+	function load(array $key = array(), $table = "writingssimulations", $columns = null) {
+		return parent::load($key, $table, $columns);
 	}
 	
 	function save() {
@@ -55,7 +48,7 @@ class Writings_Simulation extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writingssimulations'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('writings simulations'));
+		$this->db->status($result[1], "d", __('writings simulations'));
 
 		return $this->id;
 	}
@@ -68,7 +61,8 @@ class Writings_Simulation extends Record {
 			date_start = ".(int)$this->date_start.",
 			date_stop = ".(int)$this->date_stop.",
 			display = ".(int)$this->display.",
-			timestamp = ".time()."
+			timestamp = ".time().",
+			evolution = ".$this->db->quote($this->evolution)."
 			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('writings simulations'));
@@ -84,16 +78,37 @@ class Writings_Simulation extends Record {
 			date_start = ".(int)$this->date_start.",
 			date_stop = ".(int)$this->date_stop.",
 			display = ".(int)$this->display.",
-			timestamp = ".time()
+			timestamp = ".time().",
+			evolution = ".$this->db->quote($this->evolution)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('writings simulations'));
+		$this->db->status($result[1], "i", __('writings simulations'));
 
 		return $this->id;
 	}
 	
 	function fill($hash) {
 		$writingssimulation = parent::fill($hash);
+		
+		switch ($hash['evolution']) {
+			case 'none':
+				$writingssimulation->evolution = "";
+				break;
+			case 'linear':
+				if (!empty($hash['evolution_periodical'])) {
+					$hash['evolution_periodical'] = str_replace(",", ".", $hash['evolution_periodical']);
+					if (is_numeric($hash['evolution_periodical'])) {
+						$writingssimulation->evolution = "linear".":".$hash['evolution_periodical'];
+					} else {
+						$writingssimulation->evolution = "";
+					}
+				} else {
+					$writingssimulation->evolution = "";
+				}
+				break;
+			default:
+				break;
+		}
 		
 		if (isset($hash['amount_inc_vat'])) {
 			$writingssimulation->amount_inc_vat = str_replace(",", ".", $hash['amount_inc_vat']);
@@ -109,22 +124,24 @@ class Writings_Simulation extends Record {
 	}
 	
 	function form() {
-		$form = "<div id=\"edit_writingssimulation\">
-			<span class=\"button\" id=\"edit_writingssimulation_show\">".utf8_ucfirst(__('show form'))."</span>
-			<span class=\"button\" id=\"edit_writingssimulation_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span class=\"button\" id=\"edit_writingssimulation_cancel\">".Html_Tag::a(link_content("content=writingssimulations.php"),utf8_ucfirst(__('cancel record')))."</span>
-			<div class=\"edit_writingssimulation_form\">
-			<form method=\"post\" name=\"edit_writingssimulation_form\" action=\"\" enctype=\"multipart/form-data\">";
+		return "<div id=\"insert_simulations\"><span class=\"button\" id=\"insert_simulations_show\">".utf8_ucfirst(__('show form'))."</span></div>";
+	}
+	
+	function display() {
+		$form = "<div id=\"edit_simulations_form\">
+			<form method=\"post\" name=\"edit_simulations_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		$input_hidden = new Html_Input("action", "insert");
 		$form .= $input_hidden->input_hidden();
 
 		$name = new Html_Input("name", $this->name);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
+		$evolution = new Html_Select("evolution", $this->evolutions);
+		$evolution_periodical = new Html_Input("evolution_periodical");
 		$date_start = new Html_Input_Date("date_start");
 		$date_stop = new Html_Input_Date("date_stop");
 		$periodicity = new Html_Input("periodicity", $this->periodicity);
-		$display = new Html_Checkbox("display", "display");
+		$display = new Html_Checkbox("display", "display", 1);
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
@@ -136,6 +153,9 @@ class Writings_Simulation extends Record {
 				),
 				'amount_inc_vat' => array(
 					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'evolution' => array(
+					'value' => $evolution->item(__('evolution')).$evolution_periodical->input(),
 				),
 				'date_start' => array(
 					'value' => $date_start->item(__('start date')),
@@ -157,25 +177,26 @@ class Writings_Simulation extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div></div>";
+		$form .= "</form></div>";
 
 		return $form;
 	}
 	
 	function form_in_table() {
-		$form = "<tr class=\"table_writingssimulation_form_modify\"><td colspan=\"7\" ><div id=\"table_edit_writingssimulation\">
-			<span class=\"button\" id=\"table_edit_writingssimulation_cancel\">".Html_Tag::a(link_content("content=writingssimulations.php"),utf8_ucfirst(__('cancel record')))."</span>
-			<div class=\"table_edit_writingssimulation_form\">
+		$form = "<div id=\"table_edit_writingssimulation\">
 			<form method=\"post\" name=\"table_edit_writingssimulation_form\" action=\"\" enctype=\"multipart/form-data\">";
+		
+		$evolution_selected = explode(":", $this->evolution);
+		$evolution_value = (isset($evolution_selected[1]) and is_numeric($evolution_selected[1])) ? $evolution_selected[1] : "";
 		
 		$input_hidden = new Html_Input("action", "edit");
 		$form .= $input_hidden->input_hidden();
-		
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$form .= $input_hidden_id->input_hidden();
-
 		$name = new Html_Input("name", $this->name);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
+		$evolution = new Html_Select("evolution", $this->evolutions, $evolution_selected[0]);
+		$evolution_periodical = new Html_Input("evolution_periodical", $evolution_value);
 		$date_start = new Html_Input_Date("date_start", $this->date_start);
 		$date_stop = new Html_Input_Date("date_stop", $this->date_stop);
 		$periodicity = new Html_Input("periodicity", $this->periodicity);
@@ -192,6 +213,9 @@ class Writings_Simulation extends Record {
 				'amount_inc_vat' => array(
 					'value' => $amount_inc_vat->item(__('amount including vat')),
 				),
+				'evolution' => array(
+					'value' => $evolution->item(__('evolution')).$evolution_periodical->input(),
+				),
 				'date_start' => array(
 					'value' => $date_start->item(__('start date')),
 				),
@@ -212,7 +236,7 @@ class Writings_Simulation extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div></div></td></tr>";
+		$form .= "</form></div>";
 
 		return $form;
 	}
@@ -227,38 +251,74 @@ class Writings_Simulation extends Record {
 			case empty($form['date_stop']['d']) :
 			case empty($form['date_stop']['m']) :
 			case empty($form['date_stop']['Y']) :
-			case empty($form['periodicity']) :
 				return false;
 			default :
 				return true;
 		}
 	}
 	
-	function form_modify() {
-		return "<div class=\"modify\">".
-			Html_Tag::a(link_content("content=writingssimulations.php")," ").
-			"</div>";
+	function show_form_modify() {
+		$input_hidden_id = new Html_Input("table_simulations_modify_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "form_edit");
+		$submit = new Html_Input("table_simulations_modify_submit", "", "submit");
+		
+		$form = "<div class=\"modify\">
+					<form method=\"post\" name=\"table_simulations_modify\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
+					</form>
+				</div>";
+			
+		return $form;
 	}
 
-	function show_operations() {
-		return $this->form_modify().$this->form_duplicate().$this->form_delete();
+	function show_form_duplicate() {
+		$input_hidden_id = new Html_Input("table_simulations_form_duplicate_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "form_duplicate");
+		$submit = new Html_Input("table_simulations_duplicate_submit", "", "submit");
+		
+		$form = "<div class=\"duplicate\">
+					<form method=\"post\" name=\"table_simulations_form_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
+					</form>
+				</div>";
+		
+		return $form;
 	}
 	
+	function show_operations() {
+		return $this->show_form_modify().$this->show_form_duplicate().$this->form_delete();
+	}
 	
 	function form_duplicate() {
-		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"table_writingssimulation_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("table_writingssimulation_duplicate_id", $this->id);
+		$input_hidden_id = new Html_Input("simulation_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
-		$submit = new Html_Input("table_writingssimulation_duplicate_submit", "", "submit");
-		$input_hidden_value = new Html_Input("table_writingssimulation_duplicate_amount", "");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-		$form .= "</form></div>";
+		$submit = new Html_Input("table_simulations_duplicate_submit", utf8_ucfirst(__('save')), "submit");
+		$input_value = new Html_Input("table_simulations_duplicate_amount", "");
+		
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'duplicate' => array(
+					'value' => $input_value->item(utf8_ucfirst(__('duplicate')))." ".__('time(s)'),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+			)
+		);
+		$list = new Html_List($grid);
+		$form = "<div class=\"form_duplicate\">
+					<form method=\"post\" name=\"table_simulations_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+					</form>
+				</div>";
+		
 		return $form;
 	}
 	
 	function form_delete() {
-		$form = "<div class=\"delete\"><form method=\"post\" name=\"table_writingssimulation_delete\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_id = new Html_Input("table_writingssimulation_delete_id", $this->id);
+		$form = "<div class=\"delete\"><form method=\"post\" name=\"table_simulations_delete\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_id = new Html_Input("table_simulations_delete_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "delete");
 		$submit = new Html_Input("table_writings_deletesimulation_submit", "", "submit");
 		$submit->properties = array(

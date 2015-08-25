@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Categories extends Collector  {
 	public $filters = null;
@@ -22,80 +15,120 @@ class Categories extends Collector  {
 		parent::__construct($class, $table, $db);
 	}
 	
+	function get_where() {
+		$where = parent::get_where();
+		
+		if (isset($this->id) and !empty($this->id)) {
+			if (!is_array($this->id)) {
+				$this->id = array((int)$this->id);
+			}
+			$where[] = $this->db->config['table_categories'].".id IN ".array_2_list($this->id);
+		}
+		if (isset($this->filters['vat_category'])) {
+			$where[] = $this->db->config['table_categories'].".vat_category = ".(int)$this->filters['vat_category'];
+		}
+		
+		return $where;
+	}
+	
+	function filter_with() {
+		$elements = func_get_args();
+		foreach ($elements as $element) {
+			foreach ($element as $key => $value) {
+				$this->filters[$key] = $value;
+			}
+		}
+	}
+	
 	function names() {
 		$names = array();
 		$names[0] = "--";
 		foreach ($this as $category) {
-			$names[$category->id] = $category->name();
+			$names[$category->id] = $category->name;
 		}
 		return $names;
 	}
 	
 	function grid_header() {
+		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
-			'header' => array(
-				'cells' => array(
-					array(
-						'type' => "th",
-						'value' => __('name')
-					),
-					array(
-						'type' => "th",
-						'value' => __('default VAT')
-					),
-				)
-			)
-		);
+			      'header' => array(
+						'class' => "table_header",
+						'cells' => array(
+								 array(
+										'type' => "th",
+										'id' => "checkbox",
+										'value' => $checkbox->input()
+										),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("name")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("default VAT")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("VAT category")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("right")),
+								       ),
+						))
+			      );
 		return $grid;
 	}
-		
-	
+
 	function grid_body() {
-		$input = new Html_Input("name_new");
-		$input_vat = new Html_Input("vat_new");
-		$grid[0] =  array(
-			'id' => 0,
-			'cells' => array(
-				array(
-					'type' => "td",
-					'value' => $input->item(""),
-				),
-				array(
-					'type' => "td",
-					'value' => $input_vat->item(""),
-				),
-			)
-		);
-		
+		$category_number = 0;
 		foreach ($this as $category) {
-			$input = new Html_Input("category[".$category->id."][name]", $category->name);
-			$input_vat = new Html_Input("category[".$category->id."][vat]", $category->vat);
+			$category_number++;
+			$class = "";
+
+			if ($category->is_recently_modified())
+				$class = "modified";
+			$checker = new Html_CheckBox("category[".$category->id."][checked]",$category->id);
+			$checkbox_category_vat = new Html_Checkbox("category[".$category->id."][vat_category]", 1, $category->vat_category);
+			
 			$grid[$category->id] =  array(
-				'cells' => array(
-					array(
-						'type' => "td",
-						'value' => $input->item(""),
-					),
-					array(
-						'type' => "td",
-						'value' => $input_vat->item(""),
-					),
-				)
-			);
+						  'class' => $class,
+						  'id' => 'table_'.$category->id,
+						  'cells' => array(
+								  	array(
+									'type' => "td",
+									'value' => $checker->input(),
+									),
+									array(
+									'type' => "td",
+									'value' => htmlspecialchars($category->name),
+									),
+									array(
+									'type' => "td",
+									'value' => htmlspecialchars($category->vat),
+									),
+									array(
+									'type' => "td",
+									'value' => $checkbox_category_vat->input_readonly(),
+									),
+								   array(
+									'type' => "td",
+									 'value' => $category->show_operations(),
+									),
+								   )
+						  );
 		}
-		
-		$submit = new Html_Input("submit", __('save'), "submit");
-		$grid[] =  array(
-			'cells' => array(
-				array(
-					'type' => "td",
-					'value' => $submit->item(""),
-				),
-			)
-		);
+
+		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "4", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of categories')).': '.$category_number)));
 		return $grid;
 	}
-	
+
+	function add_category() {
+		$category = new Category();
+		return '<div id=\'add_category\'>'.$category->show_form_add().ucfirst(__('add new category')).'</div>';
+	}
+
 	function grid() {
 		return $this->grid_header() + $this->grid_body();
 	}
@@ -105,8 +138,24 @@ class Categories extends Collector  {
 		return $html_table->show();
 	}
 	
+	function display() {
+		return "<div id=\"table_categories\">".$this->show_form()."</div>";
+	}
+
 	function show_form() {
-		return "<div id=\"edit_categories\"><form method=\"post\" name=\"categories_id\" action=\"\" enctype=\"multipart/form-data\">".
-				$this->show()."</form></div>";
+
+		$options = array(
+			"none" => "--",
+			"delete" => ucfirst(__('delete')),
+		);
+		$select = new Html_Select("action", $options, "none");
+		$select->properties = array(
+				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
+		$submit = new Html_Input("submit", __('ok'), "submit");
+
+		return "<div id=\"edit_categories\"><form id=\"form_categories\" method=\"POST\" action=\"\" name=\"categories_id\" >".
+			$this->show().$checkbox->input().$select->item("").$submit->input()."</form></div>";
 	}
 }

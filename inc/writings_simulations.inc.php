@@ -1,15 +1,8 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Writings_Simulations extends Collector  {
-	
+	public $amounts = array();
 	public $filters = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
@@ -26,39 +19,17 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function show_timeline_at($timestamp) {
-		$grid = array();
-		$this->month = determine_first_day_of_month($timestamp);
+		list($this->start,$this->stop) = determine_fiscal_year($timestamp);
 		
-		$timeline_iterator = strtotime('-2 months', $this->month);
-		$writingssimulations = new Writings_Simulations();
-		while ($timeline_iterator <= strtotime('+10 months', $this->month)) {
-			$class = "navigation";
-			if ($timeline_iterator == $this->month) {
-				$class = "encours";
-			} 
-			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
-			$next_month = determine_first_day_of_next_month($timeline_iterator);
-			$balance = $writingssimulations->show_balance_at($next_month);
-			
-			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
-			
-			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=writingssimulations.php&timestamp=".$timeline_iterator),
-					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
-					date("Y", $timeline_iterator))."<br /><br />
-					<span class=\"".$balance_class."\">".$balance."</span>";
-			$timeline_iterator = $next_month;
-		}
-		$list = new Html_List($grid);
-		$timeline = $list->show();
-
-		return $timeline;
+		$cubismchart = new Html_Cubismchart("writingssimulations");
+		$cubismchart->data = $this->balance_per_day_in_a_year_in_array($this->start);
+		$cubismchart->start = $this->start;
+		return $cubismchart->show();
 	}
-	
 	
 	function display_timeline_at($timestamp) {
 		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
-	
 	
 	function grid_header() {
 		$grid =  array(
@@ -71,6 +42,10 @@ class Writings_Simulations extends Collector  {
 					array(
 						'type' => "th",
 						'value' => utf8_ucfirst(__("amount including vat")),
+					),
+					array(
+						'type' => "th",
+						'value' => utf8_ucfirst(__("evolution")),
 					),
 					array(
 						'type' => "th",
@@ -90,7 +65,8 @@ class Writings_Simulations extends Collector  {
 					),
 					array(
 						'type' => "th",
-						'value' => utf8_ucfirst(__("operations")),
+						'id' => "operations",
+						'value' => "",
 					)
 				)
 			)
@@ -101,6 +77,12 @@ class Writings_Simulations extends Collector  {
 	function grid_body() {
 		$grid = array();
 		foreach ($this as $simulation) {
+			
+			$evolution = explode(":", $simulation->evolution);
+			$evolution_to_display = __($evolution[0]);
+			if (isset($evolution[1])) {
+				$evolution_to_display .= " : ".$evolution[1];
+			}
 			
 			if ($simulation->is_recently_modified()) {
 				$class = "modified";
@@ -119,6 +101,10 @@ class Writings_Simulations extends Collector  {
 					array(
 						'type' => "td",
 						'value' => round($simulation->amount_inc_vat, 2),
+					),
+					array(
+						'type' => "td",
+						'value' => $evolution_to_display,
 					),
 					array(
 						'type' => "td",
@@ -157,23 +143,28 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function display() {
-		return "<div id=\"simulation\">".$this->show()."</div>";
+		return "<div id=\"table_simulations\">".$this->show()."</div>";
 	}
 	
 	function get_amounts_in_array() {
 		$amounts = array();
 		foreach ($this as $writingssimulation) {
 			if ($writingssimulation->display == 1) {
-				$first = determine_first_day_of_month($writingssimulation->date_start);
-				$last = determine_first_day_of_month($writingssimulation->date_stop);
+				$first = $writingssimulation->date_start;
+				$last = $writingssimulation->date_stop;
 				$amount = $writingssimulation->amount_inc_vat;
 				$periodicity = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $writingssimulation->periodicity, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-
-				if (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
+				$evolution = explode(":", $writingssimulation->evolution);
+				if ($first == $last) {
+					$amounts[$first][] = $amount;
+				} elseif (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
 					if(preg_match("/(m)/i", $periodicity[0])) {
 						while ($first < $last) {
 							$first = strtotime('+1 months', $first);
 							$amounts[$first][] = $amount;
+							if ($evolution[0] == "linear") {
+								$amount = $amount + $evolution[1];
+							}
 						}
 					} elseif(preg_match("/(t)|(q)/i", $periodicity[0])) {
 						while ($first < $last) {
@@ -210,22 +201,8 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function show_balance_at($timestamp) {
-		$writings = new Writings();
-		$writings->filter_with(array('stop' => strtotime('+11 months', determine_first_day_of_month($timestamp))));
-		$writings->select_columns('amount_inc_vat', 'day');
-		$writings->select();
-		
-		$this->select();
-		$simulation_amounts = $this->get_amounts_in_array();
-		
 		$amount = 0;
-		foreach ($writings->instances as $writing) {
-			if($writing->day < $timestamp) {
-				$amount += $writing->amount_inc_vat;
-			}
-		}
-		
-		foreach ($simulation_amounts as $month => $values) {
+		foreach ($this->amounts as $month => $values) {
 			if($month < $timestamp) {
 				foreach ($values as $value) {
 					$amount += $value;
@@ -233,5 +210,23 @@ class Writings_Simulations extends Collector  {
 			}
 		}
 		return round($amount, 2);
+	}
+	
+	function balance_per_day_in_a_year_in_array($timestamp_max) {
+		$nb_day = intval(($this->stop -$this->start)/60/60/24);
+		$writings = new Writings();
+		$writings->filter_with(array('stop' => $this->stop));
+		$writings->select_columns('amount_inc_vat', 'day');
+		$writings->select();
+		$this->select();
+		$this->amounts = $this->get_amounts_in_array();
+		
+		$values = array();
+		for ($i = 0; $i <= $nb_day; $i++) {
+			$timestamp_max = strtotime('+1 day', $timestamp_max);
+			$value = $writings->show_balance_at($timestamp_max) + $this->show_balance_at($timestamp_max);
+			$values[] = $value;
+		}
+		return $values;
 	}
 }

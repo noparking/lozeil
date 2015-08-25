@@ -1,13 +1,12 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL:  $
-	$Revision: $
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-	Copyright (C) No Parking 2013 - 2013
-*/
-
-session_destroy();
-header ("Location: ".link_content("content=login.php"));
-exit();
+if (isset($_SESSION['previous_location'])) {
+	session_destroy();
+	header("Location: ".$_SESSION['previous_location']);
+}
+else {
+	session_destroy();
+	header ("Location: ".link_content("content=login.php"));
+}
+exit(0);

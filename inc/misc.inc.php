@@ -1,12 +1,79 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL:  $
-	$Revision:  $
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
-	Copyright (C) No Parking 2013 - 2013
-*/
+function sortcmp($a,$b) {
+	if((int)$a['sort'] == (int)$b['sort'])return 0;
+	if((int)$a['sort']  > (int)$b['sort'])return 1;
+	if((int)$a['sort']  < (int)$b['sort'])return -1;
+}
+
+function pourcentage ($val, $total, $round) {
+	if (!is_numeric($val) or !is_numeric($total)) {
+		return "";
+	}
+
+	if ($val != 0 and $total == 0) {
+		return ($val < 0) ? -100 : 100;
+	} else if ($total == 0) {
+		return 0;
+	}
+
+	return round((floatval($val) / floatval($total)) * 100, $round);
+}
+
+function is_positive($number) {
+	if (is_numeric($number) and $number >= 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function is_negative($number) {
+	if (is_numeric($number) and $number <= 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function number_difference($number) {
+	if ($number >= 0 and $number) {
+		return "+".$number;
+	}
+	return $number;
+}
+
+function number_adjust_format($number) {
+	if (is_numeric($number)) {
+		return number_format($number, 2, ".", " " );
+	}
+}
+
+function currency_if_exists($number) {
+	if (isset($number) and is_numeric($number)) {
+		return $GLOBALS['param']['currency'];
+	}
+}
+
+function ratio_if_exists($number) {
+	if (isset($number) and is_numeric($number)) {
+		return "%";
+	}
+}
+
+function adapt_number($number) {
+	if (strlen($number) == 1) {
+		return $number;
+	} else {
+		$number = preg_replace("#0+$#","",$number);
+		if (strlen($number) == 1) {
+			$number .= "0";
+		}
+	}
+
+	return $number;
+}
 
 function clean_location($location) {
 	return preg_replace("/\/(.*\/)*([a-zA-Z_]*\.php[0-9]?)(.*)/", "\\2", $location);
@@ -182,12 +249,35 @@ function success_status($message, $priority = 0) {
 	if (!isset($_SESSION['global_status'])) {
 		$_SESSION['global_status'] = array();
 	}
-	//$message = Plugins::transform_hook("success_status", $message);
 	$_SESSION['global_status'][] = array(
-			'value' => "<div class=\"content_success_status\"><span><ul><li>".$message."</li></ul></span></div>",
-			'priority' => $priority
+		'value' => "<div class=\"content_success_status\"><span><ul><li>".$message."</li></ul></span></div>",
+		'priority' => $priority
 	);
 	return $_SESSION['global_status'];
+}
+
+function show_status() {
+	if (isset($_SESSION['global_status']) and !empty($_SESSION['global_status'])) {
+		if (isset($GLOBALS['param']['layout_multiplestatus']) and $GLOBALS['param']['layout_multiplestatus']) {
+			$status_shown = "<ul class=\"content_status\">";
+			foreach ($_SESSION['global_status'] as $status) {
+				$status_shown .= $status['value'];
+			}
+			$status_shown .= "</ul>";
+		} else {
+			$last_priority = 0;
+			foreach ($_SESSION['global_status'] as $status) {
+				if ($status['priority'] >= $last_priority) {
+					$status_shown = "<span>".$status['value']."</span>";
+					$last_priority = $status['priority'];
+				}
+			}
+		}
+		unset($_SESSION['global_status']);
+		return $status_shown;
+	} else {
+		return "";
+	}
 }
 
 function error_handling($type, $msg, $file, $line, $args) {
@@ -267,6 +357,32 @@ function determine_integer_from_post_get_session() {
 	return 0;
 }
 
+function array_2_list($array, $delimeter = "", $map = NULL) {
+	if ($map === null) {
+		if ($delimeter == "") {
+			$map = "intval";
+		} else if ($delimeter == "'") {
+			$map = "mysql_real_escape_string";
+		}
+	}
+
+	if (is_array($array)) {
+		$array = array_unique($array);
+		if (sizeof($array) == 0) {
+			$array = array(0);
+		}
+		if ($map) {
+			$array = array_map($map, $array);
+		}
+		$list = implode($delimeter.",".$delimeter, $array);
+		$list = $delimeter.$list.$delimeter;
+		$list = "(".$list.")";
+	} else {
+		$list = "(".$delimeter."0".$delimeter.")";
+	}
+	return $list;
+}
+
 function is_url($url) {
 	if (isset($GLOBALS['location'])) {
 		return (preg_match("/^[#|http|".$GLOBALS['location']."]/", $url));
@@ -275,23 +391,44 @@ function is_url($url) {
 	}
 }
 
-function determine_month($timestamp) {
-	$starttime = mktime(0, 0, 0, date("m", $timestamp), 1, date("Y",$timestamp));
-	$stoptime = mktime(23, 59, 59, date("m", $timestamp) + 1 , 0, date("Y", $timestamp));
-
+function determine_fiscal_year($year) {
+	$starttime = mktime(0, 0, 0, $GLOBALS['param']['fiscal year begin'], 1, date("Y", (int)$year)); 
+	$stoptime = mktime(23, 59, 59, $GLOBALS['param']['fiscal year begin'], 0, date("Y", (int)$starttime) + 1);
 	return array($starttime, $stoptime);
 }
 
-function determine_first_day_of_month($timestamp) {
+function determine_month($timestamp) {
 	$starttime = mktime(0, 0, 0, date("m", $timestamp), 1, date("Y",$timestamp));
+	$stoptime = mktime(23, 59, 59, date("m", $timestamp) + 1 , 0, date("Y", $timestamp));
+	
+	return array($starttime, $stoptime);
+}
 
+function determine_last_day_of_year($timestamp) {
+	$starttime = mktime(23, 59, 59, 13 , 0, date("Y", (int)$timestamp));
+	return $starttime;
+}
+
+function determine_first_day_of_year($timestamp) {
+	$starttime = mktime(0, 0, 0, 1, 1, date("Y", (int)$timestamp));
+	return $starttime;
+}
+
+function determine_first_day_of_month($timestamp) {
+	$starttime = mktime(0, 0, 0, date("m", (int)$timestamp), 1, date("Y", (int)$timestamp));
 	return $starttime;
 }
 
 function determine_first_day_of_next_month($timestamp) {
-	$starttime = mktime(0, 0, 0, date("m", $timestamp) + 1, 1, date("Y",$timestamp));
-
+	$starttime = mktime(0, 0, 0, date("m", (int)$timestamp) + 1, 1, date("Y", (int)$timestamp));
 	return $starttime;
+}
+
+function determine_week($timestamp) {
+	$starttime = determine_monday($timestamp);
+	$stoptime = mktime(23, 59, 59, date("m", $starttime), date("d", $starttime) + 6, date("Y", $starttime));
+
+	return array($starttime, $stoptime);
 }
 
 function get_time($format,$act_time="") {
@@ -337,4 +474,93 @@ function excel_span_format($span) {
 	}
 	
 	return $excel_formatted;
+}
+
+function is_leap($year=NULL) {
+    return checkdate(2, 29, ($year==NULL)? date('Y'):$year);
+}
+
+function is_datepicker_valid($time) {
+  switch (true) {
+        case !isset($time['d']) or empty($time['d']) :
+        case !isset($time['m']) or empty($time['m']) :
+        case !isset($time['Y']) or empty($time['Y']) :
+          return false;
+       default:
+         return true;
+  }
+}
+
+function month_from_timestamp($start, $stop) {
+	$months = 0;
+	while ($start < $stop) {
+		$months++;
+    	$start = strtotime("first day of next month", $start);
+	}
+
+	return $months;
+}
+
+function determine_start_stop($start, $stop) {
+	$starttime = mktime(0, 0, 0, (int)$start['m'], (int)$start['d'], (int)$start['Y']);
+	$stoptime = mktime(0, 0, 0, (int)$stop['m'], (int)$stop['d'], (int)$stop['Y']);
+
+	return array($starttime, $stoptime);
+}
+
+function timestamp_from_datepicker($datepicker) {
+	return mktime(0, 0, 0, (int)$datepicker['m'], (int)$datepicker['d'], (int)$datepicker['Y']);
+}
+
+function timestamp_from_year($year) {
+	return mktime(0, 0, 0, 1, 1, $year);
+}
+
+function determine_vat_date($timestamp = 0) {
+	$timestamp = !$timestamp ? time() : $timestamp;
+	$month = date('n', $timestamp);
+	return mktime(0, 0, 0, $month + 4 - $month % 3, 15, date('Y', $timestamp));
+}
+
+function renew_session() {
+	if (isset($GLOBALS['_SESSION'])) {
+		unset($GLOBALS['_SESSION']);
+	}
+	session_destroy();
+	session_regenerate_id();
+}
+
+function is_dir_empty($dir){
+	return (($files = @scandir($dir)) and count($files) <= 2);
+}
+
+function input_list_2_array($string, $key="value") {
+	$output = array();
+
+	$reste = $string;
+	while (strlen($reste) > 0) {
+		$delimiter = " ";
+		if (substr($reste, 0, 1) == "'") {
+			$delimiter = "'";
+			$reste = substr($reste, 1);
+		}
+		if (strpos($reste, $delimiter)) {
+			$word = substr($reste, 0, strpos($reste, $delimiter));
+			$reste = ltrim(substr($reste, strpos($reste, $delimiter)+1));
+		} else {
+			$word = substr($reste, 0);
+			$reste = "";
+		}
+		if ($key == "num") {
+			$output[]= $word;
+		} else {
+			$output[$word]= $word;
+		}
+	}
+
+	return $output;
+}
+
+function is_email($e) {
+	return (preg_match('/[_a-z0-9-]+([\._a-z0-9-]+)*@[\._a-z0-9-]+(\.[a-z0-9-]{2,5})+/', $e));
 }

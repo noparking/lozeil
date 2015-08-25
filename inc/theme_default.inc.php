@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL:  $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Theme_Default {
 	function html_top() {
@@ -18,8 +11,9 @@ class Theme_Default {
 		return "<head>
 			<title>".($GLOBALS['config']['title'] == '' ? '' : $GLOBALS['config']['title']." : ").$GLOBALS['config']['name']."</title>
 			<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />".
-			$this->css_files().
+			$this->css().
 			$this->js_files()."
+			<link href=\"".$GLOBALS['config']['layout_mediaserver']."medias/images/favicon.ico\" type=\"imgage/png\" rel=\"shortcut icon\" />
 		</head>";
 	}
 	
@@ -28,11 +22,24 @@ class Theme_Default {
 	}
 	
 	function css_files() {
+		$css_files[] = "medias/css/menu.css";
 		$css_files[] = "medias/css/styles.css";
-		$css_files[] = "http://fonts.googleapis.com/css?family=Bitter:400,700";
+		
+		if (isset($GLOBALS['content']) and $GLOBALS['content'] == "writings.php") {
+			$css_files[] = "medias/css/dropzone.css";
+		}
+		
+		return $css_files;
+	}
+
+	function css() {
+		$files = array_merge($this->css_files(), get_plugins_files("css"));
+		return $this->show_css_files($files);
+	}
+	
+	function show_css_files($css_files) {
 		
 		$html = "";
-
 		if (is_array($css_files)) {
 			$media_css_file = "";
 			foreach ($css_files as $css_file) {
@@ -52,23 +59,66 @@ class Theme_Default {
 	}
 	
 	function js_files() {
-		$js_files[] = "medias/js/jquery-1.9.1.js";
-		$js_files[] = "medias/js/drag_and_drop.jquery.js";
+		$js_files[] = "medias/js/jquery.js";
+		$js_files[] = "medias/js/spin.js";
+		$js_files[] = "medias/js/draganddrop.jquery.js";
 		$js_files[] = "medias/js/calendar.js";
+		$js_files[] = "medias/js/colorbox.jquery.js";
 		$js_files[] = "medias/js/common.js";
 		$js_files[] = "medias/js/common.jquery.js";
-		if ($GLOBALS['content'] == "writings.php") {
+		$js_files[] = "medias/js/d3.js";
+		$js_files[] = "medias/js/cubism.js";
+		$js_files[] = "medias/js/nagging-menu.js";
+		if (isset($GLOBALS['content'])) {
+		  if ($GLOBALS['content'] == "writings.php") {
+			$js_files[] = "medias/js/dropzone.js";
 			$js_files[] = "medias/js/writings.jquery.js";
-		}
-		if ($GLOBALS['content'] == "followupwritings.php") {
-			$js_files[] = "medias/js/sparkline.jquery.min.js";
-			$js_files[] = "medias/js/sparkline.jquery.js";
-		}
-		if ($GLOBALS['content'] == "writingssimulations.php") {
+			$js_files[] = "medias/js/timeline.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "followupwritings.php") {
+			$js_files[] = "medias/js/followupwritings.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "writingssimulations.php") {
 			$js_files[] = "medias/js/writingssimulations.jquery.js";
-		}
-		if ($GLOBALS['content'] == "login.php") {
-			$js_files[] = "medias/js/login.jquery.js";
+			$js_files[] = "medias/js/timeline.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "accountingplan.php") {
+			$js_files[] = "medias/js/accountingplan.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "categories.php") {
+			$js_files[] = "medias/js/categories.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "sources.php") {
+			$js_files[] = "medias/js/sources.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "banks.php") {
+			$js_files[] = "medias/js/banks.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "users.php") {
+			$js_files[] = "medias/js/users.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "balancesdetail.php") {
+			$js_files[] = "medias/js/balancesdetail.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "balancescustom.php") {
+		  	$js_files[] = "medias/js/dropzone.js";
+			$js_files[] = "medias/js/balancescustom.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "activities.php") {
+			  $js_files[] = "medias/js/activities.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "account.php") {
+			  $js_files[] = "medias/js/accounts.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "writingsimport.php") {
+			  $js_files[] = "medias/js/writingsimport.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "balances.php") {
+			  $js_files[] = "medias/js/balances.jquery.js";
+		  }
+		  else if ($GLOBALS['content'] == "models.php") {
+		  	  $js_files[] = "medias/js/models.jquery.js";
+		  }
 		}
 		
 		$html = "";
@@ -83,12 +133,31 @@ class Theme_Default {
 		return $html;
 	}
 	
+	function show_status() {
+		$menu = "<div class=\"layout_status\">";
+		$menu .= $this->status();
+		$menu .= "</div>";
+	
+		return $menu;
+	}
+		
+	function status() {
+		return show_status();
+	}
+	
 	function content_top() {
 		return "<div class=\"content\">";
 	}
 
 	function content_bottom() {
-		return "</div>";
+		return "</div>
+		<div class=\"content_copyright\">
+		<div>
+		&copy; No Parking 2013 - 2014 v.".$GLOBALS['config']['version']."
+		</div>
+		</div>
+		<div class=\"loading\">
+		</div>";
 	}
 	
 	function body_bottom() {

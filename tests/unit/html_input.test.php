@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author:  $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 

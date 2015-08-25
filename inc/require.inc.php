@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 $current_directory = dirname(__FILE__);
 
@@ -16,49 +9,70 @@ if (file_exists($current_directory."/../cfg/config.inc.php")) {
 if (file_exists($current_directory."/../cfg/param.inc.php")) {
 	require $current_directory."/../cfg/param.inc.php";
 }
-require $current_directory."/../lang/fr_FR.lang.php";
 
-require $current_directory."/collector.inc.php";
-require $current_directory."/db.inc.php";
-require $current_directory."/record.inc.php";
+if (isset($GLOBALS['pathconfig']['cfg']) and !empty($GLOBALS['pathconfig']['cfg'])) {
+	if (file_exists($GLOBALS['pathconfig']['cfg']."config.inc.php")) {
+		require($GLOBALS['pathconfig']['cfg']."config.inc.php");
+	}
+	if (file_exists($GLOBALS['pathconfig']['cfg']."param.inc.php")) {
+		require($GLOBALS['pathconfig']['cfg']."param.inc.php");
+	}
+}
 
-require $current_directory."/adodb-time.inc.php";
-require $current_directory."/bank.inc.php";
-require $current_directory."/banks.inc.php";
-require $current_directory."/bot.inc.php";
-require $current_directory."/categories.inc.php";
-require $current_directory."/category.inc.php";
-require $current_directory."/config_file.inc.php";
-require $current_directory."/excel.inc.php";
-require $current_directory."/export_excel.inc.php";
-require $current_directory."/format.inc.php";
-require $current_directory."/heading_area.inc.php";
-require $current_directory."/html_checkbox.inc.php";
-require $current_directory."/html_input.inc.php";
-require $current_directory."/html_input_date.inc.php";
-require $current_directory."/html_list.inc.php";
-require $current_directory."/html_radio.inc.php";
-require $current_directory."/html_select.inc.php";
-require $current_directory."/html_table.inc.php";
-require $current_directory."/html_tag.inc.php";
-require $current_directory."/html_textarea.inc.php";
-require $current_directory."/menu_area.inc.php";
-require $current_directory."/message.inc.php";
-require $current_directory."/misc.inc.php";
-require $current_directory."/param_file.inc.php";
-require $current_directory."/plugins.inc.php";
-require $current_directory."/source.inc.php";
-require $current_directory."/sources.inc.php";
-require $current_directory."/sparkline.inc.php";
-require $current_directory."/theme_default.inc.php";
-require $current_directory."/update.inc.php";
-require $current_directory."/user_authentication.inc.php";
-require $current_directory."/writing.inc.php";
-require $current_directory."/writings.inc.php";
-require $current_directory."/writings_data_file.inc.php";
-require $current_directory."/writings_simulation.inc.php";
-require $current_directory."/writings_simulations.inc.php";
+require ($current_directory."/../inc/autoload.inc.php");
+Lozeil_Autoload::register($current_directory, $current_directory."/../var/tmp/autoload.index");
+
+$external_directories = array_merge(directories_for_plugins(), directories_for_applications());
+foreach ($external_directories as $name => $path) {
+	if (file_exists($path."/cfg/config.inc.php")) {
+		require $path."/cfg/config.inc.php";
+	}
+
+	if (file_exists($path."/cfg/param.inc.php")) {
+		require $path."/cfg/param.inc.php";
+	}
+
+	if (file_exists($path."/cfg/acl.inc.php")) {
+		require $path."/cfg/acl.inc.php";
+	}
+}
+
+if (!isset($GLOBALS['param']['locale_lang'])) {
+	$GLOBALS['param']['locale_lang'] = "fr_FR";
+}
+$hl = $GLOBALS['param']['locale_lang'];
+if (!file_exists($current_directory."/../lang/".$hl.".lang.php")) {
+	$lang = substr($GLOBALS['param']['locale_lang'], 0, 2);
+	$hl = $lang."_".strtoupper($lang);
+}
+$required_files[] = $current_directory."/../lang/".$hl.".lang.php";
+
+foreach ($external_directories as $name => $path) {
+	if (file_exists($path."/lang/".$GLOBALS['param']['locale_lang'].".lang.php")) {
+		$required_files[] = $path."/lang/".$GLOBALS['param']['locale_lang'].".lang.php";
+	} elseif (file_exists($path."/lang/".$hl.".lang.php")) {
+		$required_files[] = $path."/lang/".$hl.".lang.php";
+	}
+}
+
+$required_files[] = $current_directory."/adodb-time.inc.php";
+$required_files[] = $current_directory."/misc.inc.php";
+$required_files[] = $current_directory."/email.inc.php";
+$required_files[] = $current_directory."/excel.inc.php";
+$required_files[] = $current_directory."/export_excel.inc.php";
+$required_files[] = $current_directory."/plugin.inc.php";
+
+$required_files = array_unique($required_files);
+
+foreach ($required_files as $required_file) {
+	require $required_file;
+}
 
 if (function_exists("date_default_timezone_set")) {
 	date_default_timezone_set("Europe/Paris");
+}
+
+if (strpos($_SERVER['SCRIPT_FILENAME'], "setup.php") === false  and strpos($_SERVER['SCRIPT_FILENAME'], "bot.php") === false) {
+	$db = new db($dbconfig);
+	$db->query("SET NAMES 'utf8'");
 }

@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author:  $
-	$URL:  $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Format {
 	static function page_class($string) {

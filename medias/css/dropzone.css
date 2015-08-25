@@ -1,0 +1,134 @@
+
+
+.dz-preview {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	position: absolute;
+	margin-left: -7px;
+}
+
+.dz-details {
+	display: none;
+}
+
+.dz-error-mark,
+.dz-success-mark {
+	-webkit-transition: opacity 1s ease-out;
+    opacity: 0;
+	height: 5px;
+}
+
+.dz-error .dz-error-mark,
+.dz-success .dz-success-mark {
+	opacity: 1;
+	height: 14px;
+}
+
+.dz-progress {
+	width: 25px;
+	height: 6px;
+}
+
+.dz-drag-hover {
+	background-color: #f6f5f3;
+}
+
+.dz-preview .dz-progress .dz-upload,
+.dropzone-previews .dz-preview .dz-progress .dz-upload {
+  -webkit-animation: loading 0.4s linear infinite;
+  -moz-animation: loading 0.4s linear infinite;
+  -o-animation: loading 0.4s linear infinite;
+  -ms-animation: loading 0.4s linear infinite;
+  animation: loading 0.4s linear infinite;
+  -webkit-transition: width 0.3s ease-in-out;
+  -moz-transition: width 0.3s ease-in-out;
+  -o-transition: width 0.3s ease-in-out;
+  -ms-transition: width 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+}
+
+.dz-preview.dz-error .dz-progress .dz-upload,
+.dropzone-previews .dz-preview.dz-error .dz-progress .dz-upload {
+  background: #ee1e2d;
+}
+
+.dz-preview .dz-progress,
+.dropzone-previews .dz-preview .dz-progress {
+  position: absolute;
+  background: #d7d7d7;
+  display: none;
+}
+.dz-preview .dz-progress .dz-upload,
+.dropzone-previews .dz-preview .dz-progress .dz-upload {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+  width: 0%;
+  background-color: #8cc657;
+}
+.dz-preview.dz-processing .dz-progress,
+.dropzone-previews .dz-preview.dz-processing .dz-progress {
+  display: block;
+}
+
+@-moz-keyframes loading {
+  0% {
+    background-position: 0 -400px;
+  }
+
+  100% {
+    background-position: -7px -400px;
+  }
+}
+@-webkit-keyframes loading {
+  0% {
+    background-position: 0 -400px;
+  }
+
+  100% {
+    background-position: -7px -400px;
+  }
+}
+@-o-keyframes loading {
+  0% {
+    background-position: 0 -400px;
+  }
+
+  100% {
+    background-position: -7px -400px;
+  }
+}
+@-ms-keyframes loading {
+  0% {
+    background-position: 0 -400px;
+  }
+
+  100% {
+    background-position: -7px -400px;
+  }
+}
+@keyframes loading {
+  0% {
+    background-position: 0 -400px;
+  }
+
+  100% {
+    background-position: -7px -400px;
+  }
+}
+
+.dz-error .dz-progress, .dz-success .dz-progress{
+	display: none !important;
+}
+
+.dz-fallback {
+	display: block;
+}

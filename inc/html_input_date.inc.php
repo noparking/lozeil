@@ -1,12 +1,5 @@
 <?php
-/*
-	opentime
-	$Author: bodart $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/html_input_date.inc.php $
-	$Revision: 5938 $
-
-	Copyright (C) No Parking 2011 - 2012
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Input_Date extends Html_Input {
 	public $name = "";
@@ -20,6 +13,7 @@ class Html_Input_Date extends Html_Input {
 		$this->value = $value;
 		$this->img_src = $GLOBALS['config']['layout_mediaserver'].$this->img_src;
 		$this->id = $this->name."[d]";
+
 	}
 	
 	function name($suffix = "[d]") {
@@ -31,7 +25,7 @@ class Html_Input_Date extends Html_Input {
 		return $day->input_hidden();
 	}
 	
-	function item($label, $complement = "") {
+	function item($label, $display = "", $complement = "") {
 		return $this->label($label).$this->input().$complement;
 	}
 	
@@ -39,13 +33,14 @@ class Html_Input_Date extends Html_Input {
 		$label = "";
 
 		if ($this->id) {
-			$label = "<label for=\"".$this->id."\">".Format::name($string)."</label>";
+			$label = "<label for=\"".$this->id."\">".$string."</label>";
 		}
 
 		return $label;
 	}
 	
 	function input() {
+
 		$string = "<nobr>";
 		
 		$d = new Html_Input($this->name."[d]", (($this->value) ? adodb_date("d", $this->value) : ""));

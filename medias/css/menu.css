@@ -1,0 +1,183 @@
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+
+@CHARSET "UTF-8";
+
+/* --- Log --- */
+
+#layout_logged_in_as {
+	height: 0;
+	font-size: 0.8em;
+	text-align: right;
+	color: #999999;
+}
+
+#layout_logged_in_as a {
+	color: #ffffff;
+}
+
+#layout_logged_in_as p {
+	color: #ffffff;
+	font-family: Helvetica, serif;
+	position: relative;
+	bottom: 20px;
+}
+
+/* --- Menu --- */
+
+#menu {
+	margin-bottom: 30px;
+}
+
+
+#menu.default {
+	width: 850px;
+	height: 50px;
+	
+	box-shadow: 0 5px 20px #888;
+	-webkit-box-shadow: 0 5px 20px #888;
+	-moz-box-shadow: 0 5px 20px #888;
+}
+
+#menu.fixed {
+	position: fixed;
+	top: -5px;
+	z-index: 1;	
+}
+
+#menu.fixed .level_1 {
+	-moz-box-shadow: 0px 20px 30px -15px #656565;
+	-webkit-box-shadow: 0px 20px 30px -15px #656565;
+	-o-box-shadow: 0px 20px 30px -15px #656565;
+	box-shadow: 0px 20px 30px -15px #656565;
+}
+
+/* --- Level_0 --- */
+
+.level_0 {
+	-webkit-border-radius: 5px;
+	-webkit-border-bottom-right-radius: 1px;
+	-webkit-border-bottom-left-radius: 1px;
+	-moz-border-radius: 5px;
+	-moz-border-radius-bottomright: 1px;
+	-moz-border-radius-bottomleft: 1px;
+	border-radius: 5px;
+	border-bottom-right-radius: 1px;
+	border-bottom-left-radius: 1px;
+
+	width: 1190px;
+	background-color: #3c3c3b;
+	font-weight: bold;
+}
+
+.level_0 ul li {
+	margin: 8px 10px;
+	display:block;
+	float:left;	
+}
+
+.level_0 ul li a {
+	color: white;
+	padding: 6px;
+	text-decoration: none;
+	display: block;
+}
+
+
+.level_0 ul li.selected a,.level_0 ul li:hover a {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	color: white;
+	background-color: #2fa643;
+}
+
+
+.logo_menu_image
+{
+	float:right;
+	margin-top: 7px;
+	margin-right:30px;
+}
+
+/* --- Level 1 --- */
+
+.level_1 {
+	padding: 3px 0px;
+	width: 1195px;
+	position:relative;
+	height: 40px;
+	background-color: #efefef;
+	font-size: 14px;
+}
+
+.level_1 ul li {
+	margin: 5px 10px;
+	display: block;
+    float: left;
+}
+
+.level_1 ul li a {
+	padding: 6px;
+	color: #000;
+	text-decoration: none;
+	display: block;
+}
+
+.level_1 ul li a:hover, .level_1 ul li.selected a {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	background-color: #3c3c3b;
+	color: #ffffff;
+}
+
+
+
+/*  --- clearfix --- */
+
+.clearfix:before,.clearfix:after {content:"";display:table;}
+.clearfix:after {clear:both;}
+.clearfix {zoom:1;}
+
+/* --- Others --- */
+
+@media only screen and (min-width:1150px) {
+	.level_0, .level_1 {
+		width: 1195px;
+	}
+}
+
+.forms input[type="submit"]:hover {
+	cursor:pointer;
+}
+
+
+.forms input[type="submit"] , .forms select , .forms input[type="text"] 
+{
+    border: 1px solid #D3D3D3;
+    color: #555;
+    text-shadow: 0px 1px 0px #F6F6F6;
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-shadow: 0px 1px 1px #EFEFEF;
+}
+.forms input[type="submit"] {
+	width:40px;
+}
+.forms select 
+{
+	width:80px;
+	margin-right:10px;
+}
+
+.forms input[type="text"]
+{
+	text-align:right;
+	width:80px;
+}
+
+.forms input[type="file"]{
+	width:100px;
+}

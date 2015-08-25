@@ -1,33 +1,48 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "11";
+$config['version'] = "49";
 
-$config['layout_mediaserver'] = "";		// serveur pour tous les medias -- js, css, images ("", par défaut)
+$config['layout_mediaserver'] = "http://localhost/~kafei/lozeil.com/lozeil/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
+$config['mysql_password'] = "password";
+$config['root_url'] = "http://localhost/~kafei/lozeil.com/lozeil/";
 
 ## database config
 $dbconfig['type'] = "mysql";		// type de serveur de la base de données (mysql, par défaut)
 $dbconfig['host'] = "localhost";		// nom du serveur de la base de données (localhost, par défaut)
-$dbconfig['name'] = "";
-$dbconfig['user'] = "";
+$dbconfig['name'] = "lozeil.com";
+$dbconfig['user'] = "root";
 $dbconfig['pass'] = "";
 $dbconfig['new'] = "0";		// forcer la création d'une nouvelle connexion
+$dbconfig['account'] = "0";
+
 
 # software tables
-$dbconfig['table_sources'] = "sources";
-$dbconfig['table_types'] = "types";
-$dbconfig['table_writings'] = "writings";
-$dbconfig['table_writingssimulations'] = "writingssimulations";
+$dbconfig['table_accountingcodes'] = "accountingcodes";
+$dbconfig['table_accountingcodes_affectation'] = "accountingcodes_affectation"; 
+$dbconfig['table_activities'] = "activities";
+$dbconfig['table_balances'] = "balances";
+$dbconfig['table_balancesimported'] = "balancesimported";
+$dbconfig['table_balancesperiod'] = "balancesperiod";
 $dbconfig['table_banks'] = "banks";
+$dbconfig['table_bayesianelements'] = "bayesianelements";
 $dbconfig['table_categories'] = "categories";
+$dbconfig['table_files'] = "files";
+$dbconfig['table_passwordrequests'] = "passwordrequests";
+$dbconfig['table_reportings'] = "reportings";
+$dbconfig['table_sources'] = "sources";
+$dbconfig['table_useroptions'] = "useroptions";
 $dbconfig['table_users'] = "users";
+$dbconfig['table_writings'] = "writings";
+$dbconfig['table_writingsimported'] = "writingsimported";
+$dbconfig['table_writingssimulations'] = "writingssimulations";
+
+
+$config['error_handling'] = "0";		// utilisation d'un systÃ¨me de gestion des erreurs avec PHP (1 - oui, par dÃ©faut)
+$config['db_profiler'] = "0";		// utilisation d'un profiler pour les requÃªtes Ã  la base de donnÃ©es (0 - non, par dÃ©faut)
+$config['external_plugins'] = "2";
+$config['email_smtp'] = "";		// adresse du serveur SMTP responsable de l'envoi des courriels ("", par défaut)
+$config['last_reminder'] = "1402476086";

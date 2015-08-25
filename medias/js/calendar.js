@@ -1,3 +1,4 @@
+
 function GetDays(month, year) {
 	var count = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	if (1 == month && ((0 == year % 4 && 0 != year % 100) || (0 == year % 400))) {

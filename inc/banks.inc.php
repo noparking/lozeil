@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Banks extends Collector  {
 	public $filters = null;
@@ -28,7 +21,7 @@ class Banks extends Collector  {
 		$names = array();
 		$names[0] = "--";
 		foreach ($this as $bank) {
-			$names[$bank->id] = $bank->name();
+			$names[$bank->id] = $bank->name;
 		}
 		return $names;
 	}
@@ -38,61 +31,93 @@ class Banks extends Collector  {
 		$names[0] = "--";
 		foreach ($this as $bank) {
 			if ($bank->selected == 1) {
-				$names[$bank->id] = $bank->name();
+				$names[$bank->id] = $bank->name;
 			}
 		}
 		return $names;
 	}
 	
 	function grid_header() {
+		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
-			'header' => array(
-				'class' => "table_header",
-				'cells' => array(
-					array(
-						'type' => "th",
-						'value' => utf8_ucfirst(__("name")),
-					),
-					array(
-						'type' => "th",
-						'value' => utf8_ucfirst(__("use")),
-					),
-				)
-			)
-		);
+			      'header' => array(
+						'class' => "table_header",
+						'cells' => array(
+								 array(
+										'type' => "th",
+										'id' => "checkbox",
+										'value' => $checkbox->input()
+										),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("name")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("iban")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("in use")),
+								       ),
+								 array(
+								       'type' => "th",
+								       'value' => utf8_ucfirst(__("right")),
+								       ),
+						))
+			      );
 		return $grid;
 	}
-	
+
 	function grid_body() {
+		$bank_number = 0;
 		foreach ($this as $bank) {
-			$input = new Html_Checkbox($bank->id, $bank->name, $bank->selected);
+			$bank_number++;
+			$class = "";
+			if ($bank->is_recently_modified())
+				$class = "modified";
+			$input = new Html_Input("checkbox_test", $bank->name);
+			$checker = new Html_Checkbox("banks[".$bank->id."][checked]", $bank->id);
+			$iban = new Html_Input("banks[".$bank->id."][iban]", $bank->iban);
+			$checkbox = new Html_Checkbox("banks[".$bank->id."][selected]", $bank->name, $bank->selected);
+			
 			$grid[$bank->id] =  array(
-				'cells' => array(
-					array(
-						'type' => "td",
-						'value' => $bank->name,
-					),
-					array(
-						'type' => "td",
-						'value' => $input->item(""),
-					),
-				)
-			);
+						  'class' => $class,
+						  'id' => 'table_'.$bank->id,
+						  'cells' => array(
+								  	array(
+									'type' => "td",
+									'value' => $checker->input(),
+									),
+									array(
+									'type' => "td",
+									'value' => htmlspecialchars($bank->name),
+									),
+									array(
+									'type' => "td",
+									'value' => htmlspecialchars($bank->iban),
+									),
+									array(
+									'type' => "td",
+									'value' => $checkbox->input_readonly(),
+									),
+								   array(
+									'type' => "td",
+									 'value' => $bank->show_operations(),
+									),
+								   )
+						  );
 		}
-		
-		$submit = new Html_Input("submit", __('save'), "submit");
-		$grid[] =  array(
-			'cells' => array(
-				array(
-					'type' => "td",
-					'colspan' => "2",
-					'value' => $submit->item(""),
-				),
-			)
-		);
+
+		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "4", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of banks')).': '.$bank_number)));
 		return $grid;
 	}
-	
+
+	function add_bank() {
+		$bank = new Bank();
+		return '<div id=\'add_bank\'>'.$bank->show_form_add().ucfirst(__('add new bank')).'</div>';
+	}
+
 	function grid() {
 		return $this->grid_header() + $this->grid_body();
 	}
@@ -102,9 +127,36 @@ class Banks extends Collector  {
 		return $html_table->show();
 	}
 	
+	function display() {
+		return "<div id=\"table_banks\">".$this->show_form()."</div>";
+	}
+
 	function show_form() {
-		return "<div id=\"edit_banks\"><form method=\"post\" name=\"banks_id\" action=\"\" enctype=\"multipart/form-data\">".
-				$this->show()."</form></div>";
+
+		$options = array(
+			"none" => "--",
+			"delete" => ucfirst(__('delete')),
+		);
+		$select = new Html_Select("action", $options, "none");
+		$select->properties = array(
+				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
+		$submit = new Html_Input("submit", __('ok'), "submit");
+
+		return "<div id=\"edit_banks\"><form method=\"post\" id=\"form_banks\"  name=\"banks_id\" action=\"\" enctype=\"multipart/form-data\">".
+				$this->show().$checkbox->input().$select->item("").$submit->input()."</form></div>";
+	}
+
+	function show_select($name) {
+	  $this->select();
+	  $array = array(0 => '--');
+	  foreach ($this->instances as $instance) {
+	    $array[$instance->id] = $instance->name;
+	  }
+
+	  $select = new Html_Select($name,$array);
+	  return $select->selectbox() ;
 	}
 	
 	function get_id_from_name($name) {
@@ -116,5 +168,11 @@ class Banks extends Collector  {
 			}
 		}
 		return $id;
+	}
+	
+
+	function get_instances()
+	{
+	  return $this->instances;
 	}
 }

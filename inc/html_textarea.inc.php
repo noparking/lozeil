@@ -1,12 +1,5 @@
 <?php
-/*
-	opentime
-	$Author: manon.polle $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/html_textarea.inc.php $
-	$Revision: 5452 $
-
-	Copyright (C) No Parking 2011 - 2011
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Textarea {
 	public $name = '';

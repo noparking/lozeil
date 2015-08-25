@@ -1,12 +1,6 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: svn://svn.noparking.net/var/repos/opentime/tests/inc/simpletest_table_tester.php $
-	$Revision: 5145 $
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-	Copyright (C) No Parking 2013 - 2013
-*/
 
 class RecordExistsExpectation extends SimpleExpectation {
 	private $table = "";
@@ -132,6 +126,7 @@ class TableHasSizeExpectation extends SimpleExpectation {
 
 abstract class TableTestCase extends UnitTestCase {
 	protected $db = null;
+	protected $tables = null;
 	protected $backups = array();
 
 	function __construct($label = false, db $db = null) {
@@ -140,6 +135,8 @@ abstract class TableTestCase extends UnitTestCase {
 			$db = new db();
 		}
 		$this->db = $db;
+		$this->tables = Plugins::factory("Database_Tables", $GLOBALS['param']['locale_lang']);
+		$this->tables->prepare();
 	}
 
 	function initializeTables() {
@@ -149,34 +146,21 @@ abstract class TableTestCase extends UnitTestCase {
 			$this->initializeTable($table);
 		}
 	}
-	
+
 	function initializeTable($table) {
 		$this->db->query("DROP TABLE IF EXISTS ".$table);
-		
-		$directory = dirname(__FILE__)."/../../";
-		
-                if (is_dir($directory)) {
-                        foreach (new directoryIterator($directory) as $node) {
-                                if (substr($node->getFilename(), 0, 1) != "." and $node->isDir()) {
-                                        $path = $node->getPathname()."/content.sql.php";
-                                        if (file_exists($path)) {
-                                                require $path;
-                                        }
-                                }
-                        }
-                }
-		$this->db->initialize($queries[$table]);
+		$this->tables->install($table);
 	}
 
 	function assertTableHasSize($table, $size) {
-		$this->assert(new TableHasSizeExpectation($table, $size), $this->db->value_exists("SELECT COUNT(*) FROM ". $table));
+		$this->assert(new TableHasSizeExpectation($table, $size), $this->db->value("SELECT COUNT(*) FROM ". $table));
 	}
 
 	function assertRecordsExists($table, array $records) {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
 		foreach ($records as $record) {
-			$this->assert(new RecordExistsExpectation($table, $record), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+			$this->assert(new RecordExistsExpectation($table, $record), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 		}
 	}
 
@@ -184,27 +168,27 @@ abstract class TableTestCase extends UnitTestCase {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
 		foreach ($records as $record) {
-			$this->assert(new RecordNotExistsExpectation($table, $record), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+			$this->assert(new RecordNotExistsExpectation($table, $record), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 		}
 	}
 
 	function assertRecordExists($table, array $record) {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
-		$this->assert(new RecordExistsExpectation($table, $record), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+		$this->assert(new RecordExistsExpectation($table, $record), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 	}
 
 	function assertRecordNotExists($table, array $record) {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
-		$this->assert(new RecordNotExistsExpectation($table, $record), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+		$this->assert(new RecordNotExistsExpectation($table, $record), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 	}
 
 	function assertRecordsNotDuplicate($table, array $records) {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
 		foreach ($records as $record) {
-			$this->assert(new RecordNotDuplicateExpectation($table, $record), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+			$this->assert(new RecordNotDuplicateExpectation($table, $record), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 		}
 	}
 
@@ -212,13 +196,13 @@ abstract class TableTestCase extends UnitTestCase {
 		$query = "SELECT COUNT(*) FROM ". $table." WHERE ";
 
 		foreach ($records as $record) {
-			$this->assert(new CountRecordExpectation($table, $record, $count), $this->db->value_exists($query.join(" AND ", $this->getWhere($record))));
+			$this->assert(new CountRecordExpectation($table, $record, $count), $this->db->value($query.join(" AND ", $this->getWhere($record))));
 		}
 	}
 
 	function assertSameTable($table, $records) {
 		$recordSize = sizeof($records);
-		$tableSize = $this->db->value_exists("SELECT COUNT(*) FROM ". $table);
+		$tableSize = $this->db->value("SELECT COUNT(*) FROM ". $table);
 
 		if ($recordSize != $tableSize) {
 			$this->assert(new TableHasSizeExpectation($table, $recordSize), $tableSize);

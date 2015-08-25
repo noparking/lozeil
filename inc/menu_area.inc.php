@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author:  $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 class Menu_Area {
 	public $header = "";
@@ -18,66 +11,128 @@ class Menu_Area {
 
 	function __construct() {
 		$this->img_src = $GLOBALS['config']['layout_mediaserver'].$this->img_src;
-	}
-
-	function show() {
-		$content = "<div class=\"menu\"><div class=\"menu_header\">";
-		if (!empty($this->header)) {
-			$content .= "<div id=\"menu_header_balance\">".$this->header."</div>";
-		}
-		if (!empty($this->img_src)) {
-			$content .= "<div id=\"menu_header_logo\"><img ".(!$this->img_width ? "" : " width=\"".$this->img_width."\"").(!$this->img_height ? "" : " height=\"".$this->img_height."\"")." src=\"".$this->img_src."\"></div>";
-		}
-		$content .= "<div id=\"menu_header_logout\">".Html_Tag::a(link_content("content=logout.php"),__('logout'))."</div>";
-		$content .= "</div><div class=\"menu_actions\">";
-		if (!empty($this->actions)) {
-			$content .= $this->actions;
-		}
-		$content .= "</div>";
-		if (!empty($this->handle)) {
-			$content .= "<div class=\"menu_handle hide\">".$this->handle."</div>";
-		}
-		$content .= "</div>";
-		return $content;
-	}
-	
-	function prepare_navigation() {
+		
 		$writings = new Writings();
 		$writings->filter_with(array('stop' => time()));
 		$writings->select_columns('amount_inc_vat');
 		$writings->select();
-		$this->header = $writings->show_balance_on_current_date();
-
-		$data = new Writings_Data_File();
-		$grid = array(
-			'leaves' => array (
-				array(
-					'value' => Html_tag::a(link_content("content=writings.php"), utf8_ucfirst(__("consult balance sheet")))
-				),
-				array(
-					'value' => Html_tag::a(link_content("content=followupwritings.php"), utf8_ucfirst(__("consult statistics")))
-				),
-				array(
-					'value' => Html_tag::a(link_content("content=writingssimulations.php"), utf8_ucfirst(__("make a simulation")))
-				),
-				array(
-					'value' => utf8_ucfirst(__("manage the"))." ".
-							   Html_tag::a(link_content("content=categories.php"), __("categories")).", ".
-							   Html_tag::a(link_content("content=sources.php"), __("sources")).", ".
-							   Html_tag::a(link_content("content=banks.php"), __("banks"))
-				),
-				array(
-					'value' => $data->form_import()
-				),
-				array(
-					'value' =>  "<a id=\"menu_actions_export_label\" href=\"\">".utf8_ucfirst(__("export writings"))."</a>".$data->form_export()
-				)
-			)
-		);	
-
-		$list = new Html_List($grid);
-		$this->actions = $list->show();
-
+		$this->header = $writings->display_balance_on_current_date();
+		
 		$this->handle = "<span id=\"menu_handle_hide\">".utf8_ucfirst(__("more"))."</span><span id=\"menu_handle_show\">".utf8_ucfirst(__('less'))."</span>";
+	}
+	
+	function show() {
+		$liste_menu = $this->grid_navigation();
+		$plug = $this->grid_other_actions();
+		foreach($plug as $p) {
+			$liste_menu[] = $p;
+		}
+		
+		$account = isset($GLOBALS['authenticated_user']) ? $GLOBALS['authenticated_user']->name : $GLOBALS['config']['account'];
+
+		$layout_logged_in_as = "<div id=\"layout_logged_in_as\"><p>".__('logged in as').": <strong>".$account."</strong> | ".Html_Tag::a(link_content("content=logout.php"),__('log out'))."</p></div>";
+		$level0 = "<header><div id=\"menu\" class=\"default\"><div class=\"level_0 clearfix\"><ul>";
+		$level1 = "<div class=\"level_1\" > <ul style=\"width: 1000px;\">";
+		$page = isset($_GET['content']) && !empty($_GET['content'])?($_GET['content']):"users.php";
+		foreach($liste_menu  as $cat) {
+			$title = $cat['title'];
+			$souscat = $cat['categorie'];
+			
+			if (in_array($page , $souscat) ) {
+				$level0 .= "<li class=\"selected\"><a href=\"".link_content("content=".$this->firstinarray($souscat))." \" >".$title."</a></li>";	
+				foreach($souscat as $nom => $lien)
+				{
+					if ($page == $lien )
+						$level1 .= "<li class=\"selected\"><a href=\"".link_content("content=".$lien)."\" >".$nom."</a></li>";
+					else
+						$level1 .= "<li><a href=\"".link_content("content=".$lien)."\" >".$nom."</a></li>";
+				}
+				$level1 .= "</ul></div></div></header>";
+			}
+			else {
+				$level0 .= "<li><a href=\"".link_content("content=".$this->firstinarray($souscat))." \" >".$title."</a></li>";
+			}
+		}
+
+		$level0 .= "</ul><a href=\"index.php\"><img  class=\"logo_menu_image\" width=\"128\" height=\"30\" src=\"".$GLOBALS['config']['layout_mediaserver']."medias/images/logo-menu.png\" alt=\"Lozeil - logiciel web de gestion de trésorerie\"></img></a></div>";
+		return $layout_logged_in_as.$level0.$level1;
+	}
+	
+	function firstinarray($array) {
+		foreach($array as $value) {
+			return $value;
+		}
+	}
+	
+	function grid_other_actions() {
+		$grid = array();				
+		return $grid;
+	}
+	
+	function show_grid_other_actions() {
+		$list = new Html_List($this->grid_other_actions());
+		return $list->show();
+	}
+	
+	function grid_navigation() {
+		(isset($GLOBALS['param']['ext_treasury']) && $GLOBALS['param']['ext_treasury'] == "1") ? $ext_treasury = true : $ext_treasury = false;
+		(isset($GLOBALS['param']['ext_simulation']) && $GLOBALS['param']['ext_simulation'] == "1") ? $ext_simulation = true : $ext_simulation = false;
+		(isset($GLOBALS['param']['ext_account_custom_result']) && $GLOBALS['param']['ext_account_custom_result'] == "1") ? $ext_account_custom_result = true : $ext_account_custom_result = false;
+
+		$treasury = array(
+			ucwords(__("detail")) => "writings.php",
+			ucwords(__("import")) => "writingsimport.php",
+			ucwords(__("export")) => "writingsexport.php",
+			ucwords(__("stats")) => "followupwritings.php"
+		);
+
+		$simulation = array(
+			ucwords(__("detail")) => "writingssimulations.php",
+		);
+
+		$account_custom_result = array(
+			ucwords(__("import")) => "balancesimport.php",
+			ucwords(__("balance")) => "balances.php",
+			ucwords(__("income statement")) => "balancesdetail.php",
+			ucwords(__("customisation")) => "balancescustom.php",
+			ucwords(__("export")) => "balancesexport.php"
+		);
+
+		$configuration = array(
+			ucwords(__("account")) => "account.php",
+			ucwords(__("users")) => "users.php",
+			ucwords(__("categories")) => "categories.php",
+			ucwords(__("banks")) => "banks.php",
+			ucwords(__("sources")) => "sources.php",
+		);
+		
+		if(isset($_SESSION['accountant_view']) and $_SESSION['accountant_view'] == "1" ) {
+			$configuration[ucwords(__("activities"))] = "activities.php";
+			$configuration[ucwords(__("models"))] = "models.php";
+			$configuration[ucwords(__("accounting plan"))] = "accountingplan.php";
+		}
+
+		$grid = array();
+		if ($ext_treasury === true) {
+			$grid[] = array('title' => ucfirst(__("treasury")), 'categorie' => $treasury);
+		}
+		if ($ext_simulation === true) {
+			$grid[] = array('title' => ucfirst(__("simulation")), 'categorie' => $simulation);
+		}
+		if ($ext_account_custom_result === true) {
+			$grid[] = array('title' => ucfirst(__("account custom result")), 'categorie' => $account_custom_result);
+		}
+		$grid[] = array('title' => ucfirst(__("configuration")), 'categorie' => $configuration);
+		return $grid;
+	}
+	
+	function form_calculate_vat() {
+		$date = new Html_Input_Date("vat_date", determine_vat_date());
+		$date->img_src = "medias/images/link_calendar_white.png";
+		$submit = new Html_Input("submit_calculate_vat", __('ok'), "submit");
+		$form = "<form method=\"post\" name=\"menu_actions_other\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
+					$date->item("")." ".$submit->input()
+				."</form>";
+		return $form;
 	}
 }

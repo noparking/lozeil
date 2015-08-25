@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author:  $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -21,7 +14,7 @@ class tests_Html_Input_Date extends UnitTestCase {
 		$this->assertEqual($field->id, $name."[d]");
 		$this->assertEqual($field->img_width, 18);
 		$this->assertEqual($field->img_height, 22);
-		$this->assertEqual($field->img_src, "medias/images/link_calendar.png");
+		$this->assertEqual($field->img_src, $GLOBALS['config']['layout_mediaserver']."medias/images/link_calendar.png");
 	}
 	
 	function test_input__avec_disabled() {

@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Select {
 	public $id;
@@ -69,7 +62,11 @@ class Html_Select {
 			if ($option_key == $this->selected) {
 				$selected = " selected=\"selected\"";
 			}
-			$html .= "<option value=\"".$option_key."\"".$selected.">".$option_value."</option>\n";
+			if (!preg_match("/<\/option>$/", $option_value)) {
+				$html .= "<option value=\"".$option_key."\"".$selected.">".$option_value."</option>\n";
+			} else {
+				$html .= $option_value;
+			}
 		}
 		$html .= "</select>\n";
 

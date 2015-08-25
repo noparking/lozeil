@@ -1,21 +1,15 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
-class tests_Writings_simulations extends TableTestCase {
+class tests_Writings_Simulations extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
 			"writingssimulations"
 		);
+		$GLOBALS['param']['fiscal year begin'] = "01";
 	}
 	
 	function test_get_amounts_in_array() {
@@ -109,53 +103,110 @@ class tests_Writings_simulations extends TableTestCase {
 		$writingssimulation->display = 1;
 		$writingssimulation->save();
 		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "11";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->periodicity = "truc";
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
+		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "12";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
+		
 		$writingssimulations = new Writings_Simulations();
 		$writingssimulations->select();
 		
 		$supposed_array = array(
-			mktime(0, 0, 0, 9, 1, 2013) => array(
+			mktime(0, 0, 0, 9, 25, 2013) => array(
 				0 => '1.000000',
 				1 => '2.000000'
 			),
-			mktime(0, 0, 0, 10, 1, 2013) => array(
+			mktime(0, 0, 0, 10, 25, 2013) => array(
 				0 => '1.000000',
 				1 => '2.000000',
 				2 => '5.000000'
 			),
-			mktime(0, 0, 0, 11, 1, 2013) => array(
+			mktime(0, 0, 0, 11, 25, 2013) => array(
 				0 => '1.000000',
 				1 => '2.000000',
 				2 => '3.000000',
 				3 => '4.000000',
 				4 => '6.000000'
 			),
-			mktime(0, 0, 0, 12, 1, 2013) => array(
+			mktime(0, 0, 0, 12, 25, 2013) => array(
 				0 => '1.000000',
 				1 => '2.000000'
 			),
-			mktime(0, 0, 0, 2, 1, 2014) => array(
+			mktime(0, 0, 0, 2, 25, 2014) => array(
 				0 => '3.000000',
 				1 => '6.000000'
 			),
-			mktime(0, 0, 0, 1, 1, 2014) => array(
+			mktime(0, 0, 0, 1, 25, 2014) => array(
 				0 => '5.000000'
 			),
-			mktime(0, 0, 0, 8, 1, 2014) => array(
+			mktime(0, 0, 0, 8, 25, 2014) => array(
 				0 => '7.000000',
 				1 => '8.000000',
 				2 => '9.000000',
 				3 => '10.000000'
 			),
-			mktime(0, 0, 0, 8, 1, 2015) => array(
+			mktime(0, 0, 0, 8, 25, 2015) => array(
 				0 => '7.000000',
 				1 => '8.000000',
 				2 => '9.000000',
 				3 => '10.000000'
+			),
+			mktime(0, 0, 0, 8, 25, 2013) => array(
+				0 => '11.000000',
+				1 => '12.000000'
 			)
 		);
 		$this->assertIdentical($writingssimulations->get_amounts_in_array(), $supposed_array);
+		$this->truncateTable("writingssimulations");
+		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "12";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 10, 25, 2013);
+		$writingssimulation->evolution = "linear:12";
+		$writingssimulation->periodicity = "m";
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
+		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "12";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 10, 25, 2013);
+		$writingssimulation->evolution = "linear:-12";
+		$writingssimulation->periodicity = "m";
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
 		
 		
+		$writingssimulations = new Writings_Simulations();
+		$writingssimulations->select();
+		
+		$supposed_array = array(
+			mktime(0, 0, 0, 9, 25, 2013) => array(
+				0 => '12.000000',
+				1 => '12.000000'
+			),
+			mktime(0, 0, 0, 10, 25, 2013) => array(
+				0 => 24.000000,
+				1 => 0.000000
+			)
+		);
+		
+		$this->assertIdentical($writingssimulations->get_amounts_in_array(), $supposed_array);
 		$this->truncateTable("writingssimulations");
 	}
 }

@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -45,6 +38,6 @@ class tests_Sources extends TableTestCase {
 		$this->assertPattern("/première source/", $form);
 		$this->assertPattern("/deuxième source/", $form);
 		$this->assertPattern("/troisième source/", $form);
-		$this->assertPattern("/name_new/", $form);
+		$this->assertPattern("/sources/", $form);
 	}
 }

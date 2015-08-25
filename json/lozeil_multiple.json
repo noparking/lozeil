@@ -1,0 +1,257 @@
+{
+    "activities": {
+        "0": {
+            "id": "1",
+            "name": "Global",
+            "global": "1",
+            "timestamp": "1418983904"
+        },
+        "1": {
+            "id": "2",
+            "name": "Activit\u00e9 1",
+            "global": "0",
+            "timestamp": "1418983904"
+        },
+        "2": {
+            "id": "3",
+            "name": "Activit\u00e9 2",
+            "global": "0",
+            "timestamp": "1418983904"
+        }
+    },
+    "reportings": {
+        "0": {
+            "id": "29",
+            "norm": "",
+            "name": "R\u00e9sultat d'exploitation",
+            "sort": "1",
+            "reportings_id": "0",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "1": {
+            "id": "30",
+            "norm": "G",
+            "name": "Autres produits",
+            "sort": "2",
+            "reportings_id": "29",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "2": {
+            "id": "31",
+            "norm": "H",
+            "name": "Frais g\u00e9n\u00e9raux",
+            "sort": "3",
+            "reportings_id": "29",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "3": {
+            "id": "32",
+            "norm": "I",
+            "name": "Imp\u00f4ts et taxes",
+            "sort": "4",
+            "reportings_id": "29",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "4": {
+            "id": "33",
+            "norm": "J",
+            "name": "Dotation amortissement et provisions",
+            "sort": "5",
+            "reportings_id": "29",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "5": {
+            "id": "34",
+            "norm": "",
+            "name": "R\u00e9sultat",
+            "sort": "6",
+            "reportings_id": "0",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "6": {
+            "id": "35",
+            "norm": "K",
+            "name": "Charges financi\u00e8res",
+            "sort": "7",
+            "reportings_id": "34",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "7": {
+            "id": "36",
+            "norm": "L",
+            "name": "Produits financiers",
+            "sort": "8",
+            "reportings_id": "34",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "8": {
+            "id": "37",
+            "norm": "M",
+            "name": "Charges exceptionnelles",
+            "sort": "9",
+            "reportings_id": "34",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "9": {
+            "id": "38",
+            "norm": "N",
+            "name": "Produits exceptionnels",
+            "sort": "10",
+            "reportings_id": "34",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "10": {
+            "id": "39",
+            "norm": "O",
+            "name": "Imp\u00f4t soci\u00e9t\u00e9s",
+            "sort": "11",
+            "reportings_id": "34",
+            "base": "0",
+            "contents": "",
+            "activities_id": "1",
+            "timestamp": "1418983904"
+        },
+        "11": {
+            "id": "40",
+            "norm": "",
+            "name": "Marges brutes",
+            "sort": "12",
+            "reportings_id": "0",
+            "base": "1",
+            "contents": "",
+            "activities_id": "2",
+            "timestamp": "1418983904"
+        },
+        "12": {
+            "id": "41",
+            "norm": "A",
+            "name": "Chiffres d'affaires",
+            "sort": "13",
+            "reportings_id": "40",
+            "base": "0",
+            "contents": "",
+            "activities_id": "2",
+            "timestamp": "1418983904"
+        },
+        "13": {
+            "id": "42",
+            "norm": "B",
+            "name": "Charges directes",
+            "sort": "14",
+            "reportings_id": "40",
+            "base": "0",
+            "contents": "",
+            "activities_id": "2",
+            "timestamp": "1418983904"
+        },
+        "14": {
+            "id": "43",
+            "norm": "",
+            "name": "Marges sur co\u00fbt productif",
+            "sort": "15",
+            "reportings_id": "0",
+            "base": "0",
+            "contents": "",
+            "activities_id": "2",
+            "timestamp": "1418983904"
+        },
+        "15": {
+            "id": "44",
+            "norm": "C",
+            "name": "Co\u00fbt productif",
+            "sort": "16",
+            "reportings_id": "43",
+            "base": "0",
+            "contents": "",
+            "activities_id": "2",
+            "timestamp": "1418983904"
+        },
+        "16": {
+            "id": "45",
+            "norm": "",
+            "name": "Marges brutes",
+            "sort": "17",
+            "reportings_id": "0",
+            "base": "1",
+            "contents": "",
+            "activities_id": "3",
+            "timestamp": "1418983905"
+        },
+        "17": {
+            "id": "46",
+            "norm": "D",
+            "name": "Chiffres d'affaires",
+            "sort": "18",
+            "reportings_id": "45",
+            "base": "0",
+            "contents": "",
+            "activities_id": "3",
+            "timestamp": "1418983905"
+        },
+        "18": {
+            "id": "47",
+            "norm": "E",
+            "name": "Charges directes",
+            "sort": "19",
+            "reportings_id": "45",
+            "base": "0",
+            "contents": "",
+            "activities_id": "3",
+            "timestamp": "1418983905"
+        },
+        "19": {
+            "id": "48",
+            "norm": "",
+            "name": "Marges sur co\u00fbt productif",
+            "sort": "20",
+            "reportings_id": "0",
+            "base": "0",
+            "contents": "",
+            "activities_id": "3",
+            "timestamp": "1418983905"
+        },
+        "20": {
+            "id": "49",
+            "norm": "F",
+            "name": "Co\u00fbt productif",
+            "sort": "21",
+            "reportings_id": "48",
+            "base": "0",
+            "contents": "",
+            "activities_id": "3",
+            "timestamp": "1418983905"
+        }
+    },
+    "codes": {},
+    "affectations": {}
+}

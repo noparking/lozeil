@@ -1,3 +1,4 @@
+
 function getObj(id) {
 	if (document.getElementById) {
 		return document.getElementById(id);

@@ -1,14 +1,8 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/require.inc.php $
-	$Revision: 4475 $
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-	Copyright (C) No Parking 2013 - 2013
-*/
 require_once dirname(__FILE__)."/../../inc/require.inc.php";
-require_once dirname(__FILE__)."/../simpletest/autorun.php";
+require_once dirname(__FILE__)."/../libraries/simpletest/autorun.php";
 require_once dirname(__FILE__)."/simpletest_table_tester.php";
 
 session_start();
