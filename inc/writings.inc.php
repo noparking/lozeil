@@ -378,12 +378,10 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'style' => "text-align: right;",
 						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
 					),
 					array(
 						'type' => "td",
-						'style' => "text-align: right;",
 						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
 					),
 					array(
@@ -404,11 +402,11 @@ class Writings extends Collector {
 					),
 				array(
 						'type' => "th",
-						'value' => $debit." ".$GLOBALS['param']['currency'],
+						'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
 					),
 				array(
 						'type' => "th",
-						'value' => $credit." ".$GLOBALS['param']['currency'],
+						'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
 					),
 				array(
 						'type' => "th",
@@ -500,11 +498,11 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'value' => $writing->amount_inc_vat < 0 ? round($writing->amount_inc_vat, 2) : "",
+						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
 					),
 					array(
 						'type' => "td",
-						'value' => $writing->amount_inc_vat >= 0 ? round($writing->amount_inc_vat, 2) : "",
+						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
 					),
 					array(
 						'type' => "td",
@@ -525,11 +523,11 @@ class Writings extends Collector {
 					),
 				array(
 						'type' => "td",
-						'value' => round($debit, 2)." ".$GLOBALS['param']['currency'],
+						'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
 					),
 				array(
 						'type' => "td",
-						'value' => round($credit, 2)." ".$GLOBALS['param']['currency'],
+						'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
 					),
 				array(
 						'type' => "td",

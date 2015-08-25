@@ -206,8 +206,9 @@ class tests_Writings extends TableTestCase {
 		$writings->select();
 		
 		$table = $writings->show();
-		$this->assertPattern("/-100 ".$GLOBALS['param']['currency']."/", $table);
-		$this->assertPattern("/250 ".$GLOBALS['param']['currency']."/", $table);
+		$this->assertPattern("/-100.00&nbsp;".$GLOBALS['param']['currency']."/", $table);
+		$this->assertPattern("/250.00&nbsp;".$GLOBALS['param']['currency']."/", $table);
+
 		$this->assertPattern("/5.5/", $table);
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);
@@ -216,7 +217,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Autre complément d'infos/", $table);
 		$this->assertNoPattern("/e50b79ffaccc6b50d018aad432711418/", $table);
 		$this->assertPattern("/class=\"draggable/", $table);
-		$this->assertNoPattern("/<td>250.00<\/td>/", $table);
+		$this->assertNoPattern("/<td>250.00&nbsp;€<\/td>/", $table);
 		$this->assertNoPattern("/279/", $table);
 		
 		$writings = new Writings();
