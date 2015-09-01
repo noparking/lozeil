@@ -36,10 +36,9 @@ class Category extends Record {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_categories']."
 			SET name = ".$this->db->quote($this->name).",
-				vat = ".(float)$this->vat.",
-				vat_category = ".(float)$this->vat_category.",
-				timestamp = ".time()
-
+			vat = ".(float)$this->vat.",
+			vat_category = ".(int)$this->vat_category.",
+			timestamp = ".time()
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('category'));
@@ -48,12 +47,13 @@ class Category extends Record {
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_categories']." 
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_categories']." 
 			SET name = ".$this->db->quote($this->name).", 
-				vat = ".(float)$this->vat.",
-				vat_category = ".(float)$this->vat_category.",
-				timestamp = ".time()."
-				WHERE id = ".(int)$this->id
+			vat = ".(float)$this->vat.",
+			vat_category = ".(float)$this->vat_category.",
+			timestamp = ".time()."
+			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('category'));
 
