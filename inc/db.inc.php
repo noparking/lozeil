@@ -43,7 +43,7 @@ class db {
 		if ($this->link) {
 			return mysql_close($this->link);
 		} else {
-			trigger_error(mysql_error(), E_USER_ERROR );
+			trigger_error(mysql_error(), E_USER_ERROR);
 		}
 	}
 	
@@ -53,19 +53,17 @@ class db {
 	}
 	
 	function query($query) {
-		if (! $this->link) {
-			trigger_error(mysql_error(), E_USER_ERROR );
+		if (!$this->link) {
+			trigger_error(mysql_error(), E_USER_ERROR);
 		} else {
 			self::log($query);
-			
-			$result = mysql_query($query,$this->link );
-			
+			$result = mysql_query($query, $this->link);
 			if ($result === false) {
-				$this->query_error($query );
+				$this->query_error($query);
 			} else {
 				return array(
-						$result,
-						(is_resource($result)?mysql_num_rows($result):mysql_affected_rows($this->link)) 
+					$result,
+					(is_resource($result) ? mysql_num_rows($result) : mysql_affected_rows($this->link)) 
 				);
 			}
 		}
@@ -73,7 +71,6 @@ class db {
 	
 	function num_rows($query) {
 		$result = $this->query($query);
-		
 		return $result[1];
 	}
 	
@@ -128,20 +125,16 @@ class db {
 	
 	function query_error($query) {
 		$backtraces = "";
-		
 		$level = 0;
-		
-		foreach (array_reverse(array_slice(debug_backtrace(),1)) as $backtrace ) {
+		foreach (array_reverse(array_slice(debug_backtrace(), 1)) as $backtrace ) {
 			$backtraces .= '['.$level.'] File '.(isset($backtrace['file']) == false?'unknown':$backtrace['file']).', line '.(isset( $backtrace['line']) == false?'unknown':$backtrace['line']);
-			
 			if (isset($backtrace['function'] ) == true) {
 				$backtraces .= ', '.(isset($backtrace['class']) == false?'':$backtrace['class'].'::').$backtrace['function'].'()';
 			}
 			$backtraces .= "\n";
-			$level ++;
+			$level++;
 		}
-		
-		trigger_error($backtraces."MySQL Error : ".mysql_error()." -- with query : ".substr($query,0,500),E_USER_WARNING);
+		trigger_error($backtraces."MySQL Error : ".mysql_error()." -- with query : ".substr($query, 0, 500), E_USER_WARNING);
 	}
 	
 	function status($result_id, $type, $record = "") {
