@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2015 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -7,8 +7,10 @@ class tests_Category extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"writings",
-			"categories"
+			"banks",
+			"categories",
+			"sources",
+			"writings"
 		);
 	}
 	
