@@ -71,10 +71,10 @@ class Database_Tables {
 		if ($table == null) {
 			$queries = array();
 			foreach ($this->elements as $table => $element) {
-				$queries[] = "DROP TABLE ".$table;
+				$queries[] = "DROP TABLE IF EXISTS ".$table;
 			}
 		} elseif (isset($this->elements[$table])) {
-			$queries = "DROP TABLE ".$table;
+			$queries = "DROP TABLE IF EXISTS ".$table;
 		}
 		
 		if ($queries != null) {
