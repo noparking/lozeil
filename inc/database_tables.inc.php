@@ -65,4 +65,20 @@ class Database_Tables {
 			$this->db->initialize($queries);
 		}
 	}
+	
+	function uninstall($table = null) {
+		$queries = null;
+		if ($table == null) {
+			$queries = array();
+			foreach ($this->elements as $table => $element) {
+				$queries[] = "DROP TABLE ".$table;
+			}
+		} elseif (isset($this->elements[$table])) {
+			$queries = "DROP TABLE ".$table;
+		}
+		
+		if ($queries != null) {
+			$this->db->initialize($queries);
+		}
+	}
 }
