@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2015 */
 
 class Import_Data {
 	public $file_name = "";
