@@ -36,8 +36,18 @@ class User_Authentication {
 	}
 	
 	function form() {
+		if (isset($GLOBALS['config']['root_url']) and !empty($GLOBALS['config']['root_url'])) {
+			$action = rtrim($GLOBALS['config']['root_url'], "/")."/";
+			
+			if (!empty($_SERVER['QUERY_STRING'])) {
+				$action .= "?".$_SERVER['QUERY_STRING'];
+			}
+		} else {
+			$action = "";
+		}
+
 		$items = new Html_List(array('leaves' => $this->form_grid(), 'class' => "itemsform itemsform-login"));
-		return "<center><form method=\"post\" action=\"\" name=\"form_login\">".$items->show()."</form></center>";
+		return "<center><form method=\"post\" action=\"".$action."\" name=\"form_login\">".$items->show()."</form></center>";
 	}
 	
 	function form_no_password_request() {
