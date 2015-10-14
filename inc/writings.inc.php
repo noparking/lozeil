@@ -1110,7 +1110,7 @@ class Writings extends Collector {
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		
 		foreach($balance as $id => $category) {
-			$timestamp_start = $timestamp;
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if (!isset($category[$timestamp_start])) {
@@ -1140,7 +1140,7 @@ class Writings extends Collector {
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		
 		foreach($balance as $id => $bank) {
-			$timestamp_start = determine_first_day_of_year($timestamp);
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if (!isset($bank[$timestamp_start])) {
@@ -1202,9 +1202,9 @@ class Writings extends Collector {
 		}
 		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
-		
+
 		foreach($balance as $id => $category) {
-			$timestamp_start = determine_first_day_of_year($timestamp);
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous_month = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if ($previous_month != date('m', $timestamp_start)) {
@@ -1239,7 +1239,7 @@ class Writings extends Collector {
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		
 		foreach($balance as $id => $bank) {
-			$timestamp_start = determine_first_day_of_year($timestamp);
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous_month = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if ($previous_month != date('m', $timestamp_start)) {
@@ -1274,7 +1274,7 @@ class Writings extends Collector {
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		
 		foreach($balance as $id => $bank) {
-			$timestamp_start = determine_first_day_of_year($timestamp);
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous_month = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if ($previous_month != date('W', $timestamp_start)) {
@@ -1292,9 +1292,8 @@ class Writings extends Collector {
 			ksort($bank);
 			$balance[$id] = $bank;
 		}
-		
+
 		ksort($balance);
-		
 		return $balance;
 	}
 	
@@ -1302,14 +1301,21 @@ class Writings extends Collector {
 		$balance = array();
 		
 		foreach ($this as $writing) {
-			$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day) - date('N', $writing->day) + 1, date('Y', $writing->day));
-			$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			if ((date('d', $writing->day) - date('N', $writing->day) + 1) > 0) {
+				$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day) - date('N', $writing->day) + 1, date('Y', $writing->day));
+				$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			} else {
+				$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day) - date('N', $writing->day) + 1, date('Y', $writing->day));
+				$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+				$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
+				$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			}
 		}
-		
+
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
-		
+
 		foreach($balance as $id => $category) {
-			$timestamp_start = determine_first_day_of_year($timestamp);
+			list($timestamp_start,) = determine_fiscal_year($timestamp);
 			$previous_month = 0;
 			for ($i = 0; $i < $nb_day; $i++) {
 				if ($previous_month != date('W', $timestamp_start)) {
@@ -1329,7 +1335,6 @@ class Writings extends Collector {
 		}
 		
 		ksort($balance);
-		
 		return $balance;
 	}
 	
