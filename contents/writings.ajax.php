@@ -213,7 +213,6 @@ if (isset($_REQUEST['action'])) {
 	}
 }
 
-$writings->set_limit($GLOBALS['param']['nb_max_writings']);
 $writings->filter_with($_SESSION['filter']);
 
 $writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
