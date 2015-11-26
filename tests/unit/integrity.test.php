@@ -5,42 +5,6 @@
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
-class tests_Integrity_Param extends UnitTestCase {
-	function test_number_param_default_entries() {
-		$langs = array("en_EN","fr_FR");
-		$params = array();
-
-		foreach ($langs as $lang) {
-			$this->assertTrue($p = $this->get_param_default_entries($lang));
-			$params[$lang] = $p;
-		}
-
-		$lang_ref = "fr_FR";
-		$params_ref = $params[$lang_ref];
-		foreach ($langs as $lang) {
-			if ($lang != $lang_ref) {
-				$params_lang = $params[$lang];
-				$this->assertEqual(count($params_ref), count($params_lang));
-				foreach (array_keys($params_lang) as $param_name) {
-					$this->assertTrue(in_array($param_name, array_keys($params_ref)), str_replace("%", "#", $param_name)." manquant dans param.".$lang_ref.".default.php");
-				}
-				foreach (array_keys($params_ref) as $param_name) {
-					$this->assertTrue(in_array($param_name, array_keys($params_lang)), str_replace("%", "#", $param_name)." manquant dans param.".$lang.".default.php");
-				}
-			}
-		}
-	}
-
-	function get_param_default_entries($lang) {
-		$path = dirname(__FILE__)."/../../cfg/param.".$lang.".default.php";
-		$param_file = new Config_File($path);
-
-		$values = $param_file->values();
-
-		return $values['param'];
-	}
-}
-
 class tests_Integrity_Lang extends UnitTestCase {
 	function test_number_lang_entries() {
 		$nb_fr = count($this->get_lang_entries("fr_FR"));
