@@ -14,6 +14,10 @@ class tests_Import_Balances extends TableTestCase {
 		);
 	}
 
+	function skip() {
+		$this->skipIf(!is_writable(dirname(__FILE__)."/../../var/tmp"), "Nécessite les droits d'écriture");
+	}
+
 	function tearDown() {
 		$this->truncateTable("balances");
 		$this->truncateTable("balancesimported");

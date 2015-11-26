@@ -17,6 +17,10 @@ class tests_Import_Writings extends TableTestCase {
 		);
 	}
 
+	function skip() {
+		$this->skipIf(!is_writable(dirname(__FILE__)."/../../var/tmp"), "Nécessite les droits d'écriture");
+	}
+
 	function tearDown() {
 		$this->truncateTable("writings");
 		$this->truncateTable("banks");
