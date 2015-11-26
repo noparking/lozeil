@@ -186,4 +186,141 @@ class tests_Reportings extends TableTestCase {
 
 		$this->truncateTables("activities", "accountingcodes", "accountingcodes_affectation", "balances", "balancesperiod", "reportings");
 	}
+
+	function test_show_view_body() {
+		$activity1 = new Activity();
+		$activity1->name = "activité 1";
+		$activity1->save();
+
+		$activity2 = new Activity();
+		$activity2->name = "activité 2";
+		$activity2->save();
+
+		$activity3 = new Activity();
+		$activity3->name = "global";
+		$activity3->global = 1;
+		$activity3->save();
+
+		$capital = new Reporting();
+		$capital->name = "capital";
+		$capital->activities_id = $activity1->id;
+		$capital->save();
+
+		$marge = new Reporting();
+		$marge->name = "marge";
+		$marge->activities_id = $activity2->id;
+		$marge->base = "1";
+		$marge->save();
+
+		$result = new Reporting();
+		$result->name = "result";
+		$result->activities_id = $activity3->id;
+		$result->base = "1";
+		$result->save();
+
+		$code1 = new Accounting_Code();
+		$code1->name = "code un";
+		$code1->number = "700001";
+		$code1->save();
+
+		$affectation1 = new Accounting_Code_Affectation();
+		$affectation1->accountingcodes_id = $code1->id;
+		$affectation1->reportings_id = $marge->id;
+		$affectation1->save();
+
+		$period1 = new Balance_Period();
+		$period1->start = mktime(0, 0, 0, 1, 1, 2014);
+		$period1->stop = mktime(0, 0, 0, 12, 31, 2014);
+		$period1->save();
+
+		$period2 = new Balance_Period();
+		$period2->start = mktime(0, 0, 0, 1, 1, 2015);
+		$period2->stop = mktime(0, 0, 0, 12, 31, 2015);
+		$period2->save();
+
+		$balance1 = new Balance();
+		$balance1->accountingcodes_id = $code1->id;
+		$balance1->period_id = $period2->id;
+		$balance1->amount = 150;
+		$balance1->day = time();
+		$balance1->save();
+
+		$code2 = new Accounting_Code();
+		$code2->name = "code deux";
+		$code2->number = "700002";
+		$code2->save();
+
+		$affectation2 = new Accounting_Code_Affectation();
+		$affectation2->accountingcodes_id = $code2->id;
+		$affectation2->reportings_id = $capital->id;
+		$affectation2->save();
+
+		$balance2 = new Balance();
+		$balance2->accountingcodes_id = $code2->id;
+		$balance2->period_id = $period2->id;
+		$balance2->amount = -100;
+		$balance2->day = time();
+		$balance2->save();
+
+		$balance3 = new Balance();
+		$balance3->accountingcodes_id = $code2->id;
+		$balance3->period_id = $period1->id;
+		$balance3->amount = -350;
+		$balance3->day = strtotime("-1 year", time());
+		$balance3->save();
+
+		$_SESSION['filter'] = array('start' => mktime(0, 0, 0, 1, 1, 2015), 'stop' => mktime(0, 0, 0, 12, 31, 2015));
+		$_SESSION['filter']['period'] = "variable";
+
+		$view = [];
+		$activities = new Activities();
+		$activities->add_order("global");
+		$activities->select();
+
+		$_SESSION['global_ca'] = array('n' => 0, 'n-1' => 0, 'n-2' => 0);
+		$_SESSION['global_result'] = array('n' => 0, 'n-1' => 0, 'n-2' => 0);
+
+		$reportings = new Reportings();
+		$view += $reportings->show_view_body($_SESSION['filter']['period'], $activity1, $_SESSION['filter']['start'], $_SESSION['filter']['stop']);
+
+		foreach ($view as $uniqid => $data) {
+			$view[] = $data;
+			unset($view[$uniqid]);
+		}
+
+		$this->assertEqual($view[0]['cells'][3]['value'], "-100.00&euro;");
+		$this->assertEqual($view[0]['cells'][4]['value'], "-100.00%");
+		$this->assertEqual($view[0]['cells'][5]['value'], "-350.00&euro;");
+		$this->assertEqual($view[0]['cells'][6]['value'], "-100.00%");
+		$this->assertEqual($view[0]['cells'][9]['value'], "+250.00&euro;");
+		$this->assertEqual($view[0]['cells'][10]['value'], "+71.43%");
+
+		$view = $reportings->show_view_body($_SESSION['filter']['period'], $activity2, $_SESSION['filter']['start'], $_SESSION['filter']['stop']);
+
+		foreach ($view as $uniqid => $data) {
+			$view[] = $data;
+			unset($view[$uniqid]);
+		}
+
+		$this->assertEqual($view[0]['cells'][3]['value'], "150.00&euro;");
+		$this->assertEqual($view[0]['cells'][4]['value'], "100.00%");
+		$this->assertEqual($view[0]['cells'][5]['value'], "0.00&euro;");
+		$this->assertEqual($view[0]['cells'][6]['value'], "0.00%");
+		$this->assertEqual($view[0]['cells'][9]['value'], "+150.00&euro;");
+		$this->assertEqual($view[0]['cells'][10]['value'], "+100.00%");
+
+		$view = $reportings->show_view_body($_SESSION['filter']['period'], $activity3, $_SESSION['filter']['start'], $_SESSION['filter']['stop']);
+
+		foreach ($view as $uniqid => $data) {
+			$view[] = $data;
+			unset($view[$uniqid]);
+		}
+
+		$this->assertEqual($view[0]['cells'][3]['value'], "150.00&euro;");
+		$this->assertEqual($view[0]['cells'][4]['value'], "100%");
+		$this->assertEqual($view[0]['cells'][5]['value'], "0.00&euro;");
+		$this->assertEqual($view[0]['cells'][6]['value'], "100%");
+		$this->assertEqual($view[0]['cells'][9]['value'], "+150.00&euro;");
+		$this->assertEqual($view[0]['cells'][10]['value'], "+100.00%");
+	}
 }

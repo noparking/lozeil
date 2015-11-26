@@ -665,12 +665,28 @@ class Reportings extends Collector {
 		$periods = $this->get_periods($start, $stop);
 
 		if ($activity->global == 1 and count($activities) > 1) {
-			$previous_amount = array('n' => $_SESSION['global_result']['n'], 'n-1' => $_SESSION['global_result']['n-1'], 'n-2' => $_SESSION['global_result']['n-2']);
-			$amount_base = array('n' => $_SESSION['global_ca']['n'], 'n-1' => $_SESSION['global_ca']['n-1'], 'n-2' => $_SESSION['global_ca']['n-2']);
+			$previous_amount = [
+				'n' => $_SESSION['global_result']['n'],
+				'n-1' => $_SESSION['global_result']['n-1'],
+				'n-2' => $_SESSION['global_result']['n-2'],
+			];
+			$amount_base = [
+				'n' => $_SESSION['global_ca']['n'],
+				'n-1' => $_SESSION['global_ca']['n-1'],
+				'n-2' => $_SESSION['global_ca']['n-2'],
+			];
 			$form[uniqid()] = $this->show_view_global($period_option, $start, $stop);
 		} else {
-			$previous_amount = array('n' => "", 'n-1' => "", 'n-2' => "");
-			$amount_base = array('n' => "", 'n-1' => "", 'n-2' => "");
+			$previous_amount = [
+				'n' => "",
+				'n-1' => "",
+				'n-2' => ""
+			];
+			$amount_base = [
+				'n' => "",
+				'n-1' => "",
+				'n-2' => ""
+			];
 		}
 
 		foreach ($grid as $id => $data) {
@@ -691,7 +707,9 @@ class Reportings extends Collector {
 				$class = "base_reporting";
 			}
 
-			if ($data['level'] == 0) {
+			$sum = $amount['n'] + $amount['n-1'] + $amount['n-2'] + $amount['ecart'] + $amount['ecart2'];
+
+			if ($data['level'] == 0 and $sum == 0) {
 				$_SESSION['global_result']['n'] += $amount['n'];
 				$_SESSION['global_result']['n-1'] += $amount['n-1'];
 				$_SESSION['global_result']['n-2'] += $amount['n-2'];
@@ -702,10 +720,10 @@ class Reportings extends Collector {
 			}
 
 			if ($period_option == "variable") {
-				$amount['ecart'] = !$this->verify_empty_year($start, $stop) ? $amount['ecart'] = ($amount['n'] * (12 / month_from_timestamp($periods['n']->start, $periods['n']->stop))) - ($amount['n-1'] * (12 / month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop))) : "";
-				$amount['ecart2'] = !$this->verify_empty_year(strtotime("-1 year", $start), strtotime("-1 year", $stop)) ? $amount['ecart2'] = ($amount['n-1'] * (12 / month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop))) - ($amount['n-2'] * (12 / month_from_timestamp($periods['n-2']->start, $periods['n-2']->stop))): "";
+				$amount['ecart'] = !$this->verify_empty_year($start, $stop) ? ($amount['n'] * (12 / month_from_timestamp($periods['n']->start, $periods['n']->stop))) - ($amount['n-1'] * (12 / month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop))) : "";
+				$amount['ecart2'] = !$this->verify_empty_year(strtotime("-1 year", $start), strtotime("-1 year", $stop)) ? ($amount['n-1'] * (12 / month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop))) - ($amount['n-2'] * (12 / month_from_timestamp($periods['n-2']->start, $periods['n-2']->stop))): "";
 			} else {
-				$amount['ecart'] = !$this->verify_empty_year($start, $stop) ? $amount['ecart'] = $amount['n'] - $amount['n-1'] : "";
+				$amount['ecart'] = !$this->verify_empty_year($start, $stop) ? ($amount['n'] - $amount['n-1']) : "";
 				$amount['ecart2'] = !$this->verify_empty_year(strtotime("-1 year", $start), strtotime("-1 year", $stop)) ? $amount['ecart2'] = $amount['n-1'] - $amount['n-2'] : "";
 			}
 
