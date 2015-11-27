@@ -84,6 +84,8 @@ $(document).ready(function() {
 		);
 		return false;
 	})
+
+	.on("change", ".li-clone", Li_clone)
 });
 
 (function($) {
@@ -166,4 +168,21 @@ function changeColorLine(){
 	timercolor = setTimeout(function(){
 		$('#balance tr.modified').removeClass('modified');
 	},6000);
+};
+
+
+var li_clone_index = 1;
+
+function Li_clone() {
+	var hide_label = true;
+	var parent_li = $(this).closest("li");
+	var cloned_li = parent_li.clone();
+	var html = cloned_li.html().replace(/new/g, "new" + li_clone_index);
+	cloned_li.html(html);
+	parent_li.after(cloned_li);
+	if (hide_label) {
+		cloned_li.find("label").css("visibility", "collapse");
+	}
+	$(this).removeClass("li-clone");
+	li_clone_index = (parseInt(li_clone_index) + 1);
 };

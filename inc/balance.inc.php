@@ -398,6 +398,7 @@ class Balance extends Record {
 		$input_hidden_action = new Html_Input("action", "split");
 		$input_value = new Html_Input("table_balances_split_amount[new]", "", "number");
 		$input_value_clone = new Html_Input("table_balances_split_amount[new0]", "", "number");
+		$input_value_clone->properties['class'] = "li-clone";
 		$submit = new Html_Input("table_balances_split_submit", utf8_ucfirst(__('save')), "submit");
 
 		$grid = array(
