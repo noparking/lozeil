@@ -51,6 +51,8 @@ class Database_Tables_Source {
 				number VARCHAR(100),
 				accountingcodes_id INT(11),
 				period_id INT(11),
+				split TINYINT(4),
+				parent_id INT(11),
 				timestamp INT(11),
 				PRIMARY KEY (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"

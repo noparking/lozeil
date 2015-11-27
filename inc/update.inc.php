@@ -12,6 +12,11 @@ class Update extends Updater {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 
+	function to_50() {
+		$this->db->query("ALTER TABLE `balances` ADD `split` TINYINT(4) NOT NULL DEFAULT '0';");
+		$this->db->query("ALTER TABLE `balances` ADD `parent_id` INT(11) NOT NULL DEFAULT '0';");
+	}
+
 	function to_49() {
 		$this->db->query("ALTER TABLE `accountingcodes_ratio` RENAME TO `accountingcodes_affectation`;");
 		$this->db->query("ALTER TABLE `accountingcodes_affectation` DROP `ratio`;");

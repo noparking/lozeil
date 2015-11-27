@@ -49,6 +49,30 @@ class tests_Balance extends TableTestCase {
 		$this->truncateTable("balances");
 	}
 
+	function test_delete__split() {
+		$amounts = array(10);
+
+		$balance = new Balance();
+		$balance->number = "60410000";
+		$balance->amount = 150;
+		$balance->name = "Sous-traitance";
+		$balance->period_id = 42;
+		$balance->save();
+
+		$balance->split($amounts, "amount");
+
+		$this->assertRecordExists("accountingcodes", array('number' => "96041000", 'name' => "Sous-traitance (split 1)"));
+		$this->assertRecordExists("balances", array('number' => "96041000", 'amount' => 10, 'name' => "Sous-traitance (split 1)", 'period_id' => 42));
+
+		$balance->load(array('id' => 2));
+		$balance->delete();
+
+		$this->assertRecordNotExists("balances", array('number' => "96041000", 'amount' => 10, 'name' => "Sous-traitance (split 1)", 'period_id' => 42));
+		$this->assertRecordNotExists("accountingcodes", array('number' => "96041000", 'name' => "Sous-traitance (split 1)"));
+
+		$this->truncateTables("balances", "accountingcodes_affectation", "accountingcodes");
+	}
+
 	function test_split() {
 		$amounts = array(10, 20, 30, 40);
 
@@ -78,7 +102,7 @@ class tests_Balance extends TableTestCase {
 		$balance->split($amounts, "ratio");
 
 		$this->assertRecordExists("accountingcodes", array('number' => "96041004", 'name' => "Sous-traitance (split 1)"));
-		$this->assertRecordExists("balances", array('number' => "96041004", 'amount' => 25, 'name' => "Sous-traitance (split 1)", 'period_id' => 42));
+		$this->assertRecordExists("balances", array('number' => "96041004", 'amount' => 25, 'name' => "Sous-traitance (split 1)", 'period_id' => 42, 'split' => 1, 'parent_id' => $balance->id));
 		$this->assertEqual($balance->amount, 25);
 		
 		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");

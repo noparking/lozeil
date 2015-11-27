@@ -10,6 +10,9 @@ class Balance extends Record {
 	public $day = 0;
 	public $number = "";
 	public $timestamp = 0;
+	public $split = 0;
+	public $parent_id = 0;
+
 
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -44,6 +47,8 @@ class Balance extends Record {
 				day = ".(int)$this->day.",	
 				accountingcodes_id = ".(int)$this->accountingcodes_id.",
 				period_id = ".(int)$this->period_id.",
+				split = ".(int)$this->split.",
+				parent_id = ".(int)$this->parent_id.",
 				timestamp = ".time()."
 				WHERE id = ".(int)$this->id
 			);
@@ -62,6 +67,8 @@ class Balance extends Record {
 			day = ".(int)$this->day.",
 			accountingcodes_id = ".(int)$this->accountingcodes_id.",
 			period_id = ".(int)$this->period_id.",
+			split = ".(int)$this->split.",
+			parent_id = ".(int)$this->parent_id.",
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
@@ -72,6 +79,10 @@ class Balance extends Record {
 
 	function delete() {
 		if ($this->id > 0) {
+			if ($this->split == 1) {
+				$result = $this->db->query("DELETE FROM ".$this->db->config['table_accountingcodes']." WHERE number = '".$this->number."'");
+				$this->db->status($result[1], "d", __('line'));
+			}
 			$result = $this->db->query("DELETE FROM ".$this->db->config['table_balances']." WHERE id = '".$this->id."'");
 			$this->db->status($result[1], "d", __('line'));
 		}
@@ -130,6 +141,8 @@ class Balance extends Record {
 				$balance->day = $this->day;
 				$balance->period_id = $this->period_id;
 				$balance->number = $this->split_code($number, $j - 1);
+				$balance->split = 1;
+				$balance->parent_id = $this->id;
 
 				if (is_numeric($balance->number)) {
 					$this->amount -= $balance->amount;
@@ -499,7 +512,7 @@ class Balance extends Record {
 				if ($split_amount < 0) {
 					return false;
 				} else {
-					$sum -= abs($this->amount) * ($split_amount / 100);				
+					$sum -= abs($this->amount) * ($split_amount / 100);
 				}
 			} else {
 				if ((is_positive($this->amount) and is_negative($split_amount)) or (is_negative($this->amount) and is_positive($split_amount))) {

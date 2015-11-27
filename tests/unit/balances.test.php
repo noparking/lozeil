@@ -8,7 +8,10 @@ class tests_Balances extends TableTestCase {
 		parent::__construct();
 		$this->initializeTables(
 			"accountingcodes",
-			"balances"
+			"accountingcodes_affectation",
+			"activities",
+			"balances",
+			"reportings"
 		);
 	}
 
@@ -109,8 +112,12 @@ class tests_Balances extends TableTestCase {
 		$line1->accountingcodes_id = $code->id;
 		$line1->name = "première ligne";
 		$line1->amount = 350.500;
+		$line1->number = "60410000";
 		$line1->day = time();
 		$line1->save();
+
+		$amounts = array(10);
+		$line1->split($amounts, "amount");
 
 		$line2 = new Balance();
 		$line2->accountingcodes_id = $code->id;
@@ -126,18 +133,25 @@ class tests_Balances extends TableTestCase {
 		$balances->filter_with(array('start' => $from, 'stop' => $to));
 		$balances->select();
 
-		$this->assertEqual(count($balances), 1);
+		$this->assertEqual(count($balances), 2);
 		
 		$view = $balances->display();
 
 		$this->assertPattern("/première ligne/", $view);
-		$this->assertPattern("/350.50/", $view);
+		$this->assertNoPattern("/350.50/", $view);
+		$this->assertPattern("/340.50/", $view);
 		$this->assertPattern("/Libellé/", $view);
 		$this->assertPattern("/Activité/", $view);
 		$this->assertPattern("/Libellé 1/", $view);
+		$this->assertPattern("/<div class=\"modify show_acronym\">/", $view);
+		$this->assertPattern("/<div class=\"split show_acronym\">/", $view);
+		$this->assertPattern("/<div class=\"delete show_acronym\">/", $view);
 
 		$this->assertNoPattern("/deuxième ligne/", $view);
 		$this->assertNoPattern("/-350.50/", $view);
+
+		$this->assertPattern("/première ligne \(split 1\)/", $view);
+		$this->assertPattern("/10.00/", $view);
 
 		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");
 	}

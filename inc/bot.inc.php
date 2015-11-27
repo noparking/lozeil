@@ -100,16 +100,16 @@ class Bot {
 	
 	function update() {
 		$this->log(__( "Start updating Lozeil" ));
-		$this->update_git();
+		$this->update_svn();
 		$this->update_lozeil();
 		$this->log(__("Finish updating Lozeil"));
 		return true;
 	}
 	
-	function update_git() {
-		$this->log(__("Start updating GIT"));
-		$result = exec("git pull origin master");
-		$this->log(__("Finish updating GIT"));
+	function update_svn() {
+		$this->log(__("Start updating SVN"));
+		$result = exec("svn up");
+		$this->log(__("Finish updating SVN"));
 		return $result;
 	}
 	

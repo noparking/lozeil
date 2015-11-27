@@ -256,12 +256,20 @@ class Balances extends Collector  {
 						'type' => "td",
 						'value' => date("d-m-Y", $balance->day)
 						),
-					array(
-						'class' => "op",
-						'type' => "td",
-						'value' => $balance->get_form_modify().$balance->get_form_split().$balance->get_form_delete()
-						)
-					));
+				));
+			if ($balance->split != 1) {
+				$grid[$id]['cells'][] = array(
+					'class' => "op",
+					'type' => "td",
+					'value' => $balance->get_form_modify() . $balance->get_form_split() . $balance->get_form_delete(),
+				);
+			} else {
+				$grid[$id]['cells'][] = array(
+					'class' => "op",
+					'type' => "td",
+					'value' => $balance->get_form_modify().$balance->get_form_delete(),
+				);
+			}
 		}
 		return $grid;
 	}
