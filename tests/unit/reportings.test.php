@@ -230,7 +230,7 @@ class tests_Reportings extends TableTestCase {
 
 		$period1 = new Balance_Period();
 		$period1->start = mktime(0, 0, 0, 1, 1, 2014);
-		$period1->stop = mktime(0, 0, 0, 12, 31, 2014);
+		$period1->stop = mktime(0, 0, 0, 6, 31, 2014);
 		$period1->save();
 
 		$period2 = new Balance_Period();
@@ -290,10 +290,10 @@ class tests_Reportings extends TableTestCase {
 
 		$this->assertEqual($view[0]['cells'][3]['value'], "-100.00&euro;");
 		$this->assertEqual($view[0]['cells'][4]['value'], "-100.00%");
-		$this->assertEqual($view[0]['cells'][5]['value'], "-350.00&euro;");
+		$this->assertEqual($view[0]['cells'][5]['value'], "-700.00&euro;");
 		$this->assertEqual($view[0]['cells'][6]['value'], "-100.00%");
-		$this->assertEqual($view[0]['cells'][9]['value'], "+250.00&euro;");
-		$this->assertEqual($view[0]['cells'][10]['value'], "+71.43%");
+		$this->assertEqual($view[0]['cells'][9]['value'], "+600.00&euro;");
+		$this->assertEqual($view[0]['cells'][10]['value'], "+85.71%");
 
 		$view = $reportings->show_view_body($_SESSION['filter']['period'], $activity2, $_SESSION['filter']['start'], $_SESSION['filter']['stop']);
 

@@ -727,6 +727,16 @@ class Reportings extends Collector {
 				$amount['ecart2'] = !$this->verify_empty_year(strtotime("-1 year", $start), strtotime("-1 year", $stop)) ? $amount['ecart2'] = $amount['n-1'] - $amount['n-2'] : "";
 			}
 
+			if (month_from_timestamp($periods['n']->start, $periods['n']->stop) != 0) {
+				$amount['n'] *= (12 / month_from_timestamp($periods['n']->start, $periods['n']->stop));
+			}
+			if (month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop) != 0) {
+				$amount['n-1'] *= (12 / month_from_timestamp($periods['n-1']->start, $periods['n-1']->stop));
+			}
+			if (month_from_timestamp($periods['n-2']->start, $periods['n-2']->stop) != 0) {
+				$amount['n-2'] *= (12 / month_from_timestamp($periods['n-2']->start, $periods['n-2']->stop));
+			}
+
 			$ratio = array(
 				'n' => pourcentage($amount['n'], abs($amount_base['n']), 3),
 				'n-1' => pourcentage($amount['n-1'], abs($amount_base['n-1']), 3),
