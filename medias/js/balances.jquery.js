@@ -3,7 +3,7 @@ $(document).ready(function() {
 	show_search();
 
 	$("body")
-	.on("submit", "form[name=\"form_balance\"], form[name=\"table_balances_modify\"], form[name=\"table_balances_split\"], form[name=\"table_balances_add\"]", function() {
+	.on("submit", "form[name=\"form_balance\"], form[name=\"table_balances_modify\"], form[name=\"table_balances_split\"], form[name=\"table_balances_merge\"], form[name=\"table_balances_add\"]", function() {
 		$.colorbox.close();
 		action = $(this).find("input[name=action]").attr("value");
 		$.post(
@@ -67,6 +67,10 @@ $(document).ready(function() {
 	})
 
 	.on("keyup change", "form[name=\"table_balances_split\"] li input", function() {
+		$(this).myfunction();
+	})
+
+	.on("keyup change", "form[name=\"table_balances_merge\"] li input", function() {
 		$(this).myfunction();
 	})
 
@@ -135,12 +139,25 @@ function form_insert(id) {
 function form_split(id) {
 	var donnee = {balance_id: id, action: "form_split"};
 	$.post(
-		"index.php?content=balances.ajax.php",
-		donnee,
-		function(data) {
-			var result = jQuery.parseJSON(data);
-			$.colorbox({html: result.data});
-		}
+			"index.php?content=balances.ajax.php",
+			donnee,
+			function(data) {
+				var result = jQuery.parseJSON(data);
+				$.colorbox({html: result.data});
+			}
+	);
+	return false;
+}
+
+function form_merge(id) {
+	var donnee = {balance_id: id, action: "form_merge"};
+	$.post(
+			"index.php?content=balances.ajax.php",
+			donnee,
+			function(data) {
+				var result = jQuery.parseJSON(data);
+				$.colorbox({html: result.data});
+			}
 	);
 	return false;
 }

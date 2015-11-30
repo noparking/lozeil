@@ -151,6 +151,7 @@ class tests_Balances extends TableTestCase {
 		$this->assertNoPattern("/-350.50/", $view);
 
 		$this->assertPattern("/première ligne \(split 1\)/", $view);
+		$this->assertPattern("/<div class=\"merge show_acronym\">/", $view);
 		$this->assertPattern("/10.00/", $view);
 
 		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");

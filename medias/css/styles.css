@@ -429,6 +429,7 @@ textarea #information {
 .modify,
 .delete,
 .split,
+.merge,
 .duplicate,
 .reset,
 .view {
@@ -505,6 +506,7 @@ textarea #information {
 .delete_reporting,
 .delete_accounting,
 .split_balance,
+.merge_balance,
 .delete_balance {
 	display:none;
 }
@@ -513,6 +515,7 @@ tr:hover .add_reporting,
 tr:hover .delete_reporting,
 tr:hover .delete_accounting,
 tr:hover .split_balance,
+tr:hover .merge_balance,
 tr:hover .delete_balance {
 	display:inline;
 }
@@ -1349,6 +1352,16 @@ td.operations {
 	border: 0;
 	width: 18px;
 	height: 18px;
+}
+
+.balance_merge {
+	background: url('../images/arrow_merge.png') no-repeat scroll 0% 0% / 18px auto  transparent;
+	cursor: pointer;
+	border: 0;
+	width: 18px;
+	height: 18px;
+	position: relative;
+	top: 2px;
 }
 
 .del {

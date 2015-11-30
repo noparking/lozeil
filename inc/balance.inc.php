@@ -173,9 +173,56 @@ class Balance extends Record {
 				$j++;
 			}
 		}
-		
-		$this->save();
+		if ($this->amount != 0) {
+			$this->save();
+		} else {
+			$this->delete();
+		}
 		return $this->id;
+	}
+
+	function merge($accountingcodes_id) {
+		$balances = new Balances();
+		$balances->filter_with(array("parent_id" => $this->parent_id));
+		$balances->select();
+
+		$amount = 0;
+		foreach ($balances as $balance) {
+			$amount += $balance->amount;
+		}
+		$balance = new Balance();
+		$balance->load(array('id' => $this->parent_id));
+		$balance->name = substr($this->name, 0, strpos($this->name, "(split"));
+		$balance->amount += $amount;
+		$balance->period_id = $this->period_id;
+		$balance->day = $this->day;
+
+		$code = new Accounting_Code();
+		$code->load(array('id' => $accountingcodes_id));
+		if ($code->id != 0) {
+			$balance->number = $code->number;
+			$balance->accountingcodes_id = $accountingcodes_id;
+		} else {
+			$code->load(array('id' => $this->accountingcodes_id));
+			$balance->number = $code->number;
+			$balance->accountingcodes_id = $this->accountingcodes_id;
+		}
+		$affectation = new Accounting_Code_affectation();
+		$affectation->load(array('accountingcodes_id' => $code->id));
+
+		if ($affectation->id == 0) {
+			$affectation->accountingcodes_id = $code->id;
+		}
+		$affectation_this = new Accounting_Code_Affectation();
+		$affectation_this->load((array("accountingcodes_id" => $this->accountingcodes_id)));
+		$affectation->reportings_id = $affectation_this->reportings_id;
+		$affectation->save();
+
+		$balance->save();
+		foreach ($balances as $todelete) {
+			$todelete->delete();
+		}
+		$this->delete();
 	}
 
 	function name_already_exists() {
@@ -450,7 +497,6 @@ class Balance extends Record {
 		return $form."<div class=\"preview_changes\">".$this->preview_split()."</div>";
 	}
 
-
 	function grid_preview_split($amounts) {
 		$grid = array(
 			'lines_header' => array(
@@ -530,6 +576,59 @@ class Balance extends Record {
 		}
 	}
 
+	function form_merge() {
+		$affectation = new Accounting_Code_affectation();
+		$affectation->load(array('accountingcodes_id' => $this->accountingcodes_id));
+
+		$accountingcode = new Accounting_Code();
+		$currentcode = array();
+		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
+			$currentcode[] = $accountingcode->fullname();
+		}
+
+		$input_hidden_id = new Html_Input("balance_id", $this->id, "text");
+		$input_hidden_action = new Html_Input("action", "merge");
+		$input_number = new Html_Input_Ajax("table_balances_merge_accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
+		$submit = new Html_Input("table_balances_merge_submit", utf8_ucfirst(__('save')), "submit");
+
+		$balances = new Balances();
+		$balances->filter_with(array("parent_id" => $this->parent_id));
+		$balances->select();
+		$amount = 0;
+
+		foreach ($balances as $balance) {
+			$amount += $balance->amount;
+		}
+
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'title' => array(
+					'value' => "<h2>".ucfirst(__("merge"))."</h2>"
+				),
+				'subtitle' => array(
+					'value' => "<h3>".ucfirst(__("amount")).": ".number_adjust_format($amount).$GLOBALS['param']['currency']."</h3>",
+				),
+				'code' => array(
+					'value' => $input_number->item(__("accounting code"))
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+			)
+		);
+
+		$list = new Html_List($grid);
+
+		$form = "<div class=\"form_merge\">
+					<form method=\"post\" name=\"table_balances_merge\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+					</form>
+				</div>";
+
+		return $form;
+	}
+
 	function form_import_balance() {
 		$import_file = new Html_Input("file_balance", "", "file");
 		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
@@ -575,6 +674,13 @@ class Balance extends Record {
 		return "<div class=\"split show_acronym\">
 					<input type=\"button\" class=\"balance_split split_balance\" onclick=\"form_split('".$this->id."');\" /><br>
 					<span class=\"acronym\">".__("split")."</span>
+				</div>";
+	}
+
+	function get_form_merge() {
+		return "<div class=\"merge show_acronym\">
+					<input type=\"button\" class=\"balance_merge merge_balance\" onclick=\"form_merge('".$this->id."');\" /><br>
+					<span class=\"acronym\">".__("merge")."</span>
 				</div>";
 	}
 

@@ -64,6 +64,9 @@ class Balances extends Collector  {
 		if (isset($this->filters['name'])) {
 			$query_where[] = $this->db->config['table_balances'].".name LIKE ".$this->db->quote("%".$this->filters['name']."%");
 		}
+		if (isset($this->filters['parent_id'])) {
+			$query_where[] = $this->db->config['table_balances'].".parent_id = ".$this->db->quote($this->filters['parent_id']);
+		}
 		
 		return $query_where;
 	}
@@ -267,7 +270,7 @@ class Balances extends Collector  {
 				$grid[$id]['cells'][] = array(
 					'class' => "op",
 					'type' => "td",
-					'value' => $balance->get_form_modify().$balance->get_form_delete(),
+					'value' => $balance->get_form_modify().$balance->get_form_merge().$balance->get_form_delete(),
 				);
 			}
 		}
