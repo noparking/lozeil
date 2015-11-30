@@ -197,6 +197,7 @@ $__['import choice'] = "Import choice";
 $__['import default account plan'] = "import default account plan";
 $__['import default income statement'] = "import default income statement";
 $__['import default model'] = "import default model";
+$__['Import format not supported'] = "Import format not supported";
 $__['import from API'] = "Import from API";
 $__['import from OVH'] = "Import from OVH";
 $__['import writings'] = "import writings";

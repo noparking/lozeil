@@ -197,6 +197,7 @@ $__['import choice'] = "Choix d'import";
 $__['import default income statement'] = "importer le compte de résultat par défaut";
 $__['import default account plan'] = "Importer le plan comptable par défault";
 $__['import default model'] = "importer à partir du modèle";
+$__['Import format not supported'] = "Format d'import non supporté";
 $__['import from API'] = "Importer depuis API";
 $__['import from OVH'] = "Importer depuis OVH";
 $__['import writings'] = "Importer un enregistrement";

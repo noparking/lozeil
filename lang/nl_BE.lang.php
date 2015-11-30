@@ -198,6 +198,7 @@ $__['import choice'] = "import keuze";
 $__['import default account plan'] = "invloed boekhouding codes";
 $__['import default income statement'] = "import standaard resultatenrekening";
 $__['import default model'] = "import standaard modelaan";
+$__['Import format not supported'] = "Invoer niet ondersteund";
 $__['import from API'] = "import van API";
 $__['import from OVH'] = "import van OVH";
 $__['import writings'] = "import geschriften";

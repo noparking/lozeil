@@ -6,11 +6,14 @@ if (isset($_FILES['file_balance']) and $_FILES['file_balance']['error'] == 0)  {
 		require dirname(__FILE__)."/../inc/office/excel/PHPExcel.php";
 		
 		$data = new Import_Balances($_FILES['file_balance']['tmp_name'], $_FILES['file_balance']['name'], $_FILES['file_balance']['type']);
-		$data->import();
-		$_SESSION['filter'] = $data->filters_after_import();
-		status(__("import"), __(("%s balance records(s) inserted, %s ignored"), array(strval($data->nb_new_records), strval($data->nb_ignored_records))), 1);
-		header('Location: '.link_content("content=balances.php&start=".$_SESSION['filter']['start']."&stop=".$_SESSION['filter']['stop']));
-		exit();
+		if ($data->import()) {
+			$_SESSION['filter'] = $data->filters_after_import();
+			status(__("import"), __(("%s balance records(s) inserted, %s ignored"), array(strval($data->nb_new_records), strval($data->nb_ignored_records))), 1);
+			header('Location: ' . link_content("content=balances.php&start=" . $_SESSION['filter']['start'] . "&stop=" . $_SESSION['filter']['stop']));
+			exit();
+		} else {
+			status(__("import"), __("Import format not supported"), -1);
+		}
 	} else {
 		status(__("balance"), __("format not supported"), -1);
 	}

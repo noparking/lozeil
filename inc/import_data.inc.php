@@ -52,8 +52,12 @@ class Import_Data {
 			$this->prepare_slk_data();
 			$this->import_as_slk();
 		} elseif ($this->is_xlsx()){
-			$this->prepare_xlsx_data();
-			$this->import_as_xlsx();
+			if ($this->prepare_xlsx_data() == true) {
+				$this->import_as_xlsx();
+			} else {
+				log_status(__(('file %s is not in supported format'),  $this->file_name));
+				return false;
+			}
 		}
 	}
 	
@@ -79,18 +83,28 @@ class Import_Data {
 		$date_begin = time();
 		$date_end = time();
 
-		preg_match_all("/\d*\/\d*\/\d*/", $map[3][0], $matchs);
+		if (!preg_match_all("/\d*\/\d*\/\d*/", $map[3][0], $matchs)) {
+			return false;
+		}
 		$date_begin = $matchs[0][0];
 		$date_end = $matchs[0][1];
+		if (empty($date_begin) or empty($date_end) or (empty($date_begin) and empty($date_end))) {
+			return false;
+		}
 
 		$a = strptime($date_begin, "%d/%m/%Y");
 		$b = strptime($date_end, "%d/%m/%Y");
 		$this->t_start = mktime(0, 0, 0, $a['tm_mon'] + 1, $a['tm_mday'], $a['tm_year'] + 1900);
 		$this->t_stop = mktime(23, 59, 59, $b['tm_mon'] + 1, $b['tm_mday'], $b['tm_year'] + 1900);
 
+		unset($map[3]);
+
 		foreach ($map as $cell) {
 			$number = (int)$cell[0];
 			$libelle = (string)$cell[1];
+			if ($number == 0 or empty($libelle) or (empty($cell[2]) and empty($cell[3]))) {
+				return false;
+			}
 			if (isset($cell[2])) {
 				$cell[2] = str_replace(" ", "", $cell[2]);
 				$this->csv_data[] = array($date_end, $number, $libelle, "-".(float)$cell[2]);
@@ -103,6 +117,7 @@ class Import_Data {
 
 		unset($map);
 		rmdir($dir);
+		return true;
 	}
 
 	function prepare_slk_data() {

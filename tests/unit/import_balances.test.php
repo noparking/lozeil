@@ -10,7 +10,8 @@ class tests_Import_Balances extends TableTestCase {
 		$this->initializeTables(
 			"balances",
 			"balancesimported",
-			"balancesperiod"
+			"balancesperiod",
+			"bayesianelements"
 		);
 	}
 
@@ -33,24 +34,41 @@ class tests_Import_Balances extends TableTestCase {
 
 		$this->assertTrue(file_exists($file));
 		$this->assertRecordExists("balancesperiod", array(
-			'id' => 1
-			)
+						'id' => 1
+				)
 		);
 		$this->assertRecordExists("balances", array(
-			'name' => "LOGICIEL",
-			'amount' => -59259.13
-			)
+						'name' => "LOGICIEL",
+						'amount' => -59259.13
+				)
 		);
 		$this->assertRecordExists("balances", array(
-			'name' => "CAPITAL",
-			'amount' => 155000
-			)
+						'name' => "CAPITAL",
+						'amount' => 155000
+				)
 		);
 		$this->assertRecordExists("balances", array(
-			'name' => "70000",
-			'amount' => 2000
-			)
+						'name' => "70000",
+						'amount' => 2000
+				)
 		);
+		$this->teardown();
+	}
+
+	function test_import_as_xlsx__not_working() {
+		$this->backupTables("balances", "balancesimported", "balancesperiod");
+
+		$file = dirname(__FILE__)."/data/import_fail.xlsx";
+		$importer = new Import_Balances($file,$file);
+		$importer->import();
+
+		$this->assertTrue(file_exists($file));
+
+		$balances = new Balances();
+		$balances->select();
+
+		$this->assertEqual(count($balances), 0);
+
 		$this->teardown();
 	}
 
