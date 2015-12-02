@@ -155,8 +155,8 @@ class tests_Reportings extends TableTestCase {
 		$_SESSION['filter'] = array('start' => time(), 'stop' => strtotime("+1 year", time()));
 		$_SESSION['filter']['period'] = "variable";
 
-		$this->assertEqual(month_from_timestamp($period1->start, $period1->stop), 6);
-		$this->assertEqual(month_from_timestamp($period2->start, $period2->stop), 12);
+		$this->assertEqual(month_from_timestamp($period1->start, $period1->stop), 5);
+		$this->assertEqual(month_from_timestamp($period2->start, $period2->stop), 11);
 		$this->assertTrue($activity1->id > 0);
 		$this->assertTrue($activity2->id > 0);
 		$this->assertTrue($capital->id > 0);
@@ -181,8 +181,8 @@ class tests_Reportings extends TableTestCase {
 		$this->assertPattern("/CODE DEUX/", $view);
 		$this->assertPattern("/150.00".$GLOBALS['param']['currency']."/", $view);
 		$this->assertPattern("/50.00".$GLOBALS['param']['currency']."/", $view);
-		$this->assertPattern("#".__("span at import").": <strong>12".__("month")."</strong>#", $view);
-		$this->assertPattern("#".__("span at import").": <strong>6".__("month")."</strong>#", $view);
+		$this->assertPattern("#".__("span at import").": <strong>11".__("month")."</strong>#", $view);
+		$this->assertPattern("#".__("span at import").": <strong>5".__("month")."</strong>#", $view);
 
 		$this->truncateTables("activities", "accountingcodes", "accountingcodes_affectation", "balances", "balancesperiod", "reportings");
 	}
