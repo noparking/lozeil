@@ -31,29 +31,29 @@ class Import_Data {
 			$this->prepare_csv_data();
 			if ($this->banks_id > 0) {
 				if ($this->is_cic($this->csv_data)) {
-					$this->import_as_cic();
+					return $this->import_as_cic();
 				} elseif ($this->is_coop($this->csv_data)) {
-					$this->import_as_coop();
+					return $this->import_as_coop();
 				} else {
 					log_status(__(('file %s is not in supported format'),  $this->file_name));
 				}
 			} elseif ($this->sources_id > 0) {
 				if ($this->is_paybox($this->csv_data)) {
-					$this->import_as_paybox();
+					return $this->import_as_paybox();
 				} else {
 					log_status(__(('file %s is not in supported format'),  $this->file_name));
 				}
 			}
 		} elseif ($this->is_ofx()) {
-			$this->import_as_ofx();
+			return $this->import_as_ofx();
 		} elseif ($this->is_qif()) {
-			$this->import_as_qif();
+			return $this->import_as_qif();
 		} elseif ($this->is_slk()){
 			$this->prepare_slk_data();
-			$this->import_as_slk();
+			return $this->import_as_slk();
 		} elseif ($this->is_xlsx()){
 			if ($this->prepare_xlsx_data() == true) {
-				$this->import_as_xlsx();
+				return $this->import_as_xlsx();
 			} else {
 				log_status(__(('file %s is not in supported format'),  $this->file_name));
 				return false;
@@ -100,21 +100,29 @@ class Import_Data {
 		unset($map[3]);
 
 		foreach ($map as $cell) {
-			$number = (int)$cell[0];
-			$libelle = (string)$cell[1];
-			if ($number == 0 or empty($libelle) or (empty($cell[2]) and empty($cell[3]))) {
-				return false;
+			if (isset($cell[0])) {
+				$number = (int)$cell[0];
 			}
-			if (isset($cell[2])) {
-				$cell[2] = str_replace(" ", "", $cell[2]);
-				$this->csv_data[] = array($date_end, $number, $libelle, "-".(float)$cell[2]);
+			if (isset($cell[1])) {
+				$libelle = (string)$cell[1];
 			}
-			if (isset($cell[3])) {
-				$cell[3] = str_replace(" ", "", $cell[3]);
-				$this->csv_data[] = array($date_end, $number, $libelle, (float)$cell[3]);
+			if (!(isset($cell[0]) and isset($cell[1]) and ($number == 0 or empty($libelle) or (empty($cell[2]) and empty($cell[3]))))) {
+				if (isset($cell[2])) {
+					$cell[2] = str_replace(" ", "", $cell[2]);
+					$this->csv_data[] = array($date_end, $number, $libelle, "-".(float)$cell[2]);
+				}
+				if (isset($cell[3])) {
+					$cell[3] = str_replace(" ", "", $cell[3]);
+					$this->csv_data[] = array($date_end, $number, $libelle, (float)$cell[3]);
+				}
 			}
+			unset($number);
+			unset($libelle);
 		}
 
+		if (count($this->csv_data) == 0) {
+			return false;
+		}
 		unset($map);
 		rmdir($dir);
 		return true;

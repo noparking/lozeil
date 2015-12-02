@@ -55,23 +55,6 @@ class tests_Import_Balances extends TableTestCase {
 		$this->teardown();
 	}
 
-	function test_import_as_xlsx__not_working() {
-		$this->backupTables("balances", "balancesimported", "balancesperiod");
-
-		$file = dirname(__FILE__)."/data/import_fail.xlsx";
-		$importer = new Import_Balances($file,$file);
-		$importer->import();
-
-		$this->assertTrue(file_exists($file));
-
-		$balances = new Balances();
-		$balances->select();
-
-		$this->assertEqual(count($balances), 0);
-
-		$this->teardown();
-	}
-
 	function test_import_as_paybox() {
 		require dirname(__FILE__)."/data/import.paybox.php";
 		$name = tempnam('/tmp', 'csv');
