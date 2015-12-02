@@ -210,6 +210,10 @@ class Balances extends Collector  {
 				$class = "modified";
 			}
 
+			$child = new Balance();
+			$child->parent_id = $balance->id;
+			$child->load(array("parent_id" => $balance->id));
+
 			$data = $this->get_affectations_location($balance->accountingcodes_id);
 
 			$color = "#000";
@@ -260,7 +264,13 @@ class Balances extends Collector  {
 						'value' => date("d-m-Y", $balance->day)
 						),
 				));
-			if ($balance->split != 1) {
+			if ($child->id != 0) {
+				$grid[$id]['cells'][] = array(
+						'class' => "op",
+						'type' => "td",
+						'value' => $balance->get_form_modify().$balance->get_form_delete(),
+				);
+			} elseif ($balance->split != 1) {
 				$grid[$id]['cells'][] = array(
 					'class' => "op",
 					'type' => "td",

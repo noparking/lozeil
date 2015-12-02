@@ -109,7 +109,7 @@ class tests_Balance extends TableTestCase {
 	}
 
 	function test_merge() {
-		$amounts = array(50, 50);
+		$amounts = array(50, 40);
 
 		$balance = new Balance();
 		$balance->number = "60410000";
@@ -122,7 +122,7 @@ class tests_Balance extends TableTestCase {
 
 		$balances = new Balances();
 		$balances->select();
-		$this->assertEqual(count($balances), 2);
+		$this->assertEqual(count($balances), 3);
 
 		$code = new Accounting_Code();
 		$code->id = 1;
@@ -131,18 +131,18 @@ class tests_Balance extends TableTestCase {
 		$code->save();
 
 		$balance->load(array('id' => "2"));
-		$balance->merge("1");
+		$balance->merge();
 
 		$balances->select();
 		$this->assertEqual(count($balances), 1);
 		$this->assertEqual($balances[0]->amount, 150);
-		$this->assertEqual($balances[0]->number, 10000000);
+		$this->assertEqual($balances[0]->number, 60410000);
 
 		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");
 	}
 
 	function test_merge__without_existing_code() {
-		$amounts = array(50, 50);
+		$amounts = array(50);
 
 		$balance = new Balance();
 		$balance->number = "60410000";
@@ -163,7 +163,7 @@ class tests_Balance extends TableTestCase {
 		$balances->select();
 		$this->assertEqual(count($balances), 1);
 		$this->assertEqual($balances[0]->amount, 150);
-		$this->assertEqual($balances[0]->number, 96041000);
+		$this->assertEqual($balances[0]->number, 60410000);
 
 		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");
 	}

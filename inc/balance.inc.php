@@ -173,15 +173,12 @@ class Balance extends Record {
 				$j++;
 			}
 		}
-		if ($this->amount != 0) {
-			$this->save();
-		} else {
-			$this->delete();
-		}
+
+		$this->save();
 		return $this->id;
 	}
 
-	function merge($accountingcodes_id) {
+	function merge() {
 		$balances = new Balances();
 		$balances->filter_with(array("parent_id" => $this->parent_id));
 		$balances->select();
@@ -198,15 +195,8 @@ class Balance extends Record {
 		$balance->day = $this->day;
 
 		$code = new Accounting_Code();
-		$code->load(array('id' => $accountingcodes_id));
-		if ($code->id != 0) {
-			$balance->number = $code->number;
-			$balance->accountingcodes_id = $accountingcodes_id;
-		} else {
-			$code->load(array('id' => $this->accountingcodes_id));
-			$balance->number = $code->number;
-			$balance->accountingcodes_id = $this->accountingcodes_id;
-		}
+		$code->load(array('id' => $balance->accountingcodes_id));
+
 		$affectation = new Accounting_Code_affectation();
 		$affectation->load(array('accountingcodes_id' => $code->id));
 
@@ -214,7 +204,7 @@ class Balance extends Record {
 			$affectation->accountingcodes_id = $code->id;
 		}
 		$affectation_this = new Accounting_Code_Affectation();
-		$affectation_this->load((array("accountingcodes_id" => $this->accountingcodes_id)));
+		$affectation_this->load((array("accountingcodes_id" => $balance->accountingcodes_id)));
 		$affectation->reportings_id = $affectation_this->reportings_id;
 		$affectation->save();
 
@@ -485,7 +475,7 @@ class Balance extends Record {
 				),
 			)
 		);
-		
+
 		$list = new Html_List($grid);
 
 		$form = "<div class=\"form_split\">
@@ -493,9 +483,10 @@ class Balance extends Record {
 						$input_split_hidden->input_hidden().$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
 					</form>
 				</div>";
-		
+
 		return $form."<div class=\"preview_changes\">".$this->preview_split()."</div>";
 	}
+
 
 	function grid_preview_split($amounts) {
 		$grid = array(
@@ -558,7 +549,7 @@ class Balance extends Record {
 				if ($split_amount < 0) {
 					return false;
 				} else {
-					$sum -= abs($this->amount) * ($split_amount / 100);
+					$sum -= ($this->amount * ($split_amount / 100));
 				}
 			} else {
 				if ((is_positive($this->amount) and is_negative($split_amount)) or (is_negative($this->amount) and is_positive($split_amount))) {
@@ -568,65 +559,11 @@ class Balance extends Record {
 				}
 			}
 		}
-
 		if ((is_positive($sum) and is_negative($this->amount)) or (is_negative($sum) and is_positive($this->amount))) {
 			return false;
 		} else {
 			return true;
 		}
-	}
-
-	function form_merge() {
-		$affectation = new Accounting_Code_affectation();
-		$affectation->load(array('accountingcodes_id' => $this->accountingcodes_id));
-
-		$accountingcode = new Accounting_Code();
-		$currentcode = array();
-		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
-			$currentcode[] = $accountingcode->fullname();
-		}
-
-		$input_hidden_id = new Html_Input("balance_id", $this->id, "text");
-		$input_hidden_action = new Html_Input("action", "merge");
-		$input_number = new Html_Input_Ajax("table_balances_merge_accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
-		$submit = new Html_Input("table_balances_merge_submit", utf8_ucfirst(__('save')), "submit");
-
-		$balances = new Balances();
-		$balances->filter_with(array("parent_id" => $this->parent_id));
-		$balances->select();
-		$amount = 0;
-
-		foreach ($balances as $balance) {
-			$amount += $balance->amount;
-		}
-
-		$grid = array(
-			'class' => "itemsform",
-			'leaves' => array(
-				'title' => array(
-					'value' => "<h2>".ucfirst(__("merge"))."</h2>"
-				),
-				'subtitle' => array(
-					'value' => "<h3>".ucfirst(__("amount")).": ".number_adjust_format($amount).$GLOBALS['param']['currency']."</h3>",
-				),
-				'code' => array(
-					'value' => $input_number->item(__("accounting code"))
-				),
-				'submit' => array(
-					'value' => $submit->item(""),
-				),
-			)
-		);
-
-		$list = new Html_List($grid);
-
-		$form = "<div class=\"form_merge\">
-					<form method=\"post\" name=\"table_balances_merge\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
-					</form>
-				</div>";
-
-		return $form;
 	}
 
 	function form_import_balance() {
@@ -679,14 +616,14 @@ class Balance extends Record {
 
 	function get_form_merge() {
 		return "<div class=\"merge show_acronym\">
-					<input type=\"button\" class=\"balance_merge merge_balance\" onclick=\"form_merge('".$this->id."');\" /><br>
+					<input type=\"button\" class=\"balance_merge merge_balance\" onclick=\"if (Check('".__("are you sure?")."')) { merge_balance('".$this->id."'); }\" /><br>
 					<span class=\"acronym\">".__("merge")."</span>
 				</div>";
 	}
 
 	function get_form_delete() {
 		return "<div class=\"delete show_acronym\">
-					<input type=\"button\" class=\"del delete_balance\" onclick=\"delete_balance('".$this->id."');\" /><br>
+					<input type=\"button\" class=\"del delete_balance\" onclick=\"if (Check('".__("are you sure?")."')) { delete_balance('".$this->id."'); }\" /><br>
 					<span class=\"acronym\">".__("delete")."</span>
 				</div>";
 	}

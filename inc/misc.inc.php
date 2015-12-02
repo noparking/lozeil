@@ -30,7 +30,7 @@ function is_positive($number) {
 }
 
 function is_negative($number) {
-	if (is_numeric($number) and $number < 0) {
+	if (is_numeric($number) and $number <= 0) {
 		return true;
 	} else {
 		return false;

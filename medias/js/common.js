@@ -1,4 +1,9 @@
 
+function Check(status) {
+	chk = window.confirm(status);
+	return chk;
+}
+
 function getObj(id) {
 	if (document.getElementById) {
 		return document.getElementById(id);
@@ -59,3 +64,4 @@ function state_obj(id) {
 		return false;
 	}
 }
+

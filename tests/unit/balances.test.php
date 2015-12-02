@@ -144,7 +144,7 @@ class tests_Balances extends TableTestCase {
 		$this->assertPattern("/Activité/", $view);
 		$this->assertPattern("/Libellé 1/", $view);
 		$this->assertPattern("/<div class=\"modify show_acronym\">/", $view);
-		$this->assertPattern("/<div class=\"split show_acronym\">/", $view);
+		$this->assertNoPattern("/<div class=\"split show_acronym\">/", $view);
 		$this->assertPattern("/<div class=\"delete show_acronym\">/", $view);
 
 		$this->assertNoPattern("/deuxième ligne/", $view);

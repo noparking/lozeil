@@ -71,9 +71,6 @@ if (isset($_REQUEST['action']) and isset($_REQUEST['balance_id'])) {
 	case "form_split":
 		$data = $balance->form_split();
 		break;
-	case "form_merge":
-		$data = $balance->form_merge();
-		break;
 	case "delete":
 		$balance->delete();
 		$balance_imported->delete();
@@ -106,12 +103,10 @@ if (isset($_REQUEST['action']) and isset($_REQUEST['balance_id'])) {
 		}
 		break;
 	case "merge":
-		if (isset($_REQUEST['table_balances_merge_accountingcodes_id'])) {
-			$balance = new Balance();
-			$balance->load(array('id' => (int)$_REQUEST['balance_id']));
-			$balance->merge($_REQUEST['table_balances_merge_accountingcodes_id']);
-			status(__("balance"), __("merged splits"), 1);
-		}
+		$balance = new Balance();
+		$balance->load(array('id' => (int)$_REQUEST['balance_id']));
+		$balance->merge();
+		status(__("balance"), __("merged splits"), 1);
 		break;
 	case "preview_changes":
 		$balance = new Balance();
