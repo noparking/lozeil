@@ -65,6 +65,7 @@ class Import_Writings extends Import_Data {
 			}
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 
 	function import_as_paybox() {
@@ -129,6 +130,7 @@ class Import_Writings extends Import_Data {
 			}
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 
 	function import_as_cic() {
@@ -187,6 +189,7 @@ class Import_Writings extends Import_Data {
 			}
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 	
 	
@@ -239,6 +242,7 @@ class Import_Writings extends Import_Data {
 			
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 	
 	
@@ -311,6 +315,7 @@ class Import_Writings extends Import_Data {
 			}
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 	
 	function import_as_ofx() {
@@ -389,6 +394,7 @@ class Import_Writings extends Import_Data {
 			}
 		}
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		return true;
 	}
 	
 	function import_as_qif() {
@@ -479,5 +485,6 @@ class Import_Writings extends Import_Data {
 			}
 			log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 		}
+		return true;
 	}
 }
