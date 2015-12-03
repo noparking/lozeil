@@ -310,6 +310,23 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$this->assertRecordExists("writings", array('sources_id' => $source->id));
 	}
 
+	function test_import_as_xlsx__fail() {
+		$this->backupTables("writings", "writingsimported");
+
+		$file = dirname(__FILE__)."/data/import-fail.xlsx";
+		$importer = new Import_Writings($file,$file);
+		$importer->import();
+
+		$this->assertTrue(file_exists($file));
+
+		$writings = new Writings();
+		$writings->select();
+
+		$this->assertEqual(count($writings), 0);
+
+		$this->teardown();
+	}
+
 	function test_import_as_qif() {
 		require dirname(__FILE__)."/data/import.qif.php";
 		$name = tempnam('/tmp', 'qif');
