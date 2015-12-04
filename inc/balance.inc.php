@@ -146,7 +146,7 @@ class Balance extends Record {
 
 				if (is_numeric($balance->number)) {
 					$this->amount -= $balance->amount;
-					
+
 					$code = new Accounting_Code();
 					$code->load(array('number' => $balance->number));
 					if ($code->id == 0) {
@@ -157,6 +157,7 @@ class Balance extends Record {
 					
 					$affectation = new Accounting_Code_Affectation();
 					$affectation->load(array('accountingcodes_id' => $code->id));
+					Message::log($affectation->id);
 					if ($affectation->id == 0) {
 						$affectation->accountingcodes_id = $code->id;
 						$affectation->reportings_id = $current_affect->reportings_id;
