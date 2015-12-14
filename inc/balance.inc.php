@@ -181,16 +181,25 @@ class Balance extends Record {
 
 	function merge() {
 		$balances = new Balances();
-		$balances->filter_with(array("parent_id" => $this->parent_id));
-		$balances->select();
+		if ($this->parent_id != 0) {
+			$balances->filter_with(array("parent_id" => $this->parent_id));
+			$balances->select();
+		} else {
+			$balances->filter_with(array("parent_id" => $this->id));
+			$balances->select();
+		}
 
 		$amount = 0;
 		foreach ($balances as $balance) {
 			$amount += $balance->amount;
 		}
 		$balance = new Balance();
-		$balance->load(array('id' => $this->parent_id));
-		$balance->name = substr($this->name, 0, strpos($this->name, "(split"));
+		if ($this->parent_id != 0) {
+			$balance->load(array('id' => $this->parent_id));
+			$balance->name = substr($this->name, 0, strpos($this->name, "(split"));
+		} else {
+			$balance->load(array('id' => $this->id));
+		}
 		$balance->amount += $amount;
 		$balance->period_id = $this->period_id;
 		$balance->day = $this->day;
@@ -213,7 +222,9 @@ class Balance extends Record {
 		foreach ($balances as $todelete) {
 			$todelete->delete();
 		}
-		$this->delete();
+		if ($this->parent_id != 0) {
+			$this->delete();
+		}
 	}
 
 	function name_already_exists() {
