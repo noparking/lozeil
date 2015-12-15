@@ -56,19 +56,20 @@ class Writings_Export  {
 		$querywhere .= " AND ".$this->db->config['table_writings'].".day <= ".$this->to;
 	  
 		$result_export = $this->db->query("SELECT ".
-						  $this->db->config['table_writings'].".day as '0', ".
-						  $this->db->config['table_accountingcodes'].".number as '2', ".
-						  $this->db->config['table_writings'].".number as '3', ".
-						  $this->db->config['table_writings'].".comment as '4', ".
-						  $this->db->config['table_writings'].".information, ".
-						  $this->db->config['table_writings'].".amount_inc_vat as '5' 
-			 FROM ".$this->db->config['table_writings'].
-						  " LEFT JOIN ".$this->db->config['table_accountingcodes'].
-						  " ON ".$this->db->config['table_accountingcodes'].".id = ".$this->db->config['table_writings'].".accountingcodes_id".
-						  " WHERE (1=1)".
-						  $querywhere.
-						  " ORDER BY day ASC"
-						  );
+			$this->db->config['table_writings'].".day as '0', ".
+			$this->db->config['table_writings'].".banks_id as '1', ".
+			$this->db->config['table_accountingcodes'].".number as '2', ".
+			$this->db->config['table_writings'].".number as '3', ".
+			$this->db->config['table_writings'].".comment as '4', ".
+			$this->db->config['table_writings'].".information, ".
+			$this->db->config['table_writings'].".amount_inc_vat as '5' 
+			FROM ".$this->db->config['table_writings'].
+			" LEFT JOIN ".$this->db->config['table_accountingcodes'].
+			" ON ".$this->db->config['table_accountingcodes'].".id = ".$this->db->config['table_writings'].".accountingcodes_id".
+			" WHERE (1=1)".
+			$querywhere.
+			" ORDER BY day ASC"
+		);
 		if ($result_export[1] > 0) {
 			while ($row_export = $this->db->fetchArray($result_export[0])) {
 				$value[] = $row_export;
@@ -77,7 +78,7 @@ class Writings_Export  {
 			for ($i = 0; $i < count($value); $i++) {
 				$value[$i][0] = date("d/m/Y", $value[$i][0]);
 	      
-				$value[$i][1] = "BQC";
+				$value[$i][1] = "BQC-".$value[$i][1];
 	      
 				$value[$i][4] .= " ".$value[$i]["information"];
 				unset($value[$i]["information"]);
