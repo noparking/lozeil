@@ -357,12 +357,21 @@ function determine_integer_from_post_get_session() {
 	return 0;
 }
 
+function real_escape_string($string) {
+	if (isset($GLOBALS['dbInst'])) {
+		$db = $GLOBALS['dbInst'];
+	} else {
+		$db = new db();
+	}
+	return mysqli_real_escape_string($db->link, $string);
+}
+
 function array_2_list($array, $delimeter = "", $map = NULL) {
 	if ($map === null) {
 		if ($delimeter == "") {
 			$map = "intval";
 		} else if ($delimeter == "'") {
-			$map = "mysql_real_escape_string";
+			$map = "real_escape_string";
 		}
 	}
 

@@ -2,10 +2,11 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class db {
-	
 	public $link = null;
 	public $config = array();
 	public static $log = null;
+	
+	protected static $links = array();
 	
 	function __construct($config = false) {
 		if (! $config) {
@@ -16,16 +17,21 @@ class db {
 	
 	function config(array $config) {
 		$this->config = $config;
-		
-		$link = mysqli_connect($this->config['host'], $this->config['user'],$this->config['pass'],isset($this->config['new'])?(bool)$this->config['new']:false);
-		
-		if (!$link) {
-			trigger_error("Unable to connect to database server", E_USER_ERROR);
+	
+		$link_id = $this->config['user'].'@'.$this->config['host'];
+	
+		if (!isset(self::$links[$link_id]) or (isset($this->config['new']) and (bool)$this->config['new'])) {
+			self::$links[$link_id] = @mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass']);
+		}
+	
+		if (!self::$links[$link_id]) {
+			trigger_error("Error to connect to host '".$this->config['host']."' on database '".$this->config['name']."' with user '".$this->config['user']."':\n".mysqli_connect_error(), E_USER_WARNING);
 		} else {
-			$this->link = $link;
+			$this->link = self::$links[$link_id];
 			mysqli_select_db($this->link, $this->config['name']);
 			$this->query("SET NAMES 'utf8'");
 		}
+	
 		return $this;
 	}
 	
