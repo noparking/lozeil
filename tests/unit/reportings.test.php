@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2015 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -17,11 +17,7 @@ class tests_Reportings extends TableTestCase {
 	}
 
 	function tearDown() {
-		$this->truncateTable("reportings");
-		$this->truncateTable("activities");
-		$this->truncateTable("accountingcodes");
-		$this->truncateTable("accountingcodes_affectation");
-		$this->truncateTable("balances");
+		$this->truncateTables("activities", "accountingcodes", "accountingcodes_affectation", "balances", "balancesperiod", "reportings");
 	}
 
 	function test_get_where() {
@@ -66,8 +62,6 @@ class tests_Reportings extends TableTestCase {
 		$this->assertEqual($data[$capitalbrut->sort]['name'],$capitalbrut->name);
 		$this->assertTrue($data[$capital->sort]['level'] == 0 );
 		$this->assertTrue($data[$capitalbrut->sort]['level'] ==  1);
-
-		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "reportings");
 	}
 
 	function test_display_reportings_detail() {
@@ -183,8 +177,6 @@ class tests_Reportings extends TableTestCase {
 		$this->assertPattern("/50.00".$GLOBALS['param']['currency']."/", $view);
 		$this->assertPattern("#".__("span at import").": <strong>12".__("month")."</strong>#", $view);
 		$this->assertPattern("#".__("span at import").": <strong>6".__("month")."</strong>#", $view);
-
-		$this->truncateTables("activities", "accountingcodes", "accountingcodes_affectation", "balances", "balancesperiod", "reportings");
 	}
 
 	function test_show_view_body() {
@@ -242,7 +234,7 @@ class tests_Reportings extends TableTestCase {
 		$balance1->accountingcodes_id = $code1->id;
 		$balance1->period_id = $period2->id;
 		$balance1->amount = 150;
-		$balance1->day = time();
+		$balance1->day = $period2->start;
 		$balance1->save();
 
 		$code2 = new Accounting_Code();
@@ -259,18 +251,21 @@ class tests_Reportings extends TableTestCase {
 		$balance2->accountingcodes_id = $code2->id;
 		$balance2->period_id = $period2->id;
 		$balance2->amount = -100;
-		$balance2->day = time();
+		$balance2->day = $period2->start;
 		$balance2->save();
 
 		$balance3 = new Balance();
 		$balance3->accountingcodes_id = $code2->id;
 		$balance3->period_id = $period1->id;
 		$balance3->amount = -350;
-		$balance3->day = strtotime("-1 year", time());
+		$balance3->day = $period1->start;
 		$balance3->save();
 
-		$_SESSION['filter'] = array('start' => mktime(0, 0, 0, 1, 1, 2015), 'stop' => mktime(0, 0, 0, 12, 31, 2015));
-		$_SESSION['filter']['period'] = "variable";
+		$_SESSION['filter'] = array(
+			'start' => mktime(0, 0, 0, 1, 1, 2015),
+			'stop' => mktime(0, 0, 0, 12, 31, 2015),
+			'period' => "variable",
+		);
 
 		$view = [];
 		$activities = new Activities();
@@ -396,18 +391,21 @@ class tests_Reportings extends TableTestCase {
 		$balance2->accountingcodes_id = $code2->id;
 		$balance2->period_id = $period2->id;
 		$balance2->amount = -100;
-		$balance2->day = time();
+		$balance2->day = $period2->start;
 		$balance2->save();
 
 		$balance3 = new Balance();
 		$balance3->accountingcodes_id = $code2->id;
 		$balance3->period_id = $period1->id;
 		$balance3->amount = -350;
-		$balance3->day = strtotime("-1 year", time());
+		$balance3->day = $period1->start;
 		$balance3->save();
 
-		$_SESSION['filter'] = array('start' => mktime(0, 0, 0, 1, 1, 2015), 'stop' => mktime(0, 0, 0, 12, 31, 2015));
-		$_SESSION['filter']['period'] = "absolu";
+		$_SESSION['filter'] = array(
+			'start' => mktime(0, 0, 0, 1, 1, 2015),
+			'stop' => mktime(0, 0, 0, 12, 31, 2015),
+			'period' => "absolu",
+		);
 
 		$view = [];
 		$activities = new Activities();
