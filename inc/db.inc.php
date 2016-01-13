@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class db {
 	
@@ -17,13 +17,13 @@ class db {
 	function config(array $config) {
 		$this->config = $config;
 		
-		$link = mysql_connect($this->config['host'], $this->config['user'],$this->config['pass'],isset($this->config['new'])?(bool)$this->config['new']:false);
+		$link = mysqli_connect($this->config['host'], $this->config['user'],$this->config['pass'],isset($this->config['new'])?(bool)$this->config['new']:false);
 		
 		if (!$link) {
 			trigger_error("Unable to connect to database server", E_USER_ERROR);
 		} else {
 			$this->link = $link;
-			mysql_select_db($this->config['name'], $this->link);
+			mysqli_select_db($this->link, $this->config['name']);
 			$this->query("SET NAMES 'utf8'");
 		}
 		return $this;
@@ -57,14 +57,11 @@ class db {
 			trigger_error(mysql_error(), E_USER_ERROR);
 		} else {
 			self::log($query);
-			$result = mysql_query($query, $this->link);
+			$result = mysqli_query($this->link, $query);
 			if ($result === false) {
 				$this->query_error($query);
 			} else {
-				return array(
-					$result,
-					(is_resource($result) ? mysql_num_rows($result) : mysql_affected_rows($this->link)) 
-				);
+				return array($result, (is_resource($result) ? $result->num_rows : mysqli_affected_rows($this->link)));
 			}
 		}
 	}
@@ -112,7 +109,7 @@ class db {
 	}
 	
 	function insert_id() {
-		return mysql_insert_id($this->link);
+		return mysqli_insert_id($this->link);
 	}
 	
 	function fetch_row($result) {
@@ -198,14 +195,14 @@ class db {
 				$value = 'NULL';
 				break;
 			case 'string' :
-				$value = "'".mysql_real_escape_string($value)."'";
+				$value = "'".mysqli_real_escape_string($this->link, $value)."'";
 				break;
 		}
 		return $value;
 	}
 	
 	function fetchArray($result) {
-		return mysql_fetch_array($result, MYSQL_ASSOC);
+		return mysqli_fetch_array($result, MYSQLI_ASSOC);
 	}
 	
 	private function log($message) {
@@ -220,6 +217,6 @@ class db {
 	}
 	
 	function fetchRow($result) {
-		return mysql_fetch_row($result);
+		return mysqli_fetch_row($result);
 	}
 }
