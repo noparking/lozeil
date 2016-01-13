@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Menu_Area {
 	public $header = "";
@@ -28,7 +28,8 @@ class Menu_Area {
 			$liste_menu[] = $p;
 		}
 		
-		$account = isset($GLOBALS['authenticated_user']) ? $GLOBALS['authenticated_user']->name : $GLOBALS['config']['account'];
+		$account = isset($GLOBALS['config']['account']) ? $GLOBALS['config']['account'] : "";
+		$account = isset($GLOBALS['authenticated_user']) ? $GLOBALS['authenticated_user']->name : $account;
 
 		$layout_logged_in_as = "<div id=\"layout_logged_in_as\"><p>".__('logged in as').": <strong>".$account."</strong> | ".Html_Tag::a(link_content("content=logout.php"),__('log out'))."</p></div>";
 		$level0 = "<header><div id=\"menu\" class=\"default\"><div class=\"level_0 clearfix\"><ul>";
