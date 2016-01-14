@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Balance extends Record {
 	public $id = 0;
@@ -111,36 +111,33 @@ class Balance extends Record {
 		return $code;
 	}
 
-	function split($amount, $option) {
-		$amounts = array();
-		if (!is_array($amount)) {
-			$amounts[] = $amount;
-		} else {
-			$amounts = $amount;
+	function split($amounts, $option) {
+		if (!is_array($amounts)) {
+			$amounts = array($amounts);
 		}
 		$j = 1;
-		
+
 		$number = (int)$this->number;
-		$amount = $this->amount;
+		$amount_original = $this->amount;
 
 		$current_affect = new Accounting_Code_Affectation();
 		$current_affect->load(array('accountingcodes_id' => $this->accountingcodes_id));
 
-		foreach ($amounts as $split_amount) {
-			$split_amount = str_replace(",", ".", $split_amount);
-			if (is_numeric($split_amount) and $split_amount != 0) {
+		foreach ($amounts as $amount) {
+			$amount = str_replace(",", ".", $amount);
+			if (is_numeric($amount) and $amount != 0) {
 
 				$balance = new Balance();
 				$balance->name = $this->name." (split ".$j.")";
 				if ($option == "ratio") {
-					$balance->amount = $amount * ($split_amount / 100);
+					$balance->amount = $amount_original * ($amount / 100);
 				} else {
-					$balance->amount = $split_amount;				
+					$balance->amount = $amount;				
 				}
 
 				$balance->day = $this->day;
 				$balance->period_id = $this->period_id;
-				$balance->number = $this->split_code($number, $j - 1);
+				$balance->number = $this->split_code($number);
 				$balance->split = 1;
 				$balance->parent_id = $this->id;
 
@@ -157,7 +154,6 @@ class Balance extends Record {
 					
 					$affectation = new Accounting_Code_Affectation();
 					$affectation->load(array('accountingcodes_id' => $code->id));
-					Message::log($affectation->id);
 					if ($affectation->id == 0) {
 						$affectation->accountingcodes_id = $code->id;
 						$affectation->reportings_id = $current_affect->reportings_id;
@@ -556,18 +552,18 @@ class Balance extends Record {
 
 	function verify_amounts(array $amounts, $option) {
 		$sum = $this->amount;
-		foreach ($amounts as $split_amount) {
+		foreach ($amounts as $amount) {
 			if ($option == "ratio") {
-				if ($split_amount < 0) {
+				if ($amount < 0) {
 					return false;
 				} else {
-					$sum -= ($this->amount * ($split_amount / 100));
+					$sum -= ($this->amount * ($amount / 100));
 				}
 			} else {
-				if ((is_positive($this->amount) and is_negative($split_amount)) or (is_negative($this->amount) and is_positive($split_amount))) {
+				if ((is_positive($this->amount) and is_negative($amount)) or (is_negative($this->amount) and is_positive($amount))) {
 					return false;
 				} else {
-					$sum -= $split_amount;				
+					$sum -= $amount;				
 				}
 			}
 		}
@@ -640,3 +636,4 @@ class Balance extends Record {
 				</div>";
 	}
 }
+

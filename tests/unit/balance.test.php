@@ -1,6 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014
- *  */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -71,6 +70,28 @@ class tests_Balance extends TableTestCase {
 		$this->assertRecordNotExists("accountingcodes", array('number' => "96041000", 'name' => "Sous-traitance (split 1)"));
 
 		$this->truncateTables("balances", "accountingcodes_affectation", "accountingcodes");
+	}
+
+	function test_split__avec_montant_négatif() {
+		$amounts = array(50);
+
+		$balance = new Balance();
+		$balance->number = "60410000";
+		$balance->amount = -150;
+		$balance->name = "Sous-traitance";
+		$balance->period_id = 42;
+		$balance->save();
+
+		$balance->split($amounts, "ratio");
+
+		$balances = new Balances();
+		$balances->select();
+
+		$this->assertRecordExists("accountingcodes", array('number' => "96041000", 'name' => "Sous-traitance (split 1)"));
+		$this->assertRecordExists("balances", array('number' => "96041000", 'amount' => -75, 'name' => "Sous-traitance (split 1)", 'period_id' => 42));
+		$this->assertEqual($balance->amount, -75);
+
+		$this->truncateTables("accountingcodes", "accountingcodes_affectation", "balances");
 	}
 
 	function test_split() {
@@ -226,36 +247,42 @@ class tests_Balance extends TableTestCase {
 		$balance1->amount = 0;
 		$balance1->number = "60670000";
 		$balance1->save();
-
-		$code1 = $balance1->split_code($balance1->number);
-		$this->assertEqual(96067000, $code1);
+		$this->assertEqual(96067000, $balance1->split_code($balance1->number));
 
 		$balance2 = new Balance();
 		$balance2->name = "Balance 2";
 		$balance2->amount = 0;
 		$balance2->number = "60671000";
 		$balance2->save();
-
-		$code2 = $balance2->split_code($balance2->number);
-		$this->assertEqual(96067100, $code2);
+		$this->assertEqual(96067100, $balance2->split_code($balance2->number));
+		
+		$balance20 = new Balance();
+		$balance20->name = "Balance 2";
+		$balance20->amount = 0;
+		$balance20->number = "96067100";
+		$balance20->save();
+		$this->assertEqual(96067101, $balance2->split_code($balance2->number));
 
 		$balance3 = new Balance();
 		$balance3->name = "Balance 3";
 		$balance3->amount = 0;
 		$balance3->number = "60675120";
 		$balance3->save();
+		$this->assertEqual(96067512, $balance3->split_code($balance3->number));
 
-		$code3 = $balance3->split_code($balance3->number);
-		$this->assertEqual(96067512, $code3);
+		$balance30 = new Balance();
+		$balance30->name = "Balance 3 - split";
+		$balance30->amount = 0;
+		$balance30->number = 96067512;
+		$balance30->save();
+		$this->assertEqual(96067513, $balance3->split_code($balance3->number));
 
 		$balance4 = new Balance();
 		$balance4->name = "Balance 4";
 		$balance4->amount = 0;
 		$balance4->number = "60675123";
 		$balance4->save();
-
-		$code4 = $balance4->split_code($balance4->number);
-		$this->assertFalse($code4);
+		$this->assertFalse($balance4->split_code($balance4->number));
 
 		$this->truncateTables("balances");
 	}
