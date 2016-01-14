@@ -1,9 +1,17 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
 class tests_misc extends TableTestCase {
+	function test_determine_fiscal_year() {
+		$GLOBALS['param']['fiscal year begin'] = 1;
+		$this->assertEqual(determine_fiscal_year(mktime(0, 0, 0, 1, 14, 2016)), array(mktime(0, 0, 0, 1, 1, 2016), mktime(23, 59, 59, 1, 0, 2017)));
+		$GLOBALS['param']['fiscal year begin'] = 4;
+		$this->assertEqual(determine_fiscal_year(mktime(0, 0, 0, 1, 14, 2016)), array(mktime(0, 0, 0, 4, 1, 2015), mktime(23, 59, 59, 4, 0, 2016)));
+		$GLOBALS['param']['fiscal year begin'] = 6;
+		$this->assertEqual(determine_fiscal_year(mktime(0, 0, 0, 1, 14, 2016)), array(mktime(0, 0, 0, 6, 1, 2015), mktime(23, 59, 59, 6, 0, 2016)));
+	}
 
 	function test_determine_operation() {
 		$this->assertEqual(determine_operation(array()), "");

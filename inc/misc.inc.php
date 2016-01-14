@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 function sortcmp($a,$b) {
 	if((int)$a['sort'] == (int)$b['sort'])return 0;
@@ -400,10 +400,13 @@ function is_url($url) {
 	}
 }
 
-function determine_fiscal_year($year) {
-	$starttime = mktime(0, 0, 0, $GLOBALS['param']['fiscal year begin'], 1, date("Y", (int)$year)); 
-	$stoptime = mktime(23, 59, 59, $GLOBALS['param']['fiscal year begin'], 0, date("Y", (int)$starttime) + 1);
-	return array($starttime, $stoptime);
+function determine_fiscal_year($timestamp) {
+	$start = mktime(0, 0, 0, $GLOBALS['param']['fiscal year begin'], 1, date("Y", (int)$timestamp));
+	if ($start > $timestamp) {
+		$start = mktime(0, 0, 0, $GLOBALS['param']['fiscal year begin'], 1, date("Y", (int)$timestamp) - 1);
+	} 
+	$stop = mktime(23, 59, 59, $GLOBALS['param']['fiscal year begin'], 0, date("Y", (int)$start) + 1);
+	return array($start, $stop);
 }
 
 function determine_month($timestamp) {
