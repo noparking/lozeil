@@ -46,11 +46,7 @@ class db {
 	}
 	
 	function close() {
-		if ($this->link) {
-			return mysql_close($this->link);
-		} else {
-			trigger_error(mysql_error(), E_USER_ERROR);
-		}
+		return mysql_close($this->link);
 	}
 	
 	function input($query) {
@@ -59,16 +55,12 @@ class db {
 	}
 	
 	function query($query) {
-		if (!$this->link) {
-			trigger_error(mysql_error(), E_USER_ERROR);
+		self::log($query);
+		$result = mysqli_query($this->link, $query);
+		if ($result === false) {
+			$this->query_error($query);
 		} else {
-			self::log($query);
-			$result = mysqli_query($this->link, $query);
-			if ($result === false) {
-				$this->query_error($query);
-			} else {
-				return array($result, (is_resource($result) ? $result->num_rows : mysqli_affected_rows($this->link)));
-			}
+			return array($result, (is_resource($result) ? $result->num_rows : mysqli_affected_rows($this->link)));
 		}
 	}
 	
@@ -137,7 +129,7 @@ class db {
 			$backtraces .= "\n";
 			$level++;
 		}
-		trigger_error($backtraces."MySQL Error : ".mysql_error()." -- with query : ".substr($query, 0, 500), E_USER_WARNING);
+		trigger_error($backtraces."MySQL Error : ".mysqli_error($this->link)." -- with query : ".substr($query, 0, 500), E_USER_WARNING);
 	}
 	
 	function status($result_id, $type, $record = "") {
