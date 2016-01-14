@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -27,7 +27,7 @@ class tests_Balances_Imported extends TableTestCase {
 
 		$balance_imported2 = new Balance_Imported();
 		$balance_imported2->hash = sha1("hash");
-		$balance_imported2->balance_id = uniqid();
+		$balance_imported2->balance_id = rand(43, 654321);
 		$balance_imported2->save();
 
 		$balances_imported = new Balances_Imported();
@@ -47,7 +47,7 @@ class tests_Balances_Imported extends TableTestCase {
 
 		$balance_imported2 = new Balance_Imported();
 		$balance_imported2->hash = sha1("hash");
-		$balance_imported2->balance_id = uniqid();
+		$balance_imported2->balance_id = rand(43, 654321);
 		$balance_imported2->save();
 
 		$balances_imported = new Balances_Imported();
