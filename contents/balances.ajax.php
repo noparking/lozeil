@@ -94,9 +94,9 @@ if (isset($_REQUEST['action']) and isset($_REQUEST['balance_id'])) {
 		if (isset($_REQUEST['table_balances_split_amount'])) {
 			$balance = new Balance();
 			$balance->load(array('id' => (int)$_REQUEST['balance_id']));
-			$amount = $balance->clean_amounts_from_ajax($_REQUEST['table_balances_split_amount']);
-			if ($balance->verify_amounts($amount, $_REQUEST['input_split'])) {
-				$balance->split($amount, $_REQUEST['input_split']);
+			$amounts = $balance->clean_amounts_from_ajax($_REQUEST['table_balances_split_amount']);
+			if ($balance->verify_amounts($amounts, $_REQUEST['input_split'])) {
+				$balance->split($amounts, $_REQUEST['input_split']);
 			} else {
 				status(__("balance"), __("split amount error"), -1);
 			}
