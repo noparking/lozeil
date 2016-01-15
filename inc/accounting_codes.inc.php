@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Accounting_Codes extends Collector  {
 	public $filters = null;
@@ -130,9 +130,8 @@ class Accounting_Codes extends Collector  {
 				)
 			);
 		}
-
-		ksort($grid, SORT_STRING);
-
+		uksort($grid, function ($a, $b) { return strcmp($a, $b); });
+		
 		return $grid;
 	}
 

@@ -11,6 +11,40 @@ class tests_Accounting_Codes extends TableTestCase {
 		);
 	}
 	
+	function test_grid_body() {
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = "41101";
+		$accountingcode->name = "autre test 41101";
+		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = 10;
+		$accountingcode->name = "test 10";
+		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = 101;
+		$accountingcode->name = "autre test 101";
+		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = "410001";
+		$accountingcode->name = "autre test 410001";
+		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = 1;
+		$accountingcode->name = "autre test 1";
+		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = "411AB";
+		$accountingcode->name = "autre test 411AB";
+		$accountingcode->save();
+		$accountingcodes = new Accounting_Codes();
+		$accountingcodes->select();
+		
+		$grid = $accountingcodes->grid_body();
+		$this->assertEqual(array_keys($grid), array("1", "10", "101", "410001", "41101", "411AB"));
+		
+		$this->truncateTables("accountingcodes");
+	}
+	
 	function test_fullnames() {
 		$accountingcode = new Accounting_Code();
 		$accountingcode->number = 601;
@@ -25,6 +59,7 @@ class tests_Accounting_Codes extends TableTestCase {
 		$fullnames = $accountingcodes->fullnames();
 		$this->assertEqual($fullnames[1], "60100000 - test 601");
 		$this->assertEqual($fullnames[2], "60300000 - autre test 603");
+
 		$this->truncateTable("accountingcodes");
 	}
 	
