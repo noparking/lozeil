@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 abstract class Record {
 	public $id = 0;
@@ -49,7 +49,7 @@ abstract class Record {
 			WHERE ".self::get_sql_key($key)
 		);
 
-		$row = $this->db->fetchArray($result[0]);
+		$row = $this->db->fetch_array($result[0]);
 
 		if ($row === false or $row === null) {
 			return false;

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Collector implements iterator, countable, arrayAccess {
 	
@@ -118,20 +118,17 @@ class Collector implements iterator, countable, arrayAccess {
 			$this->found_rows = ! $this->calc_found_rows ? count ( $this ) : $this->db->value ( "SELECT FOUND_ROWS()" );
 		}
 		
-		while ( $record = $this->db->fetchArray ( $records ) ) {
-			
+		while ($record = $this->db->fetch_array($records)) {
 			if ($raw) {
 				$this->instances [] = $record;
 			} else {
-				$instance = $this->get_instance ( $record );
-				
+				$instance = $this->get_instance($record);
 				if ($instance !== null) {
-					foreach ( $record as $column => $value ) {
-						if (isset ( $instance->{$column} )) {
+					foreach ($record as $column => $value) {
+						if (isset($instance->{$column})) {
 							$instance->{$column} = $value;
 						}
 					}
-					
 					$this->instances [] = $instance;
 				}
 			}

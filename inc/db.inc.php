@@ -3,13 +3,14 @@
 
 class db {
 	public $link = null;
+	public $selected = false;
 	public $config = array();
 	public static $log = null;
 	
 	protected static $links = array();
 	
 	function __construct($config = false) {
-		if (! $config) {
+		if (!$config) {
 			$config = $GLOBALS['dbconfig'];
 		}
 		$this->config($config);
@@ -17,18 +18,18 @@ class db {
 	
 	function config(array $config) {
 		$this->config = $config;
-	
-		$link_id = $this->config['user'].'@'.$this->config['host'];
-	
+
+		$link_id = $this->config['user']."@".$this->config['host']."/".$this->config['name'];
+
 		if (!isset(self::$links[$link_id]) or (isset($this->config['new']) and (bool)$this->config['new'])) {
-			self::$links[$link_id] = @mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass']);
+			self::$links[$link_id] = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass']);
 		}
-	
+		
 		if (!self::$links[$link_id]) {
 			trigger_error("Error to connect to host '".$this->config['host']."' on database '".$this->config['name']."' with user '".$this->config['user']."':\n".mysqli_connect_error(), E_USER_WARNING);
 		} else {
 			$this->link = self::$links[$link_id];
-			mysqli_select_db($this->link, $this->config['name']);
+			$this->selected = mysqli_select_db($this->link, $this->config['name']);
 			$this->query("SET NAMES 'utf8'");
 		}
 	
@@ -46,21 +47,29 @@ class db {
 	}
 	
 	function close() {
-		return mysql_close($this->link);
+		if ($this->link) {
+			return mysqli_close($this->link);
+		} else {
+			trigger_error(mysqli_error($this->link), E_USER_ERROR);
+		}
 	}
 	
 	function input($query) {
-		$result = $this->query($query );
-		return array_shift($result );
+		$result = $this->query($query);
+		return array_shift($result);
 	}
 	
 	function query($query) {
-		self::log($query);
-		$result = mysqli_query($this->link, $query);
-		if ($result === false) {
-			$this->query_error($query);
+		if (!$this->link) {
+			trigger_error(mysqli_error($this->link), E_USER_ERROR);
 		} else {
-			return array($result, (is_resource($result) ? $result->num_rows : mysqli_affected_rows($this->link)));
+			self::log($query);
+			$result = mysqli_query($this->link, $query);
+			if ($result === false) {
+				$this->query_error($query);
+			} else {
+				return array($result, (is_resource($result) ? $result->num_rows : mysqli_affected_rows($this->link)));
+			}
 		}
 	}
 	
@@ -71,7 +80,7 @@ class db {
 	
 	function value($query) {
 		$result = $this->query($query);
-		$element = $this->fetchArray($result[0]);
+		$element = $this->fetch_array($result[0]);
 		return (is_array($element)?current($element):null);
 	}
 	
@@ -92,7 +101,7 @@ class db {
 	function database_exists($database) {
 		$query = "SHOW DATABASES";
 		$result = $this->query($query);
-		while ( $row = $this->fetchRow($result[0])) {
+		while ( $row = $this->fetch_row($result[0])) {
 			if ($row [0] == $database) {
 				return true;
 			}
@@ -111,11 +120,11 @@ class db {
 	}
 	
 	function fetch_row($result) {
-		return mysql_fetch_row($result);
+		return mysqli_fetch_row($result);
 	}
 	
 	function fetch_array($result) {
-		return mysql_fetch_array($result,MYSQL_ASSOC );
+		return mysqli_fetch_array($result, MYSQLI_ASSOC);
 	}
 	
 	function query_error($query) {
@@ -199,22 +208,10 @@ class db {
 		return $value;
 	}
 	
-	function fetchArray($result) {
-		return mysqli_fetch_array($result, MYSQLI_ASSOC);
-	}
-	
 	private function log($message) {
 		static $number = 0;
 		if (self::$log !== null) {
 			error_log(($number === 0 ? '>>>>>> SESSION start <<<<<<'."\n":"").date('d/m/y h:i:s')." [".++$number."] : ".$message."\n", 3, self::$log);
 		}
-	}
-	
-	function insertID() {
-		return mysql_insert_id($this->link);
-	}
-	
-	function fetchRow($result) {
-		return mysqli_fetch_row($result);
 	}
 }
