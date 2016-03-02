@@ -126,7 +126,7 @@ class Writings extends Collector {
 		$this->select();
 		foreach ($this as $writing) {
 			$result = $this->db->query("SELECT SUM(`amount_inc_vat`) as sum FROM `".$this->db->config['table_writings']."` WHERE `accountingcodes_id` = ".$writing->accountingcodes_id);
-			$d = $this->db->fetchArray($result[0]);
+			$d = $this->db->fetch_array($result[0]);
 			debug::dump($d);
 		}
 	}
@@ -138,7 +138,7 @@ class Writings extends Collector {
 			WHERE day >= ".$start." AND day <= ".$stop
 		);
 		
-		$sum = $this->db->fetchArray($result[0]);
+		$sum = $this->db->fetch_array($result[0]);
 		
 		return $sum['sum_amount_excl_vat'] - $sum['sum_amount_inc_vat'];
 	}
@@ -263,7 +263,7 @@ class Writings extends Collector {
 		$query = "SELECT SUM(`amount_inc_vat`) as `sum` ,`".$table."`.`".$title."` FROM ".$twriting." , ".$table." WHERE `".$twriting."`.`".$nameid."` = `".$table."`.`id` AND `day` >= '".$date."' AND `day` < '".$date_end."' AND `".$twriting."`.`amount_inc_vat` ".$operateur." 0 GROUP BY `".$table."`.`".$title."` ;";
 		$db = new db();
 		$result =  $db->query($query);
-		while(($d = $db->fetchArray($result[0]))){
+		while(($d = $db->fetch_array($result[0]))){
 			$data[addslashes($d[$title])] = $d['sum'];
 		}
 		return $data;
@@ -283,7 +283,7 @@ class Writings extends Collector {
 			WHERE `day` >= '".$date."'
                         AND `day` < '".$date_end."'"
 		);
-		while(($d = $this->db->fetchArray($result[0]))) {
+		while(($d = $this->db->fetch_array($result[0]))) {
 			$data[date('m/Y',$d['day'])] += $d['amount_inc_vat'];
 		}
 		return $data;

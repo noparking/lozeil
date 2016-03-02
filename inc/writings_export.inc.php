@@ -71,7 +71,7 @@ class Writings_Export  {
 			" ORDER BY day ASC"
 		);
 		if ($result_export[1] > 0) {
-			while ($row_export = $this->db->fetchArray($result_export[0])) {
+			while ($row_export = $this->db->fetch_array($result_export[0])) {
 				$value[] = $row_export;
 			}
 	    

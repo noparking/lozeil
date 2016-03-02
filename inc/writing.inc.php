@@ -47,7 +47,7 @@ class Writing extends Record {
 				FROM ".$this->db->config['table_'.$table]."
 				WHERE `timestamp` in (select MAX(`timestamp`) from ".$this->db->config['table_'.$table]." ) LIMIT 0,1; "
 			);
-			$row = $this->db->fetchArray($result[0]);
+			$row = $this->db->fetch_array($result[0]);
 			if ($row === false or $row === null)
 			{
 

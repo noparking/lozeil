@@ -69,7 +69,7 @@ class User_Authentication {
 				WHERE username = ".$db->quote($username)."
 				AND password = password(".$db->quote($password).")"
 			);
-			$row = $db->fetchArray($result[0]);
+			$row = $db->fetch_array($result[0]);
 	
 			if ($row['username'] == $username) {
 				$this->user_id = (int)$row['id'];
@@ -93,7 +93,7 @@ class User_Authentication {
 				" FROM ".$db->config['table_users'].
 				" WHERE username = ".$db->quote($username);
 		$result = $db->query($query);
-		$row = $db->fetchArray($result[0]);
+		$row = $db->fetch_array($result[0]);
 		
 		if ($row['username'] == $username) {
 			$this->user_id = (int)$row['id'];
@@ -117,7 +117,7 @@ class User_Authentication {
 			$result = $db->query($query);
 
 			if ($result[1] == 1) {
-				$session = $db->fetchArray($result[0]);
+				$session = $db->fetch_array($result[0]);
 				$session['user_id'] = $session['userid'];
 				$session['userdatabase'] = $GLOBALS['dbconfig']['name'];
 			}

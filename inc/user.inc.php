@@ -149,7 +149,7 @@ class User extends Record  {
 		);
 
 		if ($result[1]) {
-			$row = $db->fetchArray($result[0]);
+			$row = $db->fetch_array($result[0]);
 
 			if ($row['timestamp'] > strtotime("-1 hour")) {
 				$this->load(array('id' => $row['user_id']));

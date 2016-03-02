@@ -69,7 +69,7 @@ class Bayesian_Elements extends Collector  {
 		$ids = array();
 		$result = $this->db->query("SELECT DISTINCT table_id FROM ".$this->db->config['table_bayesianelements']."
 			WHERE table_name = ".$this->db->quote($table_name));
-		while ($row = $this->db->fetchArray($result[0])) {
+		while ($row = $this->db->fetch_array($result[0])) {
 			$ids[] = $row['table_id'];
 		}
 		return $ids;

@@ -86,7 +86,7 @@ class Accounting_Codes_Affectation extends Collector  {
 			ORDER BY a.number"
 		);
 
-		while ($row = $this->db->fetchArray($result[0])) {
+		while ($row = $this->db->fetch_array($result[0])) {
 			$affectation = new Accounting_Code_Affectation();
 			$affectation->fill($row);
 			$affectations[] = $affectation;

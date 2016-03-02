@@ -14,7 +14,7 @@ class Collector_Timed extends Collector {
 		}
 		$this->tear_down_timed();
 		
-		while ($record = $this->db->fetchArray($records)) {
+		while ($record = $this->db->fetch_array($records)) {
 			if ($raw) {
 				$this->instances[] = $record;
 			} else {

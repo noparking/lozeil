@@ -216,7 +216,7 @@ abstract class TableTestCase extends UnitTestCase {
 
 		list($recordSet) = $this->db->query("SELECT ".(sizeof($columns) == 0 ? '*' : join(', ', $columns))." FROM ".$table);
 
-		while ($record = $this->db->fetchArray($recordSet)) {
+		while ($record = $this->db->fetch_array($recordSet)) {
 			$records[] = $record;
 		}
 

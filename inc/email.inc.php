@@ -42,7 +42,7 @@ function prepare_email_request($to_user_ids, $request_id) {
 
 			$result_user = $db->query($query_user);
 			if ($result_user[1] > 0) {
-				while ($row_user = $db->fetchArray($result_user[0])) {
+				while ($row_user = $db->fetch_array($result_user[0])) {
 					$emailing = array();
 					$emailing['To'] = $row_user['email'];
 					$emailing['ToName'] = $row_user['user_name'];

@@ -31,12 +31,9 @@ class Reporting extends Record {
 			$this->id = 0;
 		}
 		
-		$result = $this->db->query ( "
-			SELECT MAX(sort) as max
-			 FROM " . $this->db->config ['table_reportings'] );
-		
-		$data = $this->db->fetchArray ( $result [0] );
-		;
+		$result = $this->db->query ("SELECT MAX(sort) as max FROM " . $this->db->config ['table_reportings']);
+		$data = $this->db->fetch_array($result[0]);
+
 		$this->sort = $data ['max'] + 1;
 		$query = "INSERT INTO ".$this->db->config['table_reportings']." 
 		SET norm = ".$this->db->quote($this->norm).",
@@ -124,7 +121,7 @@ class Reporting extends Record {
 	function toend() {
 		$result = $this->db->query( "SELECT MAX(sort) as max FROM ".$this->db->config['table_reportings']);
 		
-		$data = $this->db->fetchArray($result[0]);
+		$data = $this->db->fetch_array($result[0]);
 		$this->sort = $data['max'] + 1;
 		$this->update();
 	}
@@ -234,7 +231,7 @@ class Reporting extends Record {
 		$query = "SELECT  `id` FROM `".$this->db->config['table_reportings']."` WHERE `reportings_id` = ".$this->id;
 		$result = $this->db->query($query);
 		$data = array();
-		while(($d = $this->db->fetchArray($result[0]))) {
+		while(($d = $this->db->fetch_array($result[0]))) {
 			$data[$d['id']] = array('id' => $d['id']);
 		}
 		return $data;
