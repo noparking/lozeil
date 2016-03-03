@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Accounting_Code extends Record {
 	public $id = 0;
@@ -37,7 +37,7 @@ class Accounting_Code extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_accountingcodes']."
 			SET name = ".$this->db->quote($this->name)." ,
 			number = ".$this->db->quote($this->number)
