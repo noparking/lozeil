@@ -109,7 +109,7 @@ class db {
 		return false;
 	}
 	
-	function id($query) {
+	function query_with_id($query) {
 		$result = $this->query($query);
 		$result[] = $this->insert_id();
 		return $result;
