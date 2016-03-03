@@ -1,8 +1,7 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Activity extends Record {
-	
 	public $id = 0;
 	public $name = 0;
 	public $global = 0;
@@ -14,12 +13,12 @@ class Activity extends Record {
 	}
 	
 	function insert() {
-		$query = "INSERT INTO ".$this->db->config['table_activities']." 
-					SET name = ".$this->db->quote( $this->name ).",
-					global = ".(int)$this->global.",
-					timestamp = ".time().";";	
-		list($bool, ,$this->id) = $this->db->id($query);
-
+		list($bool, ,$this->id) = $this->db->query_with_id("
+			INSERT INTO ".$this->db->config['table_activities']." 
+			SET name = ".$this->db->quote( $this->name ).",
+			global = ".(int)$this->global.",
+			timestamp = ".time()
+		);
 		return $bool;
 	}
 		

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Reporting extends Record {
 	
@@ -45,7 +45,7 @@ class Reporting extends Record {
 		activities_id = ".$this->activities_id.",
 		timestamp = ".time();
 
-		list( $bool, , $this->id ) = $this->db->id( $query );
+		list( $bool, , $this->id ) = $this->db->query_with_id($query);
 		$this->db->status($bool, "i", __("reporting"));
 		return $bool;
 	}

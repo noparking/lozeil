@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class File extends Record {
 	public $id = 0;
@@ -33,35 +33,34 @@ class File extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_files']."
 			SET writings_id = ".$this->writings_id.", ".
 			"hash = ".$this->db->quote($this->hash).", ".
 			"value = ".$this->db->quote($this->value)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "i", __('file'));
-
+		$this->db->status($result[1], "i", __("file"));
 		return $this->id;
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_files'].
-			" SET writings_id = ".$this->writings_id.", ".
-			"hash = ".$this->db->quote($this->hash).", ".
-			"value = ".$this->db->quote($this->value)
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_files']."
+			SET writings_id = ".$this->writings_id.",
+			hash = ".$this->db->quote($this->hash).",
+			value = ".$this->db->quote($this->value)
 		);
-		$this->db->status($result[1], "u", __('file'));
-
+		$this->db->status($result[1], "u", __("file"));
 		return $this->id;
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_files'].
-			" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_files']."
+			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "d", __('file'));
-
+		$this->db->status($result[1], "d", __("file"));
 		return $this->id;
 	}
 	
@@ -81,8 +80,7 @@ class File extends Record {
 					$writing->update();
 				}
 				$this->save();
-			}
-			else {
+			} else {
 				return false;
 			}
 		} else {

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class User extends Record  {
 	public $id = 0;
@@ -46,12 +46,12 @@ class User extends Record  {
 			SET name = ".$this->db->quote($this->name).",
 			timestamp = ".time().",
 			username = ".$this->db->quote($this->username).", ";
-			if (isset($this->password) and !empty($this->password)) {
-				$query .= " password = ".$GLOBALS['config']['mysql_password']."(".$this->db->quote($this->password)."), ";
-			}
-			$query .=" email = ".$this->db->quote($this->email);
+		if (isset($this->password) and !empty($this->password)) {
+			$query .= " password = ".$GLOBALS['config']['mysql_password']."(".$this->db->quote($this->password)."), ";
+		}
+		$query .= " email = ".$this->db->quote($this->email);
 				
-		$result = $this->db->id($query);
+		$result = $this->db->query_with_id($query);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('user'));
 

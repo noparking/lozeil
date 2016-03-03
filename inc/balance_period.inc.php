@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Balance_Period extends Record {
 	public $id = 0;
@@ -43,14 +43,13 @@ class Balance_Period extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO `".$this->db->config['table_balancesperiod']."`
 			SET start = ".(int)$this->start.",
 			stop = ".(int)$this->stop
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('line'));
-
 		return $this->id;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Source extends Record {
 	public $id = 0;
@@ -33,34 +33,33 @@ class Source extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_sources']."
 			SET name = ".$this->db->quote($this->name).",
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "i", __('source'));
-
+		$this->db->status($result[1], "i", __("source"));
 		return $this->id;
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_sources'].
-			" SET name = ".$this->db->quote($this->name).",
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_sources']."
+			SET name = ".$this->db->quote($this->name).",
 			timestamp = ".time()."
 			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "u", __('source'));
-
+		$this->db->status($result[1], "u", __("source"));
 		return $this->id;
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_sources'].
-			" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_sources']."
+			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "d", __('source'));
-
+		$this->db->status($result[1], "d", __("source"));
 		return $this->id;
 	}
 	
@@ -76,8 +75,9 @@ class Source extends Record {
 	}
 
 	function is_deletable() {
-		$result = $this->db->value_exists("SELECT count(1) FROM ".$this->db->config['table_writings'].
-			" WHERE sources_id = '".$this->id."'"
+		$result = $this->db->value_exists("
+			SELECT count(1) FROM ".$this->db->config['table_writings']."
+			WHERE sources_id = ".(int)$this->id
 		);
 		return !$result;
 	}

@@ -4,7 +4,7 @@
 class Users extends Collector {
 	public $filters = null;
 	
-	function __construct($db = null, $class = null, $table = null) {
+	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
 			$class = substr(__CLASS__, 0, -1);
 		}

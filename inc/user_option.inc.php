@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class User_Option extends Record {
 	public $id = 0;
@@ -16,14 +16,12 @@ class User_Option extends Record {
 		if ($this->id > 0) {
 			$this->id = 0;
 		}
-
-		$query = "INSERT INTO ".$this->db->config['table_useroptions'].
-			" SET user_id = ".(int)$this->user_id.", ".
-			" name = ".$this->db->quote($this->name).", ".
-			" value = ".$this->db->quote($this->value);
-
-		list($bool, , $this->id) = $this->db->id($query);
-
+		list($bool, , $this->id) = $this->db->query_with_id("
+			INSERT INTO ".$this->db->config['table_useroptions']."
+			SET user_id = ".(int)$this->user_id.",
+			name = ".$this->db->quote($this->name).",
+			value = ".$this->db->quote($this->value)
+		);
 		return $bool;
 	}
 
@@ -31,14 +29,13 @@ class User_Option extends Record {
 		if ($this->id <= 0) {
 			return false;
 		} else {
-			$query = "UPDATE ".$this->db->config['table_useroptions'].
-				" SET user_id = ".(int)$this->user_id.", ".
-				" name = ".$this->db->quote($this->name).", ".
-				" value = ".$this->db->quote($this->value).
-				" WHERE id = ".$this->id;
-
-			list(, $affected_rows) = $this->db->query($query);
-
+			list(, $affected_rows) = $this->db->query("
+				UPDATE ".$this->db->config['table_useroptions']."
+				SET user_id = ".(int)$this->user_id.",
+				name = ".$this->db->quote($this->name).",
+				value = ".$this->db->quote($this->value)."
+				WHERE id = ".$this->id
+			);
 			return $affected_rows == 1;
 		}
 	}
@@ -54,7 +51,6 @@ class User_Option extends Record {
 				name = ".$this->db->quote($this->name).",
 				value = ".$this->db->quote($this->value)
 			);
-
 			return $affected_rows == 1;
 		}
 	}
@@ -63,8 +59,10 @@ class User_Option extends Record {
 		if ($this->id <= 0) {
 			return false;
 		} else {
-			list(, $affected_rows) = $this->db->query("DELETE FROM ".$this->db->config['table_useroptions']." WHERE id = ".$this->id);
-
+			list(, $affected_rows) = $this->db->query("
+				DELETE FROM ".$this->db->config['table_useroptions']."
+				WHERE id = ".$this->id
+			);
 			if ($affected_rows <= 0) {
 				return false;
 			} else {

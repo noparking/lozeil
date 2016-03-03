@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2015 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Bayesian_Element extends Record {
 	public $id = 0;
@@ -34,7 +34,7 @@ class Bayesian_Element extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_bayesianelements']." 
 			SET element = ".$this->db->quote((string)$this->element).",
 			field = ".$this->db->quote($this->field).",
@@ -43,7 +43,6 @@ class Bayesian_Element extends Record {
 			occurrences = ".(int)$this->occurrences
 		);
 		$this->id = $result[2];
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 		return $this->id;
 	}
 	
@@ -57,7 +56,6 @@ class Bayesian_Element extends Record {
 			occurrences = ".(int)$this->occurrences." 
 			WHERE id = ".(int)$this->id
 		);
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 		return $this->id;
 	}
 
@@ -66,7 +64,6 @@ class Bayesian_Element extends Record {
 			DELETE FROM ".$this->db->config['table_bayesianelements']."
 			WHERE id = ".(int)$this->id
 		);
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 		return $this->id;
 	}
 	
@@ -89,7 +86,6 @@ class Bayesian_Element extends Record {
 				occurrences = 1
 			");
 		}
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 	
 	function decrement() {
@@ -102,13 +98,11 @@ class Bayesian_Element extends Record {
 			table_id = ".(int)$this->table_id." AND
 			occurrences > 0
 		");
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 	
 	function truncateTable() {
 		$result = $this->db->query("
 			TRUNCATE TABLE ".$this->db->config['table_bayesianelements']
 		);
-		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 }

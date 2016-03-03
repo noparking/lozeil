@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Category extends Record {
 	public $id = 0;
@@ -33,7 +33,7 @@ class Category extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_categories']."
 			SET name = ".$this->db->quote($this->name).",
 			vat = ".(float)$this->vat.",
@@ -42,7 +42,6 @@ class Category extends Record {
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('category'));
-
 		return $this->id;
 	}
 	
@@ -56,7 +55,6 @@ class Category extends Record {
 			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('category'));
-
 		return $this->id;
 	}
 
@@ -68,7 +66,6 @@ class Category extends Record {
 			);
 			$this->db->status($result[1], "d", __('category'));
 		}
-		
 		return $this->id;
 	}
 	

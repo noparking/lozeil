@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Writing extends Record {
 	public $id = 0;
@@ -96,14 +96,14 @@ class Writing extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writings'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "d", __('line'));
+		$this->db->status($result[1], "d", __("line"));
 
 		return $this->id;
 	}
 	
 	function truncate() {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writings']);
-		$this->db->status($result[1], "d", __('line'));
+		$this->db->status($result[1], "d", __("line"));
 		return $this->id;
 	}
 
@@ -127,13 +127,13 @@ class Writing extends Record {
 				WHERE id = ".(int)$this->id
 			);
 		
-		$this->db->status($result[1], "u", __('line'));
+		$this->db->status($result[1], "u", __("line"));
 
 		return $this->id;
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_writings']."
 			SET categories_id = ".(int)$this->categories_id.",
 			banks_id = ".(int)$this->banks_id.",
@@ -152,8 +152,7 @@ class Writing extends Record {
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "i", __('line'));
-
+		$this->db->status($result[1], "i", __("line"));
 		return $this->id;
 	}
 	
@@ -243,7 +242,7 @@ class Writing extends Record {
 			$to_merge->delete();
 			$this->save();
 		} else {
-			$this->db->status(0, "u", __('line'));
+			$this->db->status(0, "u", __("line"));
 			return false;
 		}
 	}

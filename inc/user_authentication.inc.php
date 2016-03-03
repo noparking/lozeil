@@ -4,7 +4,7 @@
 class User_Authentication {
 	public $user_id;
 
-	function __construct($user_id=0) {
+	function __construct($user_id = 0) {
 		$this->user_id = (int)$user_id;
 	}
 	

@@ -59,7 +59,7 @@ class Balance extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO `".$this->db->config['table_balances']."`
 			SET amount = ".(float)$this->amount.",
 			number  = ".$this->db->quote($this->number).",
@@ -73,7 +73,6 @@ class Balance extends Record {
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('line'));
-
 		return $this->id;
 	}
 

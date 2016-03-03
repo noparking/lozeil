@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Bank extends Record {
 	public $id = 0;
@@ -33,38 +33,37 @@ class Bank extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO ".$this->db->config['table_banks']."
-			SET name = ".$this->db->quote($this->name).", ".
-			"selected = ".$this->selected.", ".
-			"iban = ".$this->db->quote($this->iban).", ".
-			"timestamp = ".time()
+			SET name = ".$this->db->quote($this->name).",
+			selected = ".$this->selected.",
+			iban = ".$this->db->quote($this->iban).",
+			timestamp = ".time()
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "i", __('bank'));
-
+		$this->db->status($result[1], "i", __("bank"));
 		return $this->id;
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_banks'].
-			" SET name = ".$this->db->quote($this->name).", ".
-			"selected = ".$this->selected.", ".
-			"iban = ".$this->db->quote($this->iban).", ".
-			"timestamp = ".time()." ".
-			"WHERE id = ".(int)$this->id
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_banks']."
+			SET name = ".$this->db->quote($this->name).",
+			selected = ".$this->selected.",
+			iban = ".$this->db->quote($this->iban).",
+			timestamp = ".time()."
+			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "u", __('bank'));
-
+		$this->db->status($result[1], "u", __("bank"));
 		return $this->id;
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_banks'].
-			" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_banks']."
+			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "d", __('bank'));
-
+		$this->db->status($result[1], "d", __("bank"));
 		return $this->id;
 	}
 	

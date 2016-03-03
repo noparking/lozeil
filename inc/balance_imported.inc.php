@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Balance_Imported extends Record {
 	public $id = 0;
@@ -33,25 +33,24 @@ class Balance_Imported extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
+		$result = $this->db->query_with_id("
 			INSERT INTO `".$this->db->config['table_balancesimported']."`
 			SET hash = ".$this->db->quote($this->hash).",
 			balance_id  = ".(int)$this->balance_id
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('writings imported'));
-
 		return $this->id;
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_balancesimported']."
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_balancesimported']."
 			SET hash = ".$this->db->quote($this->hash).",
-				balance_id = ".(int)$this->balance_id."
+			balance_id = ".(int)$this->balance_id."
 			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('writings imported'));
-
 		return $this->id;
 	}
 

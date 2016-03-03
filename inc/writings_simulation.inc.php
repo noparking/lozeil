@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Writings_Simulation extends Record {
 	public $name = "";
@@ -45,17 +45,18 @@ class Writings_Simulation extends Record {
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writingssimulations'].
-			" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_writingssimulations']."
+			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "d", __('writings simulations'));
-
 		return $this->id;
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_writingssimulations'].
-			" SET name = ".$this->db->quote($this->name).",
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_writingssimulations']."
+			SET name = ".$this->db->quote($this->name).",
 			amount_inc_vat = ".$this->amount_inc_vat.",
 			periodicity = ".$this->db->quote($this->periodicity).",
 			date_start = ".(int)$this->date_start.",
@@ -66,13 +67,13 @@ class Writings_Simulation extends Record {
 			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('writings simulations'));
-
 		return $this->id;
 	}
 	
 	function insert() {
-		$result = $this->db->id(" INSERT INTO ".$this->db->config['table_writingssimulations'].
-			" SET name = ".$this->db->quote($this->name).",
+		$result = $this->db->query_with_id("
+			INSERT INTO ".$this->db->config['table_writingssimulations']."
+			SET name = ".$this->db->quote($this->name).",
 			amount_inc_vat = ".$this->amount_inc_vat.",
 			periodicity = ".$this->db->quote($this->periodicity).",
 			date_start = ".(int)$this->date_start.",
@@ -83,7 +84,6 @@ class Writings_Simulation extends Record {
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('writings simulations'));
-
 		return $this->id;
 	}
 	
