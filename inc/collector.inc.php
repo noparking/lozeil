@@ -113,9 +113,9 @@ class Collector implements iterator, countable, arrayAccess {
 	
 	function select($raw = false) {
 		$this->reset ();
-		list ( $records ) = $this->db->query ( $this->get_query () );
+		list($records) = $this->db->query($this->get_query());
 		if ($this->limit_row_count or $this->calc_found_rows) {
-			$this->found_rows = ! $this->calc_found_rows ? count ( $this ) : $this->db->value ( "SELECT FOUND_ROWS()" );
+			$this->found_rows = ! $this->calc_found_rows ? count ($this) : $this->db->value("SELECT FOUND_ROWS()");
 		}
 		
 		while ($record = $this->db->fetch_array($records)) {
@@ -129,7 +129,7 @@ class Collector implements iterator, countable, arrayAccess {
 							$instance->{$column} = $value;
 						}
 					}
-					$this->instances [] = $instance;
+					$this->instances[] = $instance;
 				}
 			}
 		}
@@ -193,30 +193,26 @@ class Collector implements iterator, countable, arrayAccess {
 	
 	function get_query() {
 		$calc_found_rows = ($this->calc_found_rows) ? "SQL_CALC_FOUND_ROWS " : "";
-		$columns = $this->get_columns ();
-		$from = $this->get_from ();
-		$where = $this->get_where ();
-		$limit = $this->get_limit ();
-		$join = $this->get_join ();
-		$group_by = $this->get_group_by ();
-		$order = $this->get_order ();
+		$columns = $this->get_columns();
+		$from = $this->get_from();
+		$where = $this->get_where();
+		$limit = $this->get_limit();
+		$join = $this->get_join();
+		$group_by = $this->get_group_by();
+		$order = $this->get_order();
 		
-		$query = "SELECT " . $calc_found_rows . join ( ', ', $columns ) . " FROM " . join ( ', ', $from );
+		$query = "SELECT ".$calc_found_rows.join(', ', $columns)." FROM ".join(', ', $from);
 		
-		if (sizeof ( $join ) > 0) {
-			$query .= " " . join ( " ", $join );
+		if (sizeof($join) > 0) {
+			$query .= " ".join(" ", $join);
 		}
 		
-		if (sizeof ( $where ) > 0) {
-			$query .= " WHERE " . join ( " AND ", $where );
+		if (sizeof($where) > 0) {
+			$query .= " WHERE ".join(" AND ", $where);
 		}
 		
 		$query .= $group_by;
-		
-		if (sizeof ( $order ) > 0) {
-			$query .= " ORDER BY " . join ( ", ", $order );
-		}
-		
+		$query .= $order;
 		$query .= $limit;
 		
 		return $query;
@@ -284,6 +280,16 @@ class Collector implements iterator, countable, arrayAccess {
 	}
 	
 	protected function get_order() {
-		return $this->order;
+		$order = "";
+
+		if ($this->order_col_name !== null) {
+			$order = " ORDER BY ".$this->order_col_name;
+
+			if ($this->order_direction !== null) {
+				$order .= " ".$this->order_direction;
+			}
+		}
+
+		return $order;
 	}
 }
