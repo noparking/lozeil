@@ -107,18 +107,14 @@ class User extends Record  {
 
 	function password_request() {
 		if ($this->email) {
-			$db = new db();
-
 			$time = time();
 			$token = md5($time.$this->username.$this->password);
-			$id = $db->id("
+			$this->db->query("
 				INSERT INTO ".$db->config['table_passwordrequests']."
 				(user_id, timestamp, token, completed)
 				VALUES (".(int)$this->id.", ".(int)$time.", ".$db->quote($token).", 0)"
 			);
-
 			$url = $GLOBALS['config']['root_url']."/index.php?content=passwordrequest.php&token=".$token;
-
 			$emails = array(
 				array(
 					'To' => $this->email,
@@ -129,12 +125,9 @@ class User extends Record  {
 					'Body' => sprintf($GLOBALS['array_email']['password_request'][1], $this->username, $url),
 				),
 			);
-			
 			email_send($emails);
-
 			return true;
 		}
-
 		return false;
 	}
 	
