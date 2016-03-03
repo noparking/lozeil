@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Accounting_Code_Affectation extends Record {
 	public $id = 0;
@@ -34,11 +34,12 @@ class Accounting_Code_Affectation extends Record {
 	}
 	
 	function insert() {
-		$result = $this->db->id("INSERT INTO ".$this->db->config['table_accountingcodes_affectation']."
+		$result = $this->db->query_with_id("
+			INSERT INTO ".$this->db->config['table_accountingcodes_affectation']."
 			SET id = ".(int)$this->id.",
-				accountingcodes_id = ".$this->db->quote($this->accountingcodes_id)." ,
-				reportings_id = ".$this->db->quote($this->reportings_id)." ,
-				timestamp = ".time()
+			accountingcodes_id = ".$this->db->quote($this->accountingcodes_id)." ,
+			reportings_id = ".$this->db->quote($this->reportings_id)." ,
+			timestamp = ".time()
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __("accounting code"));
@@ -47,28 +48,31 @@ class Accounting_Code_Affectation extends Record {
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_accountingcodes_affectation'].
-			" SET accountingcodes_id = ".$this->db->quote($this->accountingcodes_id)." ,
-				  reportings_id = ".$this->db->quote($this->reportings_id)." ,
-				  timestamp = ".time()." 
+		$result = $this->db->query("
+			UPDATE ".$this->db->config['table_accountingcodes_affectation']."
+			SET accountingcodes_id = ".$this->db->quote($this->accountingcodes_id).",
+			  reportings_id = ".$this->db->quote($this->reportings_id)." ,
+			  timestamp = ".time()." 
 			  WHERE id = ".(int)$this->id
 		);
+		$this->db->status($result[1], "u", __("accounting code"));
 		
 		return $this->id;
 	}
 
 	function update_id($id) {
-		$query = "UPDATE ".$this->db->config['table_accountingcodes_affectation']." 
+		$this->db->query("
+			UPDATE ".$this->db->config['table_accountingcodes_affectation']." 
 			SET id = ".(int)$id."
-			WHERE id = ".(int)$this->id;
-
-		$this->db->query($query);
+			WHERE id = ".(int)$this->id
+		);
 		return $id;
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_accountingcodes_affectation'].
-				" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_accountingcodes_affectation']."
+			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "d", __("accounting code"));
 		return $this->id;
