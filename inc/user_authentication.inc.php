@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class User_Authentication {
 	public $user_id;
@@ -119,7 +119,7 @@ class User_Authentication {
 			if ($result[1] == 1) {
 				$session = $db->fetch_array($result[0]);
 				$session['user_id'] = $session['userid'];
-				$session['userdatabase'] = $GLOBALS['dbconfig']['name'];
+				$session['userdatabase'] = $db->config['name'];
 			}
 		}
 
