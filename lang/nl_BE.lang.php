@@ -476,3 +476,6 @@ $array_email['password_request'][0] = "Vragen om het wachtwoord te wijzigen";
 $array_email['password_request'][1] = "Dit is een automatisch bericht verzonden door Lozeil ;-)\n\nEen verzoek om een nieuw wachtwoord is gedaan voor de gebruiker %1\$s.\n\nOm uw nieuwe wachtwoord te ontvangen, ga naar dit adres : %2\$s\nJe hebt een uur om te klikken op deze link.";
 $array_email['new_password'][0] = "nieuw wachtwoord";
 $array_email['new_password'][1] = "Dit is een automatisch bericht verzonden door Lozeil ;-)\n\nEen verzoek om een nieuw wachtwoord is gedaan voor de gebruiker %1\$s.\n\nJe nieuwe wachtwoord is: %2\$s";
+
+$array_contents['unauthorized'][] = "login.php";
+$array_contents['unauthorized'][] = "passwordrequest.php";

@@ -82,7 +82,7 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	
 } else {
 	$location = clean_location($_SERVER['PHP_SELF']);
-	if (isset($_GET['content']) and $_GET['content'] == "passwordrequest.php") {
+	if (isset($_GET['content']) and $content_object->is_accessible_unauthorized($_GET['content'])) {
 		$content_object->filename($_GET['content']);
 	} else {
 		$content_object->filename_login();

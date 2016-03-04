@@ -476,3 +476,6 @@ $array_email['password_request'][0] = "Request to change password";
 $array_email['password_request'][1] = "This is an automated message sent by Lozeil ;-)\n\nA request for a new password has been done for the user  %1\$s.\n\nTo receive your new password, go to this address : %2\$s\nYou have an hour to click on this link.";
 $array_email['new_password'][0] = "New password";
 $array_email['new_password'][1] = "This is an automated message sent by Lozeil ;-)\n\nA request for a new password has been done for the user %1\$s.\n\nYour new password is: %2\$s";
+
+$array_contents['unauthorized'][] = "login.php";
+$array_contents['unauthorized'][] = "passwordrequest.php";

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Content {
 	const access_denied = "403.php";
@@ -9,11 +9,19 @@ class Content {
 	public $user = null;
 	public $context;
 
-	function __construct($content="") {
+	function __construct($content = "") {
 		if (empty($content)) {
 			$this->filename_login();
 		} else {
 			$this->filename = $this->clean($content);
+		}
+	}
+
+	function is_accessible_unauthorized($content = "") {
+		if (in_array($content, $GLOBALS['array_contents']['unauthorized'])) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
