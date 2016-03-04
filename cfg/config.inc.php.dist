@@ -3,7 +3,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "49";
+$config['version'] = "50";
 
 $config['layout_mediaserver'] = "http://medias.lozeil.com/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
