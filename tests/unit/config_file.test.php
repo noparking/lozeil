@@ -1,12 +1,5 @@
 <?php
-/*
-	opentime
-	$Author$
-	$URL$
-	$Revision$
-
-	Copyright (C) No Parking 2012 - 2014
-*/
+/* Lozeil -- Copyright (C) No Parking 2015 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
