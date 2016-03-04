@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -108,7 +108,7 @@ class tests_Writings extends TableTestCase {
 	function test_get_join() {
 		$writings = new Writings();
 		$writings->filter_with(array("timestamp" => 3));
-		$writings->add_order("amount_inc_vat DESC");
+		$writings->set_order("amount_inc_vat", "DESC");
 		$join = $writings->get_join();
 		$this->assertPattern("/LEFT JOIN categories/", $join[0]);
 		$this->assertPattern("/ON categories.id = writings.categories_id/", $join[0]);
@@ -121,7 +121,7 @@ class tests_Writings extends TableTestCase {
 	
 	function test_get_columns() {
 		$writings = new Writings();
-		$writings->add_order("amount_inc_vat DESC");
+		$writings->set_order("amount_inc_vat", "DESC");
 		$columns = $writings->get_columns();
 		$this->assertPattern("/`writings`.*/", $columns[0]);
 		$this->assertPattern("/categories.name as category_name, sources.name as source_name, banks.name as bank_name/", $columns[1]);
@@ -201,7 +201,7 @@ class tests_Writings extends TableTestCase {
 		$writing4->save();
 		
 		$writings = new Writings();
-		$writings->add_order("day ASC");
+		$writings->set_order("day", "ASC");
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$writings->select();
 		
@@ -221,7 +221,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/279/", $table);
 		
 		$writings = new Writings();
-		$writings->add_order("day ASC");
+		$writings->set_order("day", "ASC");
 		$writings->filter_with(array('search_index' => "élément"));
 		$writings->select();
 		
@@ -230,7 +230,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/Ceci est un test/", $table);
 		
 		$writings = new Writings();
-		$writings->add_order("day ASC");
+		$writings->set_order("day", "ASC");
 		$writings->filter_with(array('search_index' => "Bank"));
 		$writings->select();
 		
@@ -239,7 +239,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Bank 2/", $table);
 		
 		$writings = new Writings();
-		$writings->add_order("day ASC");
+		$writings->set_order("day", "ASC");
 		$writings->filter_with(array('search_index' => "Source 1"));
 		$writings->select();
 		
@@ -1112,7 +1112,7 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		
 		$writings = new Writings();
-		$writings->add_order("day ASC");
+		$writings->set_order("day", "ASC");
 		$writings->select();
 		$this->assertEqual($writings->get_duplicate_color_classes(), array(
 			1357549200 => array (

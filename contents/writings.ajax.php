@@ -215,8 +215,7 @@ if (isset($_REQUEST['action'])) {
 
 $writings->filter_with($_SESSION['filter']);
 
-$writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
-$writings->add_order("number DESC, amount_inc_vat DESC");
+$writings->set_order($_SESSION['order']['name'], $_SESSION['order']['direction'].", number DESC, amount_inc_vat DESC");
 $writings->select();
 
 echo json_encode(array('status' => show_status(), 'table' => $writings->show(), 'extra' => $extra));

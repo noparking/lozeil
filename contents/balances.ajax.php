@@ -128,7 +128,7 @@ if (isset($_REQUEST['action'])) {
 
 $balances = new Balances();
 $balances->filter_with($_SESSION['filter']);
-$balances->add_order("number");
+$balances->set_order("number");
 $balances->select();
 
 echo json_encode(array('status' => show_status(), 'table' => $balances->display(), 'data' => $data));

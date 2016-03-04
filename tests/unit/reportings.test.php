@@ -269,7 +269,7 @@ class tests_Reportings extends TableTestCase {
 
 		$view = [];
 		$activities = new Activities();
-		$activities->add_order("global");
+		$activities->set_order("global");
 		$activities->select();
 
 		$_SESSION['global_ca'] = array('n' => 0, 'n-1' => 0, 'n-2' => 0);
@@ -409,7 +409,7 @@ class tests_Reportings extends TableTestCase {
 
 		$view = [];
 		$activities = new Activities();
-		$activities->add_order("global");
+		$activities->set_order("global");
 		$activities->select();
 
 		$_SESSION['global_ca'] = array('n' => 0, 'n-1' => 0, 'n-2' => 0);

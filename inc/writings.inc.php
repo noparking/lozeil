@@ -21,7 +21,7 @@ class Writings extends Collector {
 	
 	function get_join() {
 		$join = parent::get_join();
-		if (!empty($this->order)) {
+		if (!empty($this->order_col_name)) {
 			$join[] = "
 				LEFT JOIN ".$this->db->config['table_categories']."
 				ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id
@@ -41,7 +41,7 @@ class Writings extends Collector {
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		if(!empty($this->order)) {
+		if(!empty($this->order_col_name)) {
 			$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_banks'].".name as bank_name";
 		}
 		return $columns;

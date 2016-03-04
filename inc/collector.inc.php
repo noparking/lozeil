@@ -106,11 +106,6 @@ class Collector implements iterator, countable, arrayAccess {
 		return $this;
 	}
 	
-	function add_order($clause) {
-		$this->order [] = $clause;
-		return $this;
-	}
-	
 	function select($raw = false) {
 		$this->reset ();
 		list($records) = $this->db->query($this->get_query());

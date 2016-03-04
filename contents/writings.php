@@ -31,8 +31,7 @@ if (isset($_REQUEST['action'])) {
 $menu = Plugins::factory("Menu_Area");
 echo $menu->show();
 
-$writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
-$writings->add_order("number DESC, amount_inc_vat DESC");
+$writings->set_order($_SESSION['order']['name'], $_SESSION['order']['direction'].", number DESC, amount_inc_vat DESC");
 
 if (isset($_GET['start']) and isset($_GET['stop'])) {
 	$_SESSION['filter'] = array('start' => $_GET['start'], 'stop' => $_GET['stop']);

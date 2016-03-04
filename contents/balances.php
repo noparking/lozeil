@@ -17,7 +17,7 @@ echo $heading->show();
 
 $balances = new Balances();
 $balances->filter_with($_SESSION['filter']);
-$balances->add_order("number");
+$balances->set_order("number");
 $balances->select();
 
 $working = $balances->display($_SESSION['filter']['start']); 

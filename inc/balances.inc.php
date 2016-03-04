@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Balances extends Collector  {
 	public $filters = null;
@@ -202,7 +202,7 @@ class Balances extends Collector  {
 
 	function show_body() {
 		$grid = array();
-		$this->add_order("number");
+		$this->set_order("number");
 		$this->select();
 		foreach ($this as $id => $balance) {
 			$class = "";

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2015 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Reportings extends Collector {
 	public $filters = null;
@@ -561,7 +561,7 @@ class Reportings extends Collector {
 	function show_view($period_option, $start, $stop) {
 		$tables = "";
 		$activities = new Activities();
-		$activities->add_order("global");
+		$activities->set_order("global");
 		$activities->select();
 
 		$i = 0;
