@@ -14,8 +14,8 @@ class Writings_Export  {
 	
 	function get_form() {
 		list($from , $to) = determine_fiscal_year(time());
-		$date_picker_from = new Html_Input_Date('date_picker_from',$from);
-		$date_picker_to = new Html_Input_Date('date_picker_to',$to);
+		$date_picker_from = new Html_Input_Date('date_picker_from', $from);
+		$date_picker_to = new Html_Input_Date('date_picker_to', $to);
 		$date_picker_from->img_src = $GLOBALS['config']['layout_mediaserver']."medias/images/link_calendar.png";
 		$date_picker_to->img_src = $GLOBALS['config']['layout_mediaserver']."medias/images/link_calendar.png";
 
@@ -54,8 +54,8 @@ class Writings_Export  {
 		);
 		
 		$writings = new Writings();
-		$writings->start = $this->from;
-		$writings->stop = $this->to;
+		$writings->filters['start'] = $this->from;
+		$writings->filters['stop'] = $this->to;
 		$writings->select();
 		
 		$accounting_codes = new Accounting_Codes();

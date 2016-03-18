@@ -118,7 +118,7 @@ class Writings extends Collector {
 		if (isset($this->filters['last'])) {
 			$query_where[] = $this->db->config['table_writings'].".timestamp >= (SELECT MAX(".$this->db->config['table_writings'].".timestamp) FROM ".$this->db->config['table_writings'].")";
 		}
-		
+
 		return $query_where;
 	}
 	
