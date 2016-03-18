@@ -127,7 +127,6 @@ class Writings extends Collector {
 		foreach ($this as $writing) {
 			$result = $this->db->query("SELECT SUM(`amount_inc_vat`) as sum FROM `".$this->db->config['table_writings']."` WHERE `accountingcodes_id` = ".$writing->accountingcodes_id);
 			$d = $this->db->fetch_array($result[0]);
-			debug::dump($d);
 		}
 	}
 

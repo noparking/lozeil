@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 $__['€'] = "€";
 $__[''] = "";
@@ -91,6 +91,7 @@ $__['consult statistics'] = "consult statistics";
 $__['contact_help'] = "Contact help";
 $__['create a default user'] = "create a default user";
 $__['credit'] = "credit";
+$__['Credit'] = "Credit";
 $__['currency'] = "Currency";
 $__['Current amount'] = "Current amount";
 $__['Current date'] = "Current date";
@@ -99,10 +100,12 @@ $__['customisation'] = "customisation";
 $__['daily cumulated'] = "daily cumulated";
 $__['database configuration'] = "database configuration";
 $__['date'] = "date";
+$__['Date'] = "Date";
 $__['date picker from'] = "date picker from";
 $__['date picker to'] = "date picker to";
 $__['day'] = "day";
 $__['debit'] = "debit";
+$__['Debit'] = "Debit";
 $__['delete'] = "delete";
 $__['delete balance'] = "Delete balance";
 $__['delete balance only'] = "delete balance only";
@@ -116,6 +119,7 @@ $__['Default value :'] = "Default value :";
 $__['default VAT'] = "default VAT";
 $__['detail'] = "Detail";
 $__['Detail'] = "Detail";
+$__['Details'] = "Details";
 $__['difference'] = "difference";
 $__['disable'] = "Disable";
 $__['display'] = "display";
@@ -208,11 +212,13 @@ $__['include'] = "Included";
 $__['included in'] = "Include in";
 $__['information'] = "information";
 $__['in use'] = "In use";
+$__['Journal'] = "Journal";
 $__['label'] = "Label";
 $__['last'] = "last";
 $__['last import'] = "last import";
 $__['last import bank'] = "last import bank";
 $__['last modified'] = "last modified";
+$__['Ledger code'] = "Ledger code";
 $__['less'] = "less";
 $__['line'] = "line";
 $__['line %s of file %s already exists'] = "line %s of file %s already exists";
@@ -282,6 +288,7 @@ $__['not exisisting'] = "not exisisting";
 $__['not matching'] = "not matching";
 $__['nothing to do'] = "nothing to do";
 $__['number'] = "number";
+$__['Number'] = "Number";
 $__['number of activities'] = "Number of activities";
 $__['number of banks'] = "Number of banks";
 $__['number of categories'] = "Number of categories";
