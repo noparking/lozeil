@@ -793,14 +793,8 @@ class Writings extends Collector {
 			"estimate_category" => __('estimate category'),
 			"delete" => __('delete')
 		);
-		if (!$_SESSION['accountant_view']) {
-			unset($options['change_accounting_code']);
-			unset($options['estimate_accounting_code']);
-		}
 		$select = new Html_Select("options_modify_writings", $options);
-		$select->properties = array(
-				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
-			);
+		$select->properties = array('onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')");
 		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
 		
 		$form = "<div id=\"select_writings\">".
