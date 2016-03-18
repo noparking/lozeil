@@ -61,6 +61,14 @@ class Accounting_Codes extends Collector  {
 			}
 		}
 	}
+	
+	function names() {
+		$names = array();
+		foreach ($this as $code) {
+			$names[$code->id] = $code->name;
+		}
+		return $names;
+	}
 
 	function fullnames() {
 		$numbers = array();

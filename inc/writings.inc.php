@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Writings extends Collector {
 	public $filters = null;
@@ -154,11 +154,11 @@ class Writings extends Collector {
 	function grid_header_accountant() {
 		$grid = $this->grid_header_normal();
 		$grid['header']['cells'][3] = array(
-						'type' => "th",
-						'class' => $this->determine_table_header_class("accountingcodes_id"),
-						'id' => "accountingcodes_id",
-						'value' => utf8_ucfirst(__('accounting code')),
-					);
+			'type' => "th",
+			'class' => $this->determine_table_header_class("accountingcodes_id"),
+			'id' => "accountingcodes_id",
+			'value' => utf8_ucfirst(__('accounting code')),
+		);
 		return $grid;
 	}
 	
@@ -184,6 +184,12 @@ class Writings extends Collector {
 						'class' => $this->determine_table_header_class("number"),
 						'id' => "number",
 						'value' => utf8_ucfirst(__('piece nb')),
+					),
+					array(
+						'type' => "th",
+						'class' => $this->determine_table_header_class("accountingcodes_id"),
+						'id' => "category_name",
+						'value' => utf8_ucfirst(__("accounting code")),
 					),
 					array(
 						'type' => "th",
@@ -250,27 +256,7 @@ class Writings extends Collector {
 		return $class;
 	}
 		
-	function distribution($table,$nameid,$title,$date,$date_end,$positive)
-	{
-		if($positive == true) {
-			$operateur = ">=";	
-		}
-		else {
-			$operateur = "<";
-		}
-		$data = array();
-		$twriting = $GLOBALS['dbconfig']['table_writings'];
-		$query = "SELECT SUM(`amount_inc_vat`) as `sum` ,`".$table."`.`".$title."` FROM ".$twriting." , ".$table." WHERE `".$twriting."`.`".$nameid."` = `".$table."`.`id` AND `day` >= '".$date."' AND `day` < '".$date_end."' AND `".$twriting."`.`amount_inc_vat` ".$operateur." 0 GROUP BY `".$table."`.`".$title."` ;";
-		$db = new db();
-		$result =  $db->query($query);
-		while(($d = $db->fetch_array($result[0]))){
-			$data[addslashes($d[$title])] = $d['sum'];
-		}
-		return $data;
-	}
-			
-	function get_amount_per($date,$date_end)
-	{
+	function get_amount_per($date, $date_end) {
 		$data = array();
 		for($i = 0;$i<=11;$i++) {
 			$time = strtotime("+".$i." months ".date("m/d/Y",$date));
@@ -427,6 +413,9 @@ class Writings extends Collector {
 		$banks = new Banks();
 		$banks->select();
 		$banks_name = $banks->names();
+		$accounting_codes = new Accounting_Codes();
+		$accounting_codes->select();
+		$accounting_codes_names = $accounting_codes->names();
 		
 		$grid = array();
 		
@@ -474,6 +463,10 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'value' => $writing->number,
+					),
+					array(
+						'type' => "td",
+						'value' => isset($accounting_codes_names[$writing->accountingcodes_id]) ? $accounting_codes_names[$writing->accountingcodes_id] : "",
 					),
 					array(
 						'type' => "td",

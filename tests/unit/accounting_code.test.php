@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -14,6 +14,13 @@ class tests_Accounting_Code extends TableTestCase {
 		);
 	}
 	
+	function teardown() {
+		$this->truncateTable("accountingcodes");
+		$this->truncateTable("accountingcodes_affectation");
+		$this->truncateTable("balances");
+		$this->truncateTable("reportings");
+	}
+
 	function test_clean() {
 		$accountcode = new Accounting_Code();
 		$cleaned = $accountcode->clean(array('name' => "456 <h1>456</h2>"));
@@ -26,12 +33,18 @@ class tests_Accounting_Code extends TableTestCase {
 		$accountingcode->save();
 		$this->assertEqual($accountingcode->name, "AccountCode");
 	}
+	
+	function test_insert() {
+		$this->backupTables("accountingcodes");
+		
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = "411NOPA";
+		$accountingcode->name = "No Parking";
+		$accountingcode->save();
+		$this->assertEqual($accountingcode->number, "411NOPA0");
+		$this->assertEqual($accountingcode->id, 1);
 
-	function teardown() {
-		$this->truncateTable("accountingcodes");
-		$this->truncateTable("accountingcodes_affectation");
-		$this->truncateTable("balances");
-		$this->truncateTable("reportings");
+		$this->restoreTables();
 	}
 
 	function test_save_load() {

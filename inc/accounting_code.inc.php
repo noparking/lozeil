@@ -111,7 +111,7 @@ class Accounting_Code extends Record {
 		if ($number == null) {
 			$number = $this->number;
 		}
-		 $number = substr($number, 0, 8);
+		$number = substr($number, 0, 8);
 		if (strlen($number) > 1) {
 			while (strlen($number) < 8) {
 				$number .= "0";

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 if (!isset($_GET['start'])) {
 	$_GET['start'] = time();
@@ -30,6 +30,3 @@ $working = $followupwritings->show($_GET['start']);
 
 $area = new Working_Area($working);
 echo $area->show();
-
-
-

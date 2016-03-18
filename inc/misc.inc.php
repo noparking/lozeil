@@ -66,7 +66,7 @@ function adapt_number($number) {
 	if (strlen($number) == 1) {
 		return $number;
 	} else {
-		$number = preg_replace("#0+$#","",$number);
+		$number = preg_replace("#0+$#", "", $number);
 		if (strlen($number) == 1) {
 			$number .= "0";
 		}

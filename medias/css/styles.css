@@ -1,145 +1,42 @@
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
-/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
 
-/* --- General --- */
+body { margin-top: 43px; color: #000; font-size: 16px; font-family: Helvetica, serif; text-align: left; background: url('../images/bg-global.png') #3c3c3b repeat-x left top; }
 
-strong {
-	font-weight: bold;
-}
+h1 { font-size: 1.5em; padding: 5px 0; margin: 5px 0; }
+h2 { font-size: 1.2em; padding: 5px 0; margin: 5px 0; color: #d75a62; }
+h3 { font-weight: bold; font-size: 1.1em; padding: 5px 0; margin: 5px 0; }
 
-h1 {
-	font-size: 1.5em;
-	padding: 5px 0;
-	margin: 5px 0;
-}
+strong { font-weight: bold; }
 
-h2 {
-	font-size: 1.2em;
-	padding: 5px 0;
-	margin: 5px 0;
-	color: #d75a62;
-}
+ul,li { list-style:none; margin: 0 20px; }
 
-h3 {
-	font-weight: bold;
-	font-size: 1.1em;
-	padding: 5px 0;
-	margin: 5px 0;
-}
+a { color:#000; text-decoration:none; }
+a:hover { color:#828282; text-decoration:underline; }
 
-ul,li {
-	list-style:none;
-	margin: 0 20px;
-}
+nobr { display: inline-block; }
 
-a {
-	color:#000;
-	text-decoration:none;
-}
-
-a:hover {
-	color:#828282;
-	text-decoration:underline;
-}
-
-nobr {
-	display: inline-block;
-}
-
-body {
-	margin-top: 43px;
-	color: #000;
-	font-size: 16px;
-	font-family: Helvetica, serif;
-	text-align: left;
-	background: url('../images/bg-global.png') #3c3c3b repeat-x left top;
-}
+td, th { padding: 5px 10px; border-bottom: 1px solid #efefef; vertical-align: top; }
+th { background: #eeeee5; color: #333333; text-align: left; text-shadow: 0 1px 0 #F6F6F6; text-decoration: none; cursor: pointer; }
+th:hover { background: #eeeee5; }
+tr { background: white; }
+tr.draggable { cursor: move; }
+table { border-collapse: collapse; width: 100%; clear: both; }
 
 img { border: none; }
 
-.content {
-	background-color: #fff;
-	width : 1195px;
-	margin: auto;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	padding: 0;
-	min-height: 600px;
-}
+.content { background-color: #fff; width : 1195px; margin: auto; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; padding: 0; min-height: 600px; }
+.content_working { margin: 0 70px 0 30px; }
+.content_copyright { width: 1195px; text-align: left; margin: 8px auto 5px auto; text-align: left; color: #999; text-shadow: 0 1px 0 #FFF; font-size: 0.8em; }
 
-.content_working {
-	margin: 0 70px 0 30px;
-}
+.small { font-style: italic; font-size: 0.8em; color: red; }
 
-.content_copyright {
-	width: 1195px;
-	text-align: left;
-	margin: 8px auto 5px auto;
-	text-align: left;
-	color: #999;
-	text-shadow: 0 1px 0 #FFF;
-	font-size: 0.8em;
-}
+.dragged { position: absolute; width: 1095px; cursor: move; }
+.dragged tr:first-child { background: rgba(175, 175, 175, 0.15); }
+.dragged .operations { display: none; }
 
-td, th {
-	padding: 5px 10px;
-	border-bottom: 1px solid #efefef;
-	vertical-align: middle;
-}
-
-th {
-	background: #eeeee5;
-	color: #333333;
-	text-align: left;
-	text-shadow: 0 1px 0 #F6F6F6;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-th:hover {
-	background: #eeeee5;
-}
-
-tr {
-	background: white;
-}
-
-tr.draggable {
-	cursor: move;
-}
-
-table {
-	border-collapse: collapse;
-	width: 100%;
-	clear: both;
-}
-
-.small {
-	font-style: italic;
-	font-size: 0.8em;
-	color: red;
-}
-
-.dragged {
-	position: absolute;
-	width: 1095px;
-	cursor: move;
-}
-
-.dragged tr:first-child {
-	background: rgba(175, 175, 175, 0.15);
-}
-
-.dragged .operations {
-	display: none;
-}
-
-.over {
-	background-color: lightgray !important;
-}
+.over { background-color: lightgray !important; }
 
 input[type="file"] {
 	margin: 0 20px 0 20px;

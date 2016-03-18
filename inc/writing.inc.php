@@ -292,7 +292,7 @@ class Writing extends Record {
 		$datepicker = new Html_Input_Date("datepicker", $_SESSION['filter']['start']);
 		$category = new Html_Select("categories_id", $categories->names());
 		$source = new Html_Select("sources_id", $sources->names());
-		$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->numbers());
+		$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->fullnames());
 		$number = new Html_Input("number");
 		$amount_excl_vat = new Html_Input("amount_excl_vat");
 		$vat = new Html_Input("vat");
@@ -339,9 +339,6 @@ class Writing extends Record {
 				)
 			)
 		);
-		if (!$_SESSION['accountant_view']) {
-			unset($grid['leaves']['accountingcode']);
-		}
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
@@ -455,10 +452,17 @@ class Writing extends Record {
 		$sources = new Sources();
 		$sources->select();
 				
+		$accountingcode = new Accounting_Code();
+		$currentcode = array();
+		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
+			$currentcode[] = $accountingcode->fullname();
+		}
+
 		$input_hidden = new Html_Input("action", "edit", "submit");
 		$input_hidden_id = new Html_Input("writings_id", $this->id);
 		$datepicker = new Html_Input_Date("datepicker", $this->day);
 		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
+		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
 		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
 		$number = new Html_Input("number", $this->number);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
@@ -478,6 +482,9 @@ class Writing extends Record {
 				'leaves' => array(
 					'category' => array(
 						'value' => $category->item(__('category')),
+					),
+					'accountingcode' => array(
+						'value' => $accountingcode_input->item(__('accounting code')),
 					),
 					'source' => array(
 						'value' => $source->item(__('source')),

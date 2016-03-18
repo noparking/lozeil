@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Writings_Followup  {
 	public $amounts = array();
@@ -7,18 +7,10 @@ class Writings_Followup  {
 	public $month = "";
 	public $filter = "categories";
 	
-	function show($datebegin)
-	{
-		if($this->scale == 'histogram'){
+	function show($datebegin) {
+		if ($this->scale == "histogram") {
 			return $this->show_bar_per($datebegin);
-		}
-		else if ($this->scale == 'piechartcredit') {
-			return $this->show_piechart($datebegin,true);
-		}
-		else if ($this->scale == 'piechartdebit') {
-			return $this->show_piechart($datebegin,false);
-		}
-		else {
+		} else {
 			switch ($this->filter) {
 				case 'categories':
 					return $this->show_timeseries_per_category_at($datebegin);
@@ -100,9 +92,7 @@ class Writings_Followup  {
 			'daily' => __('timeline daily cumulated'),
 			'monthly' => __('timeline monthly'),
 			'weekly' => __('timeline weekly'),
-			'histogram' => __('histogram'),
-			'piechartcredit' => __('piechart credit'),
-			'piechartdebit' => __('piechart debit')
+			'histogram' => __('histogram')
 			),
 			$this->scale
 		);
@@ -119,8 +109,7 @@ class Writings_Followup  {
 		return $form;
 	}
 		
-	function show_bar_per($date)
-	{
+	function show_bar_per($date) {
 		$writings = new Writings();
 		list($start,$stop) = determine_fiscal_year($date);
 		$result = $writings->get_amount_per($start,$stop);
@@ -131,31 +120,4 @@ class Writings_Followup  {
 		$working .= $barchart->show();
  		return $working;
 	}
-	
-	function show_piechart($date,$credit)
-	{
-		if($this->filter == 'categories') {
-			$table = $GLOBALS['dbconfig']['table_categories'];
-			$nameid = "categories_id";
-			$title = "name";
-		}
-		else {
-			$table = $GLOBALS['dbconfig']['table_banks'];
-			$nameid = "banks_id";
-			$title = "name";
-		}
-		$writings = new Writings();
-		list($start,$stop) = determine_fiscal_year($date);
-		$result = $writings->distribution($table,$nameid,$title,$start,$stop,$credit);
-		$next = strtotime('+1 years', $date);
-		$previous = strtotime('-1 years', $date);
-		$result = array_map("abs",$result);
-		asort($result);
-		$piechart = new Html_Piechart($result,$next,$previous,$this->filter,$this->scale);
-		$working = $this->form_scale_timeseries()."<br><center><h4>".__('fiscal year')." :".date("d/m/Y",$date)." </h4></center>";
-		$working .= $piechart->show();
- 		return $working;
-	}
-		
 }
-

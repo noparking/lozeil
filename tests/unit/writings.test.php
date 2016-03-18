@@ -18,29 +18,59 @@ class tests_Writings extends TableTestCase {
 		$GLOBALS['param']['fiscal year begin'] = "01";
 	}
 	
-	function distribution() {
-		$b1 = new Banks();
+	function test_grid_body_normal() {
+		$b1 = new Bank();
 		$b1->name = "CIC";
 		$b1->save();
-		$b2 = new Banks();
-		$b2->name = "CIC";
-		$b2->save();
-		$w1 = new Writing();
-		$w1->amount_inc_vat = 10;
-		$w1->banks_id = $b1->id;
-		$w1->day = time();
-		$w1->save();
-		$w2 = new Writing();
-		$w2->amount_inc_vat = 100;
-		$w2->banks_id = $b2->id;
-		$w2->day = time();
-		$w2->save();
-		$this->assertTrue($w1->id > 0);
-		$this->assertTrue($w2->id > 0);
-		$this->assertTrue($b1->id > 0);
-		$this->assertTrue($b2->id > 0);
+		
+		$accounting_code = new Accounting_Code();
+		$accounting_code->name = "No Parking";
+		$accounting_code->number = "411NOPKG";
+		$accounting_code->save();
+
+		$writing = new Writing();
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = $b1->id;
+		$writing->accountingcodes_id = $accounting_code->id;
+		$writing->save();
+		
 		$writings = new Writings();
-		$writings->distribution();
+		$writings->select();
+		$grid = $writings->grid_body_normal();
+		$this->assertEqual(count($grid[0]['cells']), 12);
+		$this->assertEqual($grid[0]['cells'][1]['value'], Format::date($writing->day));
+		$this->assertEqual($grid[0]['cells'][2]['value'], "");
+		$this->assertEqual($grid[0]['cells'][3]['value'], "No Parking");
+		
+		$this->truncateTable("writings");
+		$this->truncateTable("banks");
+	}
+
+	function test_grid_body_accountant() {
+		$b1 = new Bank();
+		$b1->name = "CIC";
+		$b1->save();
+		
+		$accounting_code = new Accounting_Code();
+		$accounting_code->name = "No Parking";
+		$accounting_code->number = "411NOPKG";
+		$accounting_code->save();
+		
+		$writing = new Writing();
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = $b1->id;
+		$writing->accountingcodes_id = $accounting_code->id;
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$grid = $writings->grid_body_accountant();
+		$this->assertEqual(count($grid[0]['cells']), 11);
+		$this->assertEqual($grid[0]['cells'][1]['value'], Format::date($writing->day));
+		$this->assertEqual($grid[0]['cells'][2]['value'], "");
+		$this->assertEqual($grid[0]['cells'][3]['value'], "411NOPKG");
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("banks");
