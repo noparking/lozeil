@@ -104,15 +104,20 @@ class Accounting_Codes extends Collector  {
 		$grid = array();
 		foreach ($this as $accountingcode) {
 			$number = adapt_number($accountingcode->number);
-			$matches = preg_grep('/^'.$number.'/', $numbers);
-			if (count($matches) > 1) {
-				$class = substr($number, 0, -1)." accounting_codes_shift_".(strlen($number) - 1)." accounting_codes_parent";
-				$parent = true;
+			if (preg_match("/^[0-9]*$/", $number)) {
+				$matches = preg_grep('/^'.$number.'/', $numbers);
+				if (count($matches) > 1) {
+					$class = substr($number, 0, -1)." accounting_codes_shift_".(strlen($number) - 1)." accounting_codes_parent";
+					$parent = true;
+				} else {
+					$class = substr($number, 0, -1)." accounting_codes_shift_".(strlen($number) - 1);
+					$parent = false;
+				}
 			} else {
-				$class = substr($number, 0, -1)." accounting_codes_shift_".(strlen($number) - 1);
+				$class = substr($number, 0, 3)." accounting_codes_shift_3";
 				$parent = false;
 			}
-
+				
 			$grid[$number] =  array(
 				'class' => $class,
 				'id' => $number,
@@ -139,7 +144,6 @@ class Accounting_Codes extends Collector  {
 			);
 		}
 		uksort($grid, function ($a, $b) { return strcmp($a, $b); });
-		
 		return $grid;
 	}
 

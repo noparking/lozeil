@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -36,11 +36,17 @@ class tests_Accounting_Codes extends TableTestCase {
 		$accountingcode->number = "411AB";
 		$accountingcode->name = "autre test 411AB";
 		$accountingcode->save();
+		$accountingcode = new Accounting_Code();
+		$accountingcode->number = "411AB02";
+		$accountingcode->name = "autre test 411AB02";
+		$accountingcode->save();
 		$accountingcodes = new Accounting_Codes();
 		$accountingcodes->select();
 		
 		$grid = $accountingcodes->grid_body();
-		$this->assertEqual(array_keys($grid), array("1", "10", "101", "410001", "41101", "411AB"));
+		$this->assertEqual(array_keys($grid), array("1", "10", "101", "410001", "41101", "411AB", "411AB02"));
+		$this->assertEqual($grid['411AB']['class'], "411 accounting_codes_shift_3");
+		$this->assertEqual($grid['411AB02']['class'], "411 accounting_codes_shift_3");
 		
 		$this->truncateTables("accountingcodes");
 	}
