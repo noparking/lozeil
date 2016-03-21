@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -24,6 +24,43 @@ class tests_Writings_Export extends TableTestCase {
 		$this->truncateTable("activities");
 		$this->truncateTable("reportings");
 		$this->truncateTable("writingsimported");
+	}
+	
+	function test_export_data() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 123;
+		$writing->day = mktime(0, 0, 0, 3, 21, 2016);
+		$writing->save();
+		
+		$export = new Writings_Export();
+		$export->from = mktime(0, 0, 0, 3, 1, 2016);
+		$export->to = mktime(23, 59, 59, 3, 31, 2016);
+		list($title, $values) = $export->export_data();
+		$this->assertEqual($values[0]['day'], mktime(0, 0, 0, 3, 21, 2016));
+		$this->assertEqual($values[0]['journal'], "BQC-0");
+		$this->assertEqual($values[0]['ledger'], "471000");
+		$this->assertEqual($values[0]['number'], "");
+		$this->assertEqual($values[0]['details'], "");
+		$this->assertEqual($values[0]['debit'], "");
+		$this->assertEqual($values[0]['credit'], "123");
+		$this->assertEqual($values[0]['E'], "E");
+		
+		$writing->comment = "Détails en commentaire";
+		$writing->number = "987";
+		$writing->save();
+		
+		$export = new Writings_Export();
+		$export->from = mktime(0, 0, 0, 3, 1, 2016);
+		$export->to = mktime(23, 59, 59, 3, 31, 2016);
+		list($title, $values) = $export->export_data();
+		$this->assertEqual($values[0]['day'], mktime(0, 0, 0, 3, 21, 2016));
+		$this->assertEqual($values[0]['journal'], "BQC-0");
+		$this->assertEqual($values[0]['ledger'], "471000");
+		$this->assertEqual($values[0]['number'], "987");
+		$this->assertEqual($values[0]['details'], "Détails en commentaire");
+		$this->assertEqual($values[0]['debit'], "");
+		$this->assertEqual($values[0]['credit'], "123");
+		$this->assertEqual($values[0]['E'], "E");
 	}
 
 	function test_get_form() {

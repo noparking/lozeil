@@ -41,7 +41,7 @@ class Writings_Export  {
 		}
 	}
 	
-	function export() {
+	function export_data() {
 		$title = array(
 			__("Date"),
 			__("Journal"),
@@ -67,7 +67,7 @@ class Writings_Export  {
 			$values[] = array(
 				'day' => $writing->day,
 				'journal' => "BQC-".$writing->banks_id,
-				'ledger' => isset($accountingcodes_numbers[$writing->accountingcodes_id]) ? $accountingcodes_numbers[$writing->accountingcodes_id] : "",
+				'ledger' => isset($accountingcodes_numbers[$writing->accountingcodes_id]) ? $accountingcodes_numbers[$writing->accountingcodes_id] : "471000",
 				'number' => $writing->number,
 				'details' => $writing->comment,
 				'debit' => ($writing->amount_inc_vat < 0) ? abs((float)$writing->amount_inc_vat) : 0,
@@ -75,7 +75,12 @@ class Writings_Export  {
 				'E' => "E",
 			);
 		}
-
+		
+		return array($title, $values);
+	}
+	
+	function export() {
+		list($title, $values) = $this->export_data();
 		export_excel($title, $values);
 	}
 
