@@ -18,6 +18,28 @@ class tests_Writings extends TableTestCase {
 		$GLOBALS['param']['fiscal year begin'] = "01";
 	}
 	
+	function test_grid_body__grid_header() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 3, 21, 2016);
+		$writing->banks_id = 1;
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$grid = $writings->grid_body_normal();
+		$this->assertEqual(count($grid[0]['cells']), 12);
+		$grid = $writings->grid_header_normal();
+		$this->assertEqual(count($grid['header']['cells']), 12);
+
+		$grid = $writings->grid_body_accountant();
+		$this->assertEqual(count($grid[0]['cells']), 11);
+		$grid = $writings->grid_header_accountant();
+		$this->assertEqual(count($grid['header']['cells']), 11);
+		
+		$this->truncateTables("writings");
+	}
+	
 	function test_grid_body_normal() {
 		$b1 = new Bank();
 		$b1->name = "CIC";

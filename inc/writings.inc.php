@@ -152,12 +152,7 @@ class Writings extends Collector {
 	
 	function grid_header_accountant() {
 		$grid = $this->grid_header_normal();
-		$grid['header']['cells'][3] = array(
-			'type' => "th",
-			'class' => $this->determine_table_header_class("accountingcodes_id"),
-			'id' => "accountingcodes_id",
-			'value' => utf8_ucfirst(__('accounting code')),
-		);
+		unset($grid['header']['cells'][3]);
 		return $grid;
 	}
 	
