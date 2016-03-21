@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Database_Tables_Source {
 	protected $db;
@@ -25,7 +25,7 @@ class Database_Tables_Source {
 			'accountingcodes_affectation' => array(
 				"CREATE TABLE IF NOT EXISTS ".$GLOBALS['dbconfig']['table_accountingcodes_affectation']." (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`accountingcodes_id` int(11) NOT NULL,
+				`accountingcodes_id` int(11) NOT NULL DEFAULT '0',
 				`reportings_id` int(11) NOT NULL,
 				`timestamp` int(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`id`)
@@ -82,6 +82,7 @@ class Database_Tables_Source {
 				name VARCHAR(100) NOT NULL DEFAULT '',
 				selected TINYINT(1) NOT NULL DEFAULT 0,
 				iban varchar(150) DEFAULT NULL,
+				`accountingcodes_id` int(11) NOT NULL DEFAULT '0',
 				timestamp INT(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"

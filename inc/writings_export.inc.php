@@ -62,11 +62,23 @@ class Writings_Export  {
 		$accounting_codes->select();
 		$accountingcodes_numbers = $accounting_codes->numbers();
 		
+		$banks = new Banks();
+		$banks->select();
+		$banks_accounting_numbers[0] = "BQC-0";
+		foreach ($banks as $bank) {
+			if ($bank->accountingcodes_id > 0) {
+				$banks_accounting_numbers[$bank->id] = $accountingcodes_numbers[$bank->accountingcodes_id];
+			} else {
+				$banks_accounting_numbers[$bank->id] = "BQC-".$bank->id;
+			}
+		}
+
+		
 		$values = array();
 		foreach ($writings as $writing) {
 			$values[] = array(
 				'day' => $writing->day,
-				'journal' => "BQC-".$writing->banks_id,
+				'journal' => $banks_accounting_numbers[$writing->banks_id],
 				'ledger' => isset($accountingcodes_numbers[$writing->accountingcodes_id]) ? $accountingcodes_numbers[$writing->accountingcodes_id] : "471000",
 				'number' => $writing->number,
 				'details' => $writing->comment,

@@ -1,15 +1,19 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Update extends Updater {
-
 	public $param;
 	public $dbconfig;
+
 	function __construct(db $db = null) {
 		parent::__construct($db);
 		$this->config = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "config");
 		$this->param = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
+	}
+	
+	function to_51() {
+		$this->db->query("ALTER TABLE `banks` ADD `accountingcodes_id` int(11) NOT NULL DEFAULT '0' AFTER `iban`;");
 	}
 
 	function to_50() {

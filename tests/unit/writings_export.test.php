@@ -7,25 +7,28 @@ class tests_Writings_Export extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"bayesianelements",
-			"writings",
 			"accountingcodes",
 			"activities",
+			"banks",
+			"bayesianelements",
 			"reportings",
+			"writings",
 			"writingsimported"
 		);
 	}
 
 	function tearDown() {
-		$this->truncateTable("writings");
-		$this->truncateTable("bayesianelements");
-		$this->truncateTable("writings");
-		$this->truncateTable("accountingcodes");
-		$this->truncateTable("activities");
-		$this->truncateTable("reportings");
-		$this->truncateTable("writingsimported");
+		$this->truncateTables(
+			"accountingcodes",
+			"activities",
+			"banks",
+			"bayesianelements",
+			"reportings",
+			"writings",
+			"writingsimported"
+		);
 	}
-	
+
 	function test_export_data() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 123;
@@ -55,6 +58,32 @@ class tests_Writings_Export extends TableTestCase {
 		list($title, $values) = $export->export_data();
 		$this->assertEqual($values[0]['day'], mktime(0, 0, 0, 3, 21, 2016));
 		$this->assertEqual($values[0]['journal'], "BQC-0");
+		$this->assertEqual($values[0]['ledger'], "471000");
+		$this->assertEqual($values[0]['number'], "987");
+		$this->assertEqual($values[0]['details'], "Détails en commentaire");
+		$this->assertEqual($values[0]['debit'], "");
+		$this->assertEqual($values[0]['credit'], "123");
+		$this->assertEqual($values[0]['E'], "E");
+		
+		$accounting_code = new Accounting_Code();
+		$accounting_code->name = "Crédit Coopératif";
+		$accounting_code->number = 512000;
+		$accounting_code->save();
+		
+		$bank = new Bank();
+		$bank->name = "Crédit Coop";
+		$bank->accountingcodes_id = $accounting_code->id;
+		$bank->save();
+		
+		$writing->banks_id = $bank->id;
+		$writing->save();
+		
+		$export = new Writings_Export();
+		$export->from = mktime(0, 0, 0, 3, 1, 2016);
+		$export->to = mktime(23, 59, 59, 3, 31, 2016);
+		list($title, $values) = $export->export_data();
+		$this->assertEqual($values[0]['day'], mktime(0, 0, 0, 3, 21, 2016));
+		$this->assertEqual($values[0]['journal'], "51200000");
 		$this->assertEqual($values[0]['ledger'], "471000");
 		$this->assertEqual($values[0]['number'], "987");
 		$this->assertEqual($values[0]['details'], "Détails en commentaire");

@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 $menu = Plugins::factory("Menu_Area");
 echo $menu->show();
@@ -7,13 +7,14 @@ echo $menu->show();
 if (isset($_POST['name_new'])) {
 	$bank = new Bank();
 	$data['name'] = $_POST['name_new'];
-	if (isset($_POST['iban_new']))
+	if (isset($_POST['iban_new'])) {
 		$data['iban'] = $_POST['iban_new'];
+	}
+	$data['accountingcodes_id'] = isset($_POST['accountingcodes_id_new']) ? $_POST['accountingcodes_id_new'] : 0;
 	$cleaned = $bank->clean($data);
 	$bank->fill($cleaned);
-	(isset($_POST['selected_new'])) ? $bank->selected = 1 : $bank->selected = 0;
-
-		$bank->save();
+	$bank->selected = isset($_POST['selected_new']) ? 1 : 0;
+	$bank->save();
 } 
 
 if (isset($_POST['banks'])) {
@@ -35,14 +36,13 @@ if (isset($_POST['banks'])) {
 					$cleaned = $bank->clean($data);
 					$bank->fill($cleaned);
 					(isset($data['selected'])) ? $bank->selected = 1 : $bank->selected = 0;
-
 					$bank->save();
 					break;
 				default:
 				}
 			}
 	}
- }  
+}  
 
 $heading = new Heading_Area(utf8_ucfirst(__('manage the banks')));
 echo $heading->show();

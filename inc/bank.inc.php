@@ -6,6 +6,7 @@ class Bank extends Record {
 	public $name = "";
 	public $selected = 0;
 	public $iban = "" ;
+	public $accountingcodes_id = 0;
 	public $timestamp = 0;
 
 	function __construct($id = 0, db $db = null) {
@@ -38,6 +39,7 @@ class Bank extends Record {
 			SET name = ".$this->db->quote($this->name).",
 			selected = ".$this->selected.",
 			iban = ".$this->db->quote($this->iban).",
+			accountingcodes_id = ".(int)$this->accountingcodes_id.",
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
@@ -51,6 +53,7 @@ class Bank extends Record {
 			SET name = ".$this->db->quote($this->name).",
 			selected = ".$this->selected.",
 			iban = ".$this->db->quote($this->iban).",
+			accountingcodes_id = ".(int)$this->accountingcodes_id.",
 			timestamp = ".time()."
 			WHERE id = ".(int)$this->id
 		);
@@ -70,16 +73,23 @@ class Bank extends Record {
 	function clean($variables) {
 		$cleaned = array();
 
+		$cleaned['name'] = "";
 		if (isset($variables['name'])) {
 			$cleaned['name'] = strip_tags($variables['name']);
 			$cleaned['name'] = trim(preg_replace('/\s+/', ' ', $cleaned['name']));			
 		}
 
+		$cleaned['iban'] = "";
 		if (isset($variables['iban'])) {
 			$cleaned['iban'] = strip_tags($variables['iban']);
 			$cleaned['iban'] = trim(preg_replace('/\s+/', ' ', $cleaned['iban']));
 		}
 
+		$cleaned['accountingcodes_id'] = 0;
+		if (isset($variables['accountingcodes_id'])) {
+			$cleaned['accountingcodes_id'] = (int)$variables['accountingcodes_id'];
+		}
+		
 		return $cleaned;
 	}
 
@@ -100,10 +110,12 @@ class Bank extends Record {
 	function form_add() {
 		$input = new Html_Input("name_new");
 		$input_iban = new Html_Input("iban_new");
+		$input_accountingcodes_id = new Html_Input_Ajax("accountingcodes_id_new", link_content("content=writings.ajax.php"));
 		$checkbox = new Html_Checkbox("selected new", "", true);
 		$form = "<div class=\"\"><center><h3>".__('add new bank')."</h3><form name=\"\" id=\"form_modif_source\"  method=\"post\"  action=\"".link_content("content=banks.php")."\"><table>";
 		$form .= "<tr><td>".ucfirst(__('name'))."</td><td>".$input->input()."</td></tr>";
 		$form .= "<tr><td>".ucfirst(__('iban'))."</td><td>".$input_iban->input()."</td></tr>";
+		$form .= "<tr><td>".ucfirst(__('accounting code'))."</td><td>".$input_accountingcodes_id->input()."</td></tr>";
 		$form .= "<tr><td>".ucfirst(__('use'))."</td><td>".$checkbox->input()."</td></tr>";
 		$form .= "<tr><td><input type=\"submit\" value=\"".__('add')."\" /></td></tr>";
 		$form .="</table></form>";
@@ -111,16 +123,23 @@ class Bank extends Record {
 		return $form;
 	}
 	
-	function show_form_modification()
-	{
+	function show_form_modification() {
+		$accountingcode = new Accounting_Code();
+		$accountingcode_id = array();
+		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
+			$accountingcode_id[] = $accountingcode->fullname();
+		}
+		
 		$input_name = new Html_Input("banks[".$this->id."][name]",$this->name);
 		$input_iban = new Html_Input("banks[".$this->id."][iban]",$this->iban);
+		$input_accountingcodes_id = new Html_Input_Ajax("banks[".$this->id."][accountingcodes_id]", link_content("content=writings.ajax.php"), $accountingcode_id);
 		$input_use = new Html_Checkbox("banks[".$this->id."][selected]", 1, $this->selected);
 		$input_submit = new Html_Input("banks[".$this->id."][submit]",__('modify'),"submit");
 		$action = new Html_Input("action","save","hidden");
 		$form = "<div class=\"\"><center><h3>".__('modify a bank')."</h3><form name=\"\" id=\"form_modif_source\"  method=\"post\"  action=\"".link_content("content=banks.php")."\"><table>";
 		$form .= "<tr><td>".ucfirst(__('name'))." : </td><td>".$input_name->input()."</td></tr>";
 		$form .= "<tr><td>".ucfirst(__('iban'))." : </td><td>".$input_iban->input()."</td></tr>";
+		$form .= "<tr><td>".ucfirst(__('accounting code'))."</td><td>".$input_accountingcodes_id->input()."</td></tr>";
 		$form .= "<tr><td>".ucfirst(__('use'))." : </td><td>".$input_use->input()."</td></tr>";
 		$form .= "<tr><td>".$action->input().$input_submit->input()."</td></tr>";
 		$form .= "</table></form></center></div><br><br>";
