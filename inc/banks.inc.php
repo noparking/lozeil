@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Banks extends Collector  {
 	public $filters = null;
@@ -82,34 +82,32 @@ class Banks extends Collector  {
 			$checkbox = new Html_Checkbox("banks[".$bank->id."][selected]", $bank->name, $bank->selected);
 			
 			$grid[$bank->id] =  array(
-						  'class' => $class,
-						  'id' => 'table_'.$bank->id,
-						  'cells' => array(
-								  	array(
-									'type' => "td",
-									'value' => $checker->input(),
-									),
-									array(
-									'type' => "td",
-									'value' => htmlspecialchars($bank->name),
-									),
-									array(
-									'type' => "td",
-									'value' => htmlspecialchars($bank->iban),
-									),
-									array(
-									'type' => "td",
-									'value' => $checkbox->input_readonly(),
-									),
-								   array(
-									'type' => "td",
-									 'value' => $bank->show_operations(),
-									),
-								   )
-						  );
+				'class' => $class,
+				'id' => 'table_'.$bank->id,
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $checker->input(),
+					),
+					array(
+						'type' => "td",
+						'value' => htmlspecialchars($bank->name),
+					),
+					array(
+						'type' => "td",
+						'value' => htmlspecialchars($bank->iban),
+					),
+					array(
+						'type' => "td",
+						'value' => $checkbox->input_readonly(),
+					),
+					array(
+						'type' => "td",
+						'value' => $bank->show_operations(),
+					),
+				)
+			);
 		}
-
-		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "4", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of banks')).': '.$bank_number)));
 		return $grid;
 	}
 
