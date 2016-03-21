@@ -112,7 +112,7 @@ class Accounting_Code extends Record {
 			$number = $this->number;
 		}
 		$number = substr($number, 0, 8);
-		if (strlen($number) > 1) {
+		if (strlen($number) > 1 and preg_match("/^[0-9]*$/", $number)) {
 			while (strlen($number) < 8) {
 				$number .= "0";
 			}

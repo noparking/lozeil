@@ -41,7 +41,7 @@ class tests_Accounting_Code extends TableTestCase {
 		$accountingcode->number = "411NOPA";
 		$accountingcode->name = "No Parking";
 		$accountingcode->save();
-		$this->assertEqual($accountingcode->number, "411NOPA0");
+		$this->assertEqual($accountingcode->number, "411NOPA");
 		$this->assertEqual($accountingcode->id, 1);
 
 		$this->restoreTables();
