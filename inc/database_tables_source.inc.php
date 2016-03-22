@@ -83,7 +83,7 @@ class Database_Tables_Source {
 				selected TINYINT(1) NOT NULL DEFAULT 0,
 				iban varchar(150) DEFAULT NULL,
 				`accountingcodes_id` int(11) NOT NULL DEFAULT '0',
-				timestamp INT(11) NOT NULL DEFAULT '0',
+				`timestamp` int(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 			),

@@ -1,9 +1,9 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "50";
+$config['version'] = "52";
 
 $config['layout_mediaserver'] = "http://medias.lozeil.com/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;

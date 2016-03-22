@@ -12,6 +12,10 @@ class Update extends Updater {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_52() {
+		$this->db->query("ALTER TABLE `banks` ADD `timestamp` int(11) NOT NULL DEFAULT '0' AFTER `accountingcodes_id`;");
+	}
+	
 	function to_51() {
 		$this->db->query("ALTER TABLE `banks` ADD `accountingcodes_id` int(11) NOT NULL DEFAULT '0' AFTER `iban`;");
 	}
