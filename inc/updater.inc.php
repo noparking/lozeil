@@ -1,10 +1,10 @@
 <?php
-  /* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Updater {
-	
 	public $config;
 	public $db;
+
 	function __construct(db $db = null) {
 		if ($db === null) {
 			$db = new db();
