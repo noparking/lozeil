@@ -775,17 +775,17 @@ class Writings extends Collector {
 	
 	function modify_options() {
 		$options = array(
-			"null" => "--",
-			"change_category" => __('change category to')." ...",
-			"change_source" => __('change source to')." ...",
-			"change_accounting_code" => __('change accounting code to')." ...",
-			"change_amount_inc_vat" => __('change amount including vat to')." ...",
-			"change_vat" => __('change vat to')." ...",
-			"change_day" => __('change date to')." ...",
-			"duplicate" => __('duplicate over')." ...",
-			"estimate_accounting_code" => __('estimate accounting code'),
-			"estimate_category" => __('estimate category'),
-			"delete" => __('delete')
+			'null' => "--",
+			'change_category' => __('change category to')." ...",
+			'change_source' => __('change source to')." ...",
+			'change_accounting_code' => __('change accounting code to')." ...",
+			'change_amount_inc_vat' => __('change amount including vat to')." ...",
+			'change_vat' => __('change vat to')." ...",
+			'change_day' => __('change date to')." ...",
+			'duplicate' => __('duplicate over')." ...",
+			'estimate_accounting_code' => __('estimate accounting code'),
+			'estimate_category' => __('estimate category'),
+			'delete' => __('delete')
 		);
 		$select = new Html_Select("options_modify_writings", $options);
 		$select->properties = array('onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')");
