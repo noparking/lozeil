@@ -96,7 +96,7 @@ class Writings_Simulation extends Record {
 				break;
 			case 'linear':
 				if (!empty($hash['evolution_periodical'])) {
-					$hash['evolution_periodical'] = str_replace(",", ".", $hash['evolution_periodical']);
+					$hash['evolution_periodical'] = to_float($hash['evolution_periodical']);
 					if (is_numeric($hash['evolution_periodical'])) {
 						$writingssimulation->evolution = "linear".":".$hash['evolution_periodical'];
 					} else {
@@ -111,7 +111,7 @@ class Writings_Simulation extends Record {
 		}
 		
 		if (isset($hash['amount_inc_vat'])) {
-			$writingssimulation->amount_inc_vat = str_replace(",", ".", $hash['amount_inc_vat']);
+			$writingssimulation->amount_inc_vat = to_float($hash['amount_inc_vat']);
 		}
 		if (isset($hash['display'])) {
 			$writingssimulation->display = 1;

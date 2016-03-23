@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -282,7 +282,7 @@ class tests_Import_Data extends TableTestCase {
 					}
 				}
 				if ($key == 3 and $value!= "Montant") {
-					$value = (float)str_replace(",", ".", $value);
+					$value = to_float($value);
 				}
 				$data->csv_data[$row][$key] = trim($value);
 			}

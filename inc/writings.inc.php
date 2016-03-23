@@ -888,13 +888,13 @@ class Writings extends Collector {
 					}
 					break;
 				case 'change_vat':
-					$parameters['value'] = str_replace(",", ".", trim($post['vat']));
+					$parameters['value'] = to_float(trim($post['vat']));
 					if (is_numeric($parameters['value'])) {
 						$parameters['id'] = $ids;
 					}
 					break;
 				case 'change_amount_inc_vat':
-					$parameters['value'] = str_replace(",", ".", trim($post['amount_inc_vat']));
+					$parameters['value'] = to_float(trim($post['amount_inc_vat']));
 					if (is_numeric($parameters['value'])) {
 						$parameters['id'] = $ids;
 					}
@@ -1067,7 +1067,7 @@ class Writings extends Collector {
 			$cleaned['number'] = $post['filter_number'];
 		}
 		if (!empty($post['filter_amount_inc_vat'])) {
-			$cleaned['amount_inc_vat'] = (float)str_replace(",", ".", $post['filter_amount_inc_vat']);
+			$cleaned['amount_inc_vat'] = to_float($post['filter_amount_inc_vat']);
 		}
 		if (!empty($post['filter_comment'])) {
 			$cleaned['comment'] = $post['filter_comment'];

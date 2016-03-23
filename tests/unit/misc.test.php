@@ -4,6 +4,15 @@
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
 class tests_misc extends TableTestCase {
+	function test_to_float() {
+		$this->assertEqual(to_float("1"), 1.0);
+		$this->assertEqual(to_float("1a"), 1.0);
+		$this->assertEqual(to_float("1,2"), 1.2);
+		$this->assertEqual(to_float("12"), 12.0);
+		$this->assertEqual(to_float("12 000"), 12000.0);
+		$this->assertEqual(to_float("12 . 000"), 12.0);
+	}
+	
 	function test_determine_fiscal_year() {
 		$GLOBALS['param']['fiscal year begin'] = 1;
 		$this->assertEqual(determine_fiscal_year(mktime(0, 0, 0, 1, 14, 2016)), array(mktime(0, 0, 0, 1, 1, 2016), mktime(23, 59, 59, 1, 0, 2017)));

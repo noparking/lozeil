@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Import_Writings extends Import_Data {
 	public $nb_new_records = 0;
@@ -158,7 +158,7 @@ class Import_Writings extends Import_Data {
 				}
 				$writing->comment = $line[4];
 				$writing->banks_id = $this->banks_id;
-				$writing->amount_inc_vat = !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
+				$writing->amount_inc_vat = !empty($line[2]) ? to_float($line[2]) : to_float($line[3]);
 				$writing->paid = 1;
 
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
@@ -284,7 +284,7 @@ class Import_Writings extends Import_Data {
 				if ($line[4] == "DEBIT") {
 					$line[3] = "-".$line[3];
 				}
-				$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
+				$writing->amount_inc_vat = to_float($line[3]);
 				$writing->paid = 1;
 
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);

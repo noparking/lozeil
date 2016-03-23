@@ -191,16 +191,16 @@ class Writing extends Record {
 		}
 		
 		if (isset($post['amount_inc_vat'])) {
-			$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
+			$cleaned['amount_inc_vat'] = to_float($post['amount_inc_vat']);
 		}
 		
 		$cleaned['categories_id'] = (int)$post['categories_id'];
 		$cleaned['sources_id'] = (int)$post['sources_id'];
 		$cleaned['comment'] = $post['comment'];
 		if (isset($post['amount_inc_vat'])) {
-			$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
+			$cleaned['amount_excl_vat'] = to_float($post['amount_excl_vat']);
 		}
-		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
+		$cleaned['vat'] = to_float($post['vat']);
 		$cleaned['number'] = $post['number'];
 		
 		return $cleaned;
@@ -255,7 +255,7 @@ class Writing extends Record {
 		}
 		
 		foreach ($amounts as $split_amount) {
-			$split_amount = str_replace(",", ".", $split_amount);
+			$split_amount = to_float($split_amount);
 			if (is_numeric($split_amount)) {
 				$this->amount_inc_vat = ($this->amount_inc_vat - $split_amount);
 
@@ -1113,7 +1113,7 @@ class Writing extends Record {
 		$cleaned = array();
 		foreach ($amounts as $amount) {
 			if (!empty($amount)) {
-				$cleaned[] = (float)str_replace(",", ".", $amount);
+				$cleaned[] = to_float($amount);
 			}
 		}
 		return $cleaned;

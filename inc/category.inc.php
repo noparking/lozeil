@@ -105,7 +105,7 @@ class Category extends Record {
 		if (!empty($post['name_new'])) {
 			$cleaned[0] = array (
 				'name' => $post['name_new'],
-				'vat' => str_replace(",", ".", $post['vat_new']),
+				'vat' => to_float($post['vat_new']),
 				'vat_category' => 0
 			);
 			if (isset($post['vat_category'])) {
@@ -118,7 +118,7 @@ class Category extends Record {
 			foreach ($post['category'] as $id => $values) {
 				$cleaned[$id] = array (
 					'name' => $values['name'],
-					'vat' => str_replace(",", ".", $values['vat']),
+					'vat' => to_float($values['vat']),
 					'vat_category' => 0
 				);
 				if (isset($values['vat_category'])) {

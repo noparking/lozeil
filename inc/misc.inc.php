@@ -1,10 +1,19 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
+function to_float($string) {
+	$string = str_replace(" ", "", $string);
+	return (float)str_replace(",",".", $string);
+}
+
 function sortcmp($a,$b) {
-	if((int)$a['sort'] == (int)$b['sort'])return 0;
-	if((int)$a['sort']  > (int)$b['sort'])return 1;
-	if((int)$a['sort']  < (int)$b['sort'])return -1;
+	if ((int)$a['sort'] == (int)$b['sort']) {
+		return 0;
+	} elseif ((int)$a['sort']  > (int)$b['sort']) {
+		return 1;
+	} elseif ((int)$a['sort']  < (int)$b['sort']) {
+		return -1;
+	}
 }
 
 function pourcentage ($val, $total, $round) {
@@ -574,5 +583,5 @@ function input_list_2_array($string, $key="value") {
 }
 
 function is_email($e) {
-	return (preg_match('/[_a-z0-9-]+([\._a-z0-9-]+)*@[\._a-z0-9-]+(\.[a-z0-9-]{2,5})+/', $e));
+	return (preg_match('/[_a-z0-9-]+([\._a-z0-9-]+)*@[\._a-z0-9-]+(\.[a-z0-9-]{2,9})+/', $e));
 }

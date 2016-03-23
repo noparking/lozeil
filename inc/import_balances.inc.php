@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 class Import_Balances extends Import_Data {
 	public $nb_new_records = 0;
@@ -163,7 +163,7 @@ class Import_Balances extends Import_Data {
 				$writing = new Writing();
 				$writing->comment = $line[4];
 				$writing->banks_id = $this->banks_id;
-				$writing->amount_inc_vat = !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
+				$writing->amount_inc_vat = !empty($line[2]) ? to_float($line[2]) : to_float($line[3]);
 				$writing->paid = 1;
 				$writing->day = $day;
 
@@ -176,7 +176,7 @@ class Import_Balances extends Import_Data {
 				$balance->load(array('accountingcodes_id' => $code->id, 'day' => $day));
 				$balance->number = $code->number;
 				$balance->name = $line[4];
-				$balance->amount += !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
+				$balance->amount += !empty($line[2]) ? to_float($line[2]) : to_float($line[3]);
 				$balance->accountingcodes_id = $code->id;
 				$balance->period_id = $period->id;
 				$balance->day = $day;
@@ -234,7 +234,7 @@ class Import_Balances extends Import_Data {
 				if ($line[4] == "DEBIT") {
 					$line[3] = "-".$line[3];
 				}
-				$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
+				$writing->amount_inc_vat = to_float($line[3]);
 				$writing->paid = 1;
 				$writing->day = $day;
 
@@ -247,7 +247,7 @@ class Import_Balances extends Import_Data {
 				$balance->load(array('accountingcodes_id' => $code->id, 'day' => $day));
 				$balance->number = $code->number;
 				$balance->name = $line[1];
-				$balance->amount += (float)str_replace(",", ".", $line[3]);
+				$balance->amount += to_float($line[3]);
 				$balance->accountingcodes_id = $code->id;
 				$balance->period_id = $period->id;
 				$balance->day = $day;

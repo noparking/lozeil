@@ -123,7 +123,7 @@ class Balance extends Record {
 		$current_affect->load(array('accountingcodes_id' => $this->accountingcodes_id));
 
 		foreach ($amounts as $amount) {
-			$amount = str_replace(",", ".", $amount);
+			$amount = to_float($amount);
 			if (is_numeric($amount) and $amount != 0) {
 
 				$balance = new Balance();
@@ -298,7 +298,7 @@ class Balance extends Record {
 		$cleaned = array();
 		foreach ($amounts as $amount) {
 			if (!empty($amount)) {
-				$cleaned[] = (float)str_replace(",", ".", $amount);
+				$cleaned[] = to_float($amount);
 			}
 		}
 		return $cleaned;
@@ -308,7 +308,7 @@ class Balance extends Record {
 		$cleaned = array();
 		foreach ($amounts as $ratio) {
 			if (!empty($ratio)) {
-				$ratio = (float)str_replace(",", ".", $ratio);
+				$ratio = to_float($ratio);
 				$cleaned[] = $this->amount * ($ratio / 100);
 			}
 		}
