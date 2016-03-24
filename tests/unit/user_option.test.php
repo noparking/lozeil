@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -11,7 +11,7 @@ class tests_User_Option extends TableTestCase {
 		);
 	}
 	function test_insert() {
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 
 		$option = new User_Option();
 		$option->id = 0;
@@ -30,11 +30,11 @@ class tests_User_Option extends TableTestCase {
 			$this->assertEqual($this->db->value($query), $value);
 		}
 
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 	}
 
 	function test_update() {
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 
 		$option = new User_Option();
 		$option->id = 0;
@@ -65,15 +65,15 @@ class tests_User_Option extends TableTestCase {
 
 		$option->id = 0;
 		$this->assertFalse($option->update());
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 
 		$option->id = 1;
 		$this->assertFalse($option->update());
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 	}
 
 	function test_delete() {
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 
 		$option = new User_Option();
 		$option->id = 0;
@@ -92,11 +92,11 @@ class tests_User_Option extends TableTestCase {
 
 		$this->assertFalse($option->delete());
 
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 	}
 
 	function test_save() {
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 
 		$option = new User_Option();
 		$option->id = 0;
@@ -125,7 +125,7 @@ class tests_User_Option extends TableTestCase {
 			$this->assertEqual($this->db->value($query), $value);
 		}
 
-		$this->truncateTable('useroptions');
+		$this->truncateTable("useroptions");
 	}
 
 	private static function get_db() {

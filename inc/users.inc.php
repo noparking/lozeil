@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Users extends Collector {
 	public $filters = null;
@@ -125,7 +125,7 @@ class Users extends Collector {
 									 ),
 								   array(
 									'type' => "td",
-									 'value' => $user->show_operations(),
+									 'value' => $user->links_to_operations(),
 									),
 								   )
 						  );
@@ -147,7 +147,7 @@ class Users extends Collector {
 
 	function add_user() {
 		$user = new User();
-		return '<div id=\'add_user\'>'.$user->show_form_add().ucfirst(__('add new user')).'</div>';
+		return '<div id=\'add_user\'>'.$user->show_form_add().ucfirst(__("Add new user")).'</div>';
 	}
 
  	function grid() {

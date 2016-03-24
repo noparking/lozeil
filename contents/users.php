@@ -1,10 +1,11 @@
 <?php
-  /* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2014 - 2016 */
 
 $menu = Plugins::factory("Menu_Area");
-echo $menu->show();
+echo $theme->menu($menu);
+
 $heading = new Heading_Area(utf8_ucfirst(__('manage the users')));
-echo $heading->show();
+echo $theme->heading($heading);
 
 if (isset($_POST['action']) and isset($_POST['users'])) {
 	$current_user = new User();
@@ -33,48 +34,13 @@ if (isset($_POST['action']) and isset($_POST['users'])) {
 						$_SESSION['accountant_view'] = "0";
 					}
 					break;
-				case "save":
-					$u =  new User();
-					$u->load(array('username' => $data['username']));
-					$user->password = "";
-
-					if (empty($user->username)) {
-						status(__("user"), __('username empty'), 1);
-						break;						
-					}
-
-					if ($u->id > 0 and $u->id != $user->id ) {
-						status(__("user"), __('username already exists'), 1);
-						break;
-					}
-					
-					if (isset($data['password']) and !empty($data['password'])) {
-						$user->password = $data['password'];
-					}
-					if (isset($data['view'])) {
-						$user->savemodexpert('1');
-						if ($current_user->id == $user->id) {
-							$_SESSION['accountant_view'] = "1";
-						}
-					}
-					else {
-						$user->savemodexpert('0');
-						if ($current_user->id == $user->id) {
-							$_SESSION['accountant_view'] = "0";
-						}
-					}
-					$cleaned = $user->clean($data);
-					$user->fill($cleaned);
-					$user->save();
-					break;
-				default:;
 				}
 			}
 		}
 	}
  }
 
-if(isset($_POST['new_user_name']) and empty($_POST['action'])) {
+if (isset($_POST['new_user_name']) and empty($_POST['action'])) {
 	$u = new User();
 	$u_loaded = new User();
 	$u_loaded->load(array("username" =>  $_POST['new_user_username']));
@@ -105,8 +71,11 @@ if(isset($_POST['new_user_name']) and empty($_POST['action'])) {
 
 $users = new Users();
 
-echo $users->add_user();
+$user = new User();
+$working = $user->link_to_edit();
+
 $users->select();
-$working = $users->display();
+$working .= $users->display();
+
 $area = new Working_Area($working);
 echo $area->show();

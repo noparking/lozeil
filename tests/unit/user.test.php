@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -7,9 +7,37 @@ class tests_User extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-		       "users",
-		       "useroptions"
+			"users",
+			"useroptions"
 		);
+	}
+	
+	function test_link_to_delete() {
+		$user = new User();
+		$this->assertNoPattern("/user.delete.php/", $user->link_to_delete());
+		$this->assertNoPattern("/id=0/", $user->link_to_delete());
+		
+		$user->name = "Perrick";
+		$user->username = "perrick";
+		$user->save();
+		$this->assertPattern("/user.delete.php/", $user->link_to_delete());
+		$this->assertPattern("/id=".$user->id."/", $user->link_to_delete());
+		
+		$this->truncateTables("users");
+	}
+
+	function test_link_to_edit() {
+		$user = new User();
+		$this->assertPattern("/user.edit.php/", $user->link_to_edit());
+		$this->assertNoPattern("/id=0/", $user->link_to_edit());
+		
+		$user->name = "Perrick";
+		$user->username = "perrick";
+		$user->save();
+		$this->assertPattern("/user.edit.php/", $user->link_to_edit());
+		$this->assertPattern("/id=".$user->id."/", $user->link_to_edit());
+		
+		$this->truncateTables("users");
 	}
 	
 	function test_clean() {
@@ -27,12 +55,14 @@ class tests_User extends TableTestCase {
 		$user->password = "pass";
 		$user->email = "admin@noparking.net";
 		$user->save();
+
 		$user_loaded = new User();
 		$user_loaded->load(array('id' => 1));
 		$this->assertEqual($user_loaded->name, $user->name);
 		$this->assertEqual($user_loaded->username, $user->username);
 		$this->assertEqual($user_loaded->password, "*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7");
 		$this->assertEqual($user_loaded->email, $user->email);
+
 		$this->truncateTable("users");
 	}
 	
@@ -56,6 +86,7 @@ class tests_User extends TableTestCase {
 		$this->assertNotEqual($user_loaded2->username, $user->username);
 		$this->assertNotEqual($user_loaded2->password, $user->password);
 		$this->assertNotEqual($user_loaded2->email, $user->email);
+
 		$this->truncateTable("users");
 	}
 	
@@ -64,58 +95,48 @@ class tests_User extends TableTestCase {
 		$user->name = "premier user";
 		$user->save();
 		$user_loaded = new User();
-		$this->assertTrue($user_loaded->load(array('id' => 1 )));
+		$this->assertTrue($user_loaded->load(array('id' => 1)));
 		$user->delete();
-		$this->assertFalse($user_loaded->load(array('id' => 1 )));
-	}
-
-	function test_expert_view() {
-		$user = new User();
-		$user->name = "abdelrhamane";
-		$user->username = "abdel";
-		$user->password = "pass";
-		$user->email = "abdelrhamane.benhammou@noparking.net";
-		$user->save();
-		$option = new User_Option();
-		$this->assertFalse($user->ismodexpert());
-		$user->savemodexpert(true);
-		$option = new User_Option();
-		$option->load(array("user_id" => $user->id,"name" => "viewexpert"));
-		$this->assertTrue($option->id > 0);
-		$this->assertTrue($user->ismodexpert());
-		$user->savemodexpert(false);
-		$this->assertFalse($user->ismodexpert());
-		$this->truncateTable("users");
-		$this->truncateTable("useroptions");
-	}
-
-	function test_show_form () {
-		$user = new User();
-		$user->name = "abdelrhamane";
-		$user->username = "abdel";
-		$user->password = "pass";
-		$user->email = "abdelrhamane.benhammou@noparking.net";
-		$user->save();
-		$form = $user->show_form();
-		$this->assertPattern("/new_user_name/",$form);
-		$this->assertPattern("/new_user_username/",$form);		
+		$this->assertFalse($user_loaded->load(array('id' => 1)));
+		
 		$this->truncateTable("users");
 	}
 
-	
-	function test_show_form_modification () {
+	function test_ask_before_delete() {
 		$user = new User();
-		$user->name = "abdelrhamane";
-		$user->username = "abdel";
+		$user->name = "Abdelrhamane";
+		$user->username = "Abdel";
 		$user->password = "pass";
 		$user->email = "abdelrhamane.benhammou@noparking.net";
 		$user->save();
-		$form = $user->show_form_modification();
-		$this->assertPattern("/abdelrhamane/",$form);
-		$this->assertPattern("/abdel/",$form);		
-		$this->assertPattern("/action/",$form);
-		$this->assertPattern("/".$user->email."/",$form);
+		
+		$form = $user->ask_before_delete();
+		$this->assertPattern("/user\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		
 		$this->truncateTable("users");
 	}
 	
+	function test_edit() {
+		$user = new User();
+		$user->name = "Abdelrhamane";
+		$user->username = "Abdel";
+		$user->password = "pass";
+		$user->email = "abdelrhamane.benhammou@noparking.net";
+		$user->save();
+		
+		$form = $user->edit();
+		$this->assertPattern("/user\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		$this->assertPattern("/user\[name\]/", $form);
+		$this->assertPattern("/value=\"Abdelrhamane\"/", $form);
+		$this->assertPattern("/user\[username\]/", $form);		
+		$this->assertPattern("/value=\"Abdel\"/", $form);
+		$this->assertPattern("/user\[password\]/", $form);
+		$this->assertPattern("/value=\"\"/", $form);
+		$this->assertPattern("/user\[email\]/", $form);
+		$this->assertPattern("/value=\"abdelrhamane.benhammou@noparking.net\"/", $form);
+		
+		$this->truncateTable("users");
+	}
 }

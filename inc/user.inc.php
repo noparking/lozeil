@@ -8,6 +8,7 @@ class User extends Record  {
 	public $password = "";
 	public $email = "";
 	public $timestamp = 0;
+
 	protected $db = null;
 
 	function __construct($user_id = 0, $db = null) {
@@ -19,7 +20,7 @@ class User extends Record  {
 
 		$this->db = $db;
 	}
-
+	
 	function db($db) {
 		if ($db instanceof db) {
 			$this->db = $db;
@@ -30,6 +31,22 @@ class User extends Record  {
 		return parent::load($key, $table, $columns);
 	}
 	
+	function link_to_edit() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=user.edit.php&id=".$this->id), __("Edit user %s", array($this->name)), array('class' => "ajax"));
+		} else {
+			return Html_Tag::a(link_content("content=user.edit.php&id"), __("Add new user"), array('class' => "ajax"));
+		}
+	}
+
+	function link_to_delete() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=user.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+
 	function save() {
 		if (is_numeric($this->id) and $this->id != 0) {
 			$this->id = $this->update();
@@ -77,11 +94,12 @@ class User extends Record  {
 	}
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_users'].
-			" WHERE id = '".$this->id."'"
+		$result = $this->db->query("
+			DELETE FROM ".$this->db->config['table_users']."
+			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "d", __('user'));
-		return $this->id;
+		return true;
 	}
 
 	function clean($variables) {
@@ -182,116 +200,78 @@ class User extends Record  {
 		return $this->defaultpage;
 	}
 	
-	function ismodexpert()
-	{
-		$option = new User_Option();
-		$option->load(array( "user_id" => $this->id , "name" => "viewexpert"));
-		return empty($option->value)?false:($option->value == "1")?"1":false;
-	}
-	
-	function savemodexpert($bool)
-	{
-		$option = new User_Option();
-		$option->load(array("user_id"=>$this->id,"name"=>"viewexpert"));
-		$option->user_id = $this->id;
-		$option->name = "viewexpert";
-		$option->value = $bool;
-		$option->save();
-	}
-	
-	function delmodexpert()
-	{
-		$option = new User_Option();
-		$option->load(array("user_id" => $this->id,"name" => "viewexpert"));
-		if ($option->id > 0) {
-			$option->delete();
-		}
-	}
-
-	static function show_form()	{
-		$input_name = new Html_Input("new_user_name","","text");
-		$input_username = new Html_Input("new_user_username","","text");
-		$input_psw = new Html_Input("new_user_psw","","password");
-		$input_mail = new Html_Input("new_user_mail","","text");
-		$input_submit = new Html_Input("new_user_submit",__('add'),"submit");
-		$checkbox_view = new Html_Checkbox("new_user_view","1");
-		$form = "<center><div><h3>".__('add new user')."</h3><form method=\"post\"  action=\"".link_content("content=users.php")."\"><table>";
-		$form .= "<tr><td>".ucfirst(__('name'))." : </td><td>".$input_name->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('username'))." : </td><td>".$input_username->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('password'))." : </td><td>".$input_psw->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('email'))." : </td><td>".$input_mail->input()."</td></tr>";
-		if (isset($_SESSION['accountant_view']) and $_SESSION['accountant_view']) {
-			$form .= "<tr><td>".ucfirst(__("expert mode"))."</td><td>".$checkbox_view->input()."</td></tr>";
-		}
-		$form .= "<tr><td>".$input_submit->input()."</td></tr>";
-		$form .= "</table></form></div></center><br><br>";
-		
-		return $form;
-	}
-	
-	
-	function show_form_modification() {
-		$input_name = new Html_Input("users[".$this->id."][name]",$this->name);
-		$input_username = new Html_Input("users[".$this->id."][username]",$this->username);
-		$input_psw = new Html_Input("users[".$this->id."][password]","","password");
-		$input_mail = new Html_Input("users[".$this->id."][email]",$this->email);
-		$input_submit = new Html_Input("users[".$this->id."][submit]",__('modify'),"submit");
-		$action = new Html_Input("action","save","hidden");
-		$checkbox_view = new Html_Checkbox("users[".$this->id."][view]","1",$this->ismodexpert());
-		$form = "<div class=\"\"><center><h3>".__('modify a user')."</h3><form name=\"\" id=\"form_modif_user\"  method=\"post\"  action=\"".link_content("content=users.php")."\"><table>";
-		$form .= "<tr><td>".ucfirst(__('name'))." : </td><td>".$input_name->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('username'))." : </td><td>".$input_username->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('password'))." : </td><td>".$input_psw->input()."</td></tr>";
-		$form .= "<tr><td>".ucfirst(__('email'))." : </td><td>".$input_mail->input()."</td></tr>";
-		if (isset($_SESSION['accountant_view']) and $_SESSION['accountant_view']) {
-			$form .= "<tr><td>".ucfirst(__("expert mode"))."</td><td>".$checkbox_view->input()."</td></tr>";
-		}
-		$form .= "<tr><td>".$action->input().$input_submit->input()."</td></tr>";
-		$form .= "</table></form></center></div><br><br>";
-		
-		return $form;
-	}
-	
-	
-	function show_form_add() {
-		$form = "<div class=\"duplicate show_acronym\">
-					<span class=\"operation\"> <input class=\"add\" type=\"button\"  id=\"".$this->id."\"/> </span> <br />
-					<span class=\"acronym\">".__('add')."</span>
-				</div>";
-		
-		return $form;
-	}
-	
-	function form_delete() {
-			$input_hidden_id = new Html_Input("table_users_delete_id", $this->id);
-			$input_hidden_action = new Html_Input("action", "delete");
-			$submit = new Html_Input("users[".$this->id."][submit]", '',"submit");
-			$submit->properties = array(
-				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
+	function ask_before_delete() {
+		if ((int)$this->id > 0) {
+			$id = new Html_Input("user[id]", (int)$this->id, "hidden");
+			$delete = new Html_Input("submit", __('delete'), "submit");
+			
+			$list = array(
+				'submit' => array(
+					'class' => "itemsform-submit",
+					'value' => $delete->input(),
+				),
 			);
-			
-			$form = "<div class=\"delete show_acronym\">
-						<form method=\"post\" name=\"table_users_form_delete\" action=\"\" enctype=\"multipart/form-data\">".
-							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-						</form>
-						<span class=\"acronym\">".__('delete')."</span>
-					</div>";
-			
-			return $form;
-	}
-	
 
-	function show_form_modify() {
-			$form = "<div class=\"modify show_acronym\">
-					<span class=\"operation\"> <input class=\"modif\" type=\"button\"  id=\"".$this->id."\"/> </span> <br />
-					<span class=\"acronym\">".__('modify')."</span>
-					</div>";
+			$form = "<h3>".__("Delete user %s", array($this->name))."</h3>";
+			$form .= "<form method=\"post\" action=\"\">";
+			$form .= $id->input_hidden();
+			$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+			$form .= $items->show();
+			$form .= "</form>";
 			
 			return $form;
+		} else {
+			return false;
+		}
+	}
+
+	function edit() {
+		$id = new Html_Input("user[id]", (int)$this->id, "hidden");
+		$name = new Html_Input("user[name]", $this->name);
+		$username = new Html_Input("user[username]", $this->username);
+		$password = new Html_Input("user[password]", "", "password");
+		$email = new Html_Input("user[email]", $this->email);
+		$save = new Html_Input("submit", __('save'), "submit");
+		
+		$list = array(
+			'name' => array(
+				'class' => "itemsform-head itemsform-bold clearfix",
+				'value' => $name->item(__("name")),
+			),
+			'username' => array(
+				'class' => "itemsform-head itemsform-bold itemsform-head-bottom clearfix",
+				'value' => $username->item(__("username")),
+			),
+			'password' => array(
+				'class' => "clearfix",
+				'value' => $password->item(__("password")),
+			),
+			'email' => array(
+				'class' => "clearfix",
+				'value' => $email->item(__("email")),
+			),
+			'submit' => array(
+				'class' => "itemsform-submit",
+				'value' => $save->input(),
+			),
+		);
+		
+		if ((int)$this->id > 0) {
+			$form = "<h3>".__("Edit user %s", array($this->name))."</h3>";
+		} else {
+			$form = "<h3>".__("Add new user")."</h3>";
+		}
+		$form .= "<form method=\"post\" action=\"\">";
+		$form .= $id->input_hidden();
+		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+		$form .= $items->show();
+		$form .= "</form>";
+		
+		return $form;
 	}
 	
-	function show_operations() {
-		return $this->show_form_modify().$this->form_delete();
+	function links_to_operations() {
+		return $this->link_to_edit().$this->link_to_delete();
 	}
 
 	function is_recently_modified(){

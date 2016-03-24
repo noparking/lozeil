@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require dirname(__FILE__)."/inc/require.inc.php";
 
@@ -52,15 +52,14 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 
 		if(isset($_GET['content']) and $_GET['content'] == "login.php") {
 			header("Location: index.php");
-		} else if(preg_match("/export/", $content) and isset($_POST['date_picker_from']) and isset($_POST['menu_actions_export_submit']) ) {
+		} elseif(preg_match("/export/", $content) and isset($_POST['date_picker_from']) and isset($_POST['menu_actions_export_submit']) ) {
 			include($content_included);
 			exit();
-		}
-		
-		else if ($content_object->check_access_denied() === true)
+		} elseif ($content_object->check_access_denied() === true) {
 			$content_included = dirname(__FILE__)."/contents/".Content::access_denied;
+		}
 
-		$theme = new Theme_Default();
+		$theme = Theme::factory(isset($_REQUEST['theme']) ? $_REQUEST['theme'] : "");
 		echo $theme->html_top();
 		echo $theme->head();
 		echo $theme->body_top($location, $content);

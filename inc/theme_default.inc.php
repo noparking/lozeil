@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Theme_Default {
 	function html_top() {
@@ -12,7 +12,7 @@ class Theme_Default {
 			<title>".($GLOBALS['config']['title'] == '' ? '' : $GLOBALS['config']['title']." : ").$GLOBALS['config']['name']."</title>
 			<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />".
 			$this->css().
-			$this->js_files()."
+			$this->js()."
 			<link href=\"".$GLOBALS['config']['layout_mediaserver']."medias/images/favicon.ico\" type=\"imgage/png\" rel=\"shortcut icon\" />
 		</head>";
 	}
@@ -38,7 +38,6 @@ class Theme_Default {
 	}
 	
 	function show_css_files($css_files) {
-		
 		$html = "";
 		if (is_array($css_files)) {
 			$media_css_file = "";
@@ -60,6 +59,8 @@ class Theme_Default {
 	
 	function js_files() {
 		$js_files[] = "medias/js/jquery.js";
+		$js_files[] = "medias/js/jquery.form.js";
+		$js_files[] = "medias/js/ajax.jquery.js";
 		$js_files[] = "medias/js/spin.js";
 		$js_files[] = "medias/js/draganddrop.jquery.js";
 		$js_files[] = "medias/js/calendar.js";
@@ -121,15 +122,20 @@ class Theme_Default {
 		  }
 		}
 		
+		return $js_files;
+	}
+	
+	function js() {
 		$html = "";
 
+		$js_files = $this->js_files();
 		if (is_array($js_files)) {
 			foreach ($js_files as $js_file) {
 				$js_file = $GLOBALS['config']['layout_mediaserver'].$js_file."?v=".urlencode($GLOBALS['config']['version']);
 				$html .= "<script src=\"".$js_file."\" language=\"JavaScript\" type=\"text/javascript\"></script>\n";
 			}
 		}
-
+		
 		return $html;
 	}
 	
@@ -145,6 +151,14 @@ class Theme_Default {
 		return show_status();
 	}
 	
+	function menu($menu) {
+		return $menu->show();
+	}
+	
+	function heading($heading) {
+		return $heading->show();
+	}
+	
 	function content_top() {
 		return "<div class=\"content\">";
 	}
@@ -153,7 +167,7 @@ class Theme_Default {
 		return "</div>
 		<div class=\"content_copyright\">
 		<div>
-		&copy; No Parking 2013 - 2014 v.".$GLOBALS['config']['version']."
+		&copy; No Parking 2013 - 2016 v.".$GLOBALS['config']['version']."
 		</div>
 		</div>
 		<div class=\"loading\">
