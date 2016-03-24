@@ -9,9 +9,63 @@ class tests_Bank extends TableTestCase {
 		$this->initializeTables(
 			"banks",
 			"sources",
-			"categories",
 			"writings"
 		);
+	}
+	
+	function test_ask_before_delete() {
+		$bank = new Bank();
+		$bank->name = "Via API";
+		$bank->save();
+	
+		$form = $bank->ask_before_delete();
+		$this->assertPattern("/bank\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+	
+		$this->truncateTable("banks");
+	}
+	
+	function test_edit() {
+		$bank = new Bank();
+		$bank->name = "Via API";
+		$bank->save();
+	
+		$form = $bank->edit();
+		$this->assertPattern("/bank\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		$this->assertPattern("/bank\[name\]/", $form);
+		$this->assertPattern("/value=\"Via API\"/", $form);
+		$this->assertPattern("/bank\[iban\]/", $form);
+		$this->assertPattern("/bank\[accountingcodes_id\]/", $form);
+		$this->assertPattern("/bank\[selected\]/", $form);
+	
+		$this->truncateTable("banks");
+	}
+	
+	function test_link_to_delete() {
+		$bank = new Bank();
+		$this->assertNoPattern("/bank.delete.php/", $bank->link_to_delete());
+		$this->assertNoPattern("/id=0/", $bank->link_to_delete());
+	
+		$bank->name = "Bank 1";
+		$bank->save();
+		$this->assertPattern("/bank.delete.php/", $bank->link_to_delete());
+		$this->assertPattern("/id=".$bank->id."/", $bank->link_to_delete());
+	
+		$this->truncateTables("banks");
+	}
+	
+	function test_link_to_edit() {
+		$bank = new Bank();
+		$this->assertPattern("/bank.edit.php/", $bank->link_to_edit());
+		$this->assertNoPattern("/id=0/", $bank->link_to_edit());
+	
+		$bank->name = "Bank 1";
+		$bank->save();
+		$this->assertPattern("/bank.edit.php/", $bank->link_to_edit());
+		$this->assertPattern("/id=".$bank->id."/", $bank->link_to_edit());
+	
+		$this->truncateTables("banks");
 	}
 	
 	function test_clean() {
@@ -80,31 +134,6 @@ class tests_Bank extends TableTestCase {
 		$writing->save();
 		$this->assertFalse($bank->is_deletable());
 		
-		$this->truncateTable("banks");
-	}
-
-	function test_form_add() {
-		$bank = new Bank();
-		$bank->name = "lcl";
-		$bank->bankname = "fr2030008055";
-		$bank->save();
-		$form = $bank->form_add();
-		$this->assertPattern("/name_new/", $form);
-		$this->assertPattern("/iban_new/", $form);		
-		$this->assertPattern("/accountingcodes_id_new/", $form);
-
-		$this->truncateTable("banks");
-	}
-
-	function test_show_form_modification () {
-		$bank = new Bank();
-		$bank->name = "lcl";
-		$bank->iban = "fr2030008055";
-		$bank->save();
-		$form = $bank->show_form_modification();
-		$this->assertPattern("/lcl/",$form);
-		$this->assertPattern("/fr2030008055/",$form);		
-		$this->assertPattern("/action/",$form);
 		$this->truncateTable("banks");
 	}
 }
