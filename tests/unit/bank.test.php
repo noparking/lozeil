@@ -8,6 +8,7 @@ class tests_Bank extends TableTestCase {
 		parent::__construct();
 		$this->initializeTables(
 			"banks",
+			"categories",
 			"sources",
 			"writings"
 		);
