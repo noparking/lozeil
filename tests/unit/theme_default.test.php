@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -15,14 +15,14 @@ class tests_Theme_Default extends TableTestCase {
 		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->css());
 	}
 	
-	function test_js_files() {
+	function test_js() {
 		$theme = new Theme_Default();
 		$GLOBALS['config']['layout_mediaserver'] = "";
-		$this->assertPattern("/javascript/", $theme->js_files());
-		$this->assertPattern("/medias\/js\/jquery.js/", $theme->js_files());
+		$this->assertPattern("/javascript/", $theme->js());
+		$this->assertPattern("/medias\/js\/jquery.js/", $theme->js());
 		$GLOBALS['config']['layout_mediaserver'] = "autre/chemin/";
-		$this->assertPattern("/autre\/chemin\//", $theme->js_files());
-		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->js_files());
+		$this->assertPattern("/autre\/chemin\//", $theme->js());
+		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->js());
 	}
 	
 	function test_head() {
