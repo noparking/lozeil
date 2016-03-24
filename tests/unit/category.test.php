@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2015 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -9,18 +9,65 @@ class tests_Category extends TableTestCase {
 		$this->initializeTables(
 			"banks",
 			"categories",
-			"sources",
+			"categories",
 			"writings"
 		);
 	}
 	
-	function test_clean_str() {
+	function test_ask_before_delete() {
 		$category = new Category();
-		$cleaned = $category->clean_str(array('name' => "456 <h1>456</h2>", 'vat' => "category&lt;h1&gt;             "));
-		$this->assertEqual($cleaned['name'], "456 456");
-		$this->assertEqual($cleaned['vat'], "category&lt;h1&gt;");
+		$category->name = "Via API";
+		$category->save();
+		
+		$form = $category->ask_before_delete();
+		$this->assertPattern("/category\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		
+		$this->truncateTable("categories");
+	}
+	
+	function test_edit() {
+		$category = new Category();
+		$category->name = "Via API";
+		$category->save();
+		
+		$form = $category->edit();
+		$this->assertPattern("/category\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		$this->assertPattern("/category\[name\]/", $form);
+		$this->assertPattern("/value=\"Via API\"/", $form);
+		$this->assertPattern("/category\[vat\]/", $form);
+		$this->assertPattern("/category\[vat_category\]/", $form);
+		
+		$this->truncateTable("categories");
 	}
 
+	function test_link_to_delete() {
+		$category = new Category();
+		$this->assertNoPattern("/category.delete.php/", $category->link_to_delete());
+		$this->assertNoPattern("/id=0/", $category->link_to_delete());
+	
+		$category->name = "Category 1";
+		$category->save();
+		$this->assertPattern("/category.delete.php/", $category->link_to_delete());
+		$this->assertPattern("/id=".$category->id."/", $category->link_to_delete());
+	
+		$this->truncateTables("categories");
+	}
+	
+	function test_link_to_edit() {
+		$category = new Category();
+		$this->assertPattern("/category.edit.php/", $category->link_to_edit());
+		$this->assertNoPattern("/id=0/", $category->link_to_edit());
+	
+		$category->name = "Category 1";
+		$category->save();
+		$this->assertPattern("/category.edit.php/", $category->link_to_edit());
+		$this->assertPattern("/id=".$category->id."/", $category->link_to_edit());
+	
+		$this->truncateTables("categories");
+	}
+	
 	function test_save_load() {
 		$category = new Category();
 		$category->name = "première category";
@@ -109,120 +156,14 @@ class tests_Category extends TableTestCase {
 	}
 	
 	function test_clean() {
-		$post = array (
-			'name_new' => 'new',
-			'vat_new' => '5.5',
-			'category' => 
-			array (
-				1 => 
-				array (
-				  'name' => 'Salaire',
-				  'vat' => '0.00',
-				),
-				2 => 
-				array (
-				  'name' => 'Transport',
-				  'vat' => '5.50',
-				  'vat_category' => '1',
-				),
-			)
-		);
 		$category = new Category();
-		$cleaned = $category->clean($post);
-		$this->assertEqual($cleaned, array (
-				0 => array (
-					'name' => 'new',
-					'vat' => '5.5',
-					'vat_category' => 0
-				),
-				1 => 
-					array (
-					'name' => 'Salaire',
-					'vat' => '0.00',
-					'vat_category' => 0
-				),
-				2 => 
-					array (
-					'name' => 'Transport',
-					'vat' => '5.50',
-					'vat_category' => '1',
-				),
-			)
-		);
+		$cleaned = $category->clean(array('name' => "456 <h1>456</h2>", 'vat' => "category&lt;h1&gt;             "));
+		$this->assertEqual($cleaned['name'], "456 456");
+		$this->assertEqual($cleaned['vat'], "0");
+		$this->assertEqual($cleaned['vat_category'], "0");
 		
-		$post = array (
-			'name_new' => 'test',
-			'vat_new' => '',
-			'vat_category' => '1',
-			'category' => 
-			array (
-				2 => 
-				array (
-				  'name' => 'Transport',
-				  'vat' => '5.50'
-				),
-			)
-		);
-		$cleaned = $category->clean($post);
-		$this->assertEqual($cleaned, array (
-				0 => 
-					array (
-					'name' => 'test',
-					'vat' => '',
-					'vat_category' => '1',
-				),
-				2 => 
-					array (
-					'name' => 'Transport',
-					'vat' => '5.50',
-					'vat_category' => '0',
-				),
-			)
-		);
-		
-		$post = array (
-			'name_new' => 'new',
-			'vat_new' => '5.5',
-			'vat_category' => '1',
-			'category' => 
-			array (
-				1 => 
-				array (
-				  'name' => 'Salaire',
-				  'vat' => '0.00',
-				),
-				2 => 
-				array (
-				  'name' => 'Transport',
-				  'vat' => '5.50',
-				  'vat_category' => '1',
-				),
-			)
-		);
-		$cleaned = $category->clean($post);
-		$this->assertEqual($cleaned, false);
-	}
-
-	function test_form_add() {
 		$category = new Category();
-		$category->name = "Category n1";
-		$category->vat = "110";
-		$category->save();
-		$form = $category->form_add();
-		$this->assertPattern("/name_new/",$form);
-		$this->assertPattern("/vat_new/",$form);
-		$this->truncateTable("categories");
-	}
-
-	function test_show_form_modification () {
-		$category = new Category();
-		$category->name = "Category n1";
-		$category->vat = "110.10";
-		$category->save();
-		$form = $category->show_form_modification();
-		$this->assertPattern("/Category n1/",$form);
-		$this->assertPattern("/110.1/",$form);
-		$this->assertPattern("/action/",$form);
-		$this->truncateTable("categories");
+		$cleaned = $category->clean(array('name' => 'Salaire', 'vat' => '1 0', 'vat_category' => '1'));
+		$this->assertEqual($cleaned, array('name' => 'Salaire', 'vat' => '10.00', 'vat_category' => 1));
 	}
 }

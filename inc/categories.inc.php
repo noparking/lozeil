@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Categories extends Collector  {
 	public $filters = null;
@@ -114,7 +114,7 @@ class Categories extends Collector  {
 									),
 								   array(
 									'type' => "td",
-									 'value' => $category->show_operations(),
+									 'value' => $category->links_to_operations(),
 									),
 								   )
 						  );

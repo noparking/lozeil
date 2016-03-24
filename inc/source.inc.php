@@ -21,6 +21,65 @@ class Source extends Record {
 		return parent::load($key, $table, $columns);
 	}
 	
+	function ask_before_delete() {
+		if ((int)$this->id > 0) {
+			$id = new Html_Input("source[id]", (int)$this->id, "hidden");
+			$delete = new Html_Input("submit", __('delete'), "submit");
+			
+			$list = array(
+				'submit' => array(
+					'class' => "itemsform-submit",
+					'value' => $delete->input(),
+				),
+			);
+
+			$form = "<h3>".__("Delete source %s", array($this->name))."</h3>";
+			$form .= "<form method=\"post\" action=\"\">";
+			$form .= $id->input_hidden();
+			$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+			$form .= $items->show();
+			$form .= "</form>";
+			
+			return $form;
+		} else {
+			return false;
+		}
+	}
+
+	function edit() {
+		$id = new Html_Input("source[id]", (int)$this->id, "hidden");
+		$name = new Html_Input("source[name]", $this->name);
+		$save = new Html_Input("submit", __('save'), "submit");
+		
+		$list = array(
+			'name' => array(
+				'class' => "itemsform-head itemsform-bold clearfix",
+				'value' => $name->item(__("name")),
+			),
+			'submit' => array(
+				'class' => "itemsform-submit",
+				'value' => $save->input(),
+			),
+		);
+		
+		if ((int)$this->id > 0) {
+			$form = "<h3>".__("Edit source %s", array($this->name))."</h3>";
+		} else {
+			$form = "<h3>".__("Add new source")."</h3>";
+		}
+		$form .= "<form method=\"post\" action=\"\">";
+		$form .= $id->input_hidden();
+		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+		$form .= $items->show();
+		$form .= "</form>";
+		
+		return $form;
+	}
+	
+	function links_to_operations() {
+		return $this->link_to_edit().$this->link_to_delete();
+	}
+
 	function link_to_edit() {
 		if ((int)$this->id > 0) {
 			return Html_Tag::a(link_content("content=source.edit.php&id=".$this->id), __("Edit source %s", array($this->name)), array('class' => "ajax"));
@@ -96,65 +155,6 @@ class Source extends Record {
 			WHERE sources_id = ".(int)$this->id
 		);
 		return !$result;
-	}
-	
-	function ask_before_delete() {
-		if ((int)$this->id > 0) {
-			$id = new Html_Input("source[id]", (int)$this->id, "hidden");
-			$delete = new Html_Input("submit", __('delete'), "submit");
-			
-			$list = array(
-				'submit' => array(
-					'class' => "itemsform-submit",
-					'value' => $delete->input(),
-				),
-			);
-
-			$form = "<h3>".__("Delete source %s", array($this->name))."</h3>";
-			$form .= "<form method=\"post\" action=\"\">";
-			$form .= $id->input_hidden();
-			$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
-			$form .= $items->show();
-			$form .= "</form>";
-			
-			return $form;
-		} else {
-			return false;
-		}
-	}
-
-	function edit() {
-		$id = new Html_Input("source[id]", (int)$this->id, "hidden");
-		$name = new Html_Input("source[name]", $this->name);
-		$save = new Html_Input("submit", __('save'), "submit");
-		
-		$list = array(
-			'name' => array(
-				'class' => "itemsform-head itemsform-bold clearfix",
-				'value' => $name->item(__("name")),
-			),
-			'submit' => array(
-				'class' => "itemsform-submit",
-				'value' => $save->input(),
-			),
-		);
-		
-		if ((int)$this->id > 0) {
-			$form = "<h3>".__("Edit source %s", array($this->name))."</h3>";
-		} else {
-			$form = "<h3>".__("Add new source")."</h3>";
-		}
-		$form .= "<form method=\"post\" action=\"\">";
-		$form .= $id->input_hidden();
-		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
-		$form .= $items->show();
-		$form .= "</form>";
-		
-		return $form;
-	}
-	
-	function links_to_operations() {
-		return $this->link_to_edit().$this->link_to_delete();
 	}
 	
 	function is_recently_modified(){
