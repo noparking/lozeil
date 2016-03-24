@@ -83,11 +83,6 @@ class Sources extends Collector  {
 		return $grid;
 	}
 
-	function add_source() {
-		$source = new Source();
-		return "<div id='add_source'>".$source->show_form_add().ucfirst(__('add new source'))."</div>";
-	}
-
 	function show() {
 		$html_table = new Html_table(array('lines' =>$this->grid_header()+ $this->grid_body()));
 		return $html_table->show();
