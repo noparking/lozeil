@@ -60,23 +60,23 @@ class Sources extends Collector  {
 			$checker = new Html_CheckBox("sources[".$source->id."][checked]",$source->id);
 			
 			$grid[$source->id] =  array(
-						  'class' => $class,
-						  'id' => 'table_'.$source->id,
-						  'cells' => array(
-								  	array(
-									'type' => "td",
-									'value' => $checker->input(),
-									),
-									array(
-									'type' => "td",
-									'value' => htmlspecialchars($source->name),
-									),
-								   array(
-									'type' => "td",
-									 'value' => $source->show_operations(),
-									),
-								   )
-						  );
+				'class' => $class,
+				'id' => 'table_'.$source->id,
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $checker->input(),
+					),
+					array(
+						'type' => "td",
+						'value' => htmlspecialchars($source->name),
+					),
+					array(
+						'type' => "td",
+						'value' => $source->links_to_operations(),
+					),
+				)
+			);
 		}
 
 		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "2", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of sources')).': '.$source_number)));

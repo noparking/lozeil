@@ -21,6 +21,22 @@ class Source extends Record {
 		return parent::load($key, $table, $columns);
 	}
 	
+	function link_to_edit() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=source.edit.php&id=".$this->id), __("Edit source %s", array($this->name)), array('class' => "ajax"));
+		} else {
+			return Html_Tag::a(link_content("content=source.edit.php&id"), __("Add new source"), array('class' => "ajax"));
+		}
+	}
+
+	function link_to_delete() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=source.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+
 	function save() {
 		if (is_numeric($this->id) and $this->id != 0) {
 			$this->id = $this->update();
@@ -81,74 +97,66 @@ class Source extends Record {
 		);
 		return !$result;
 	}
-
-	function form_add() {
-		$input = new Html_Input("name_new");
-		$input_vat = new Html_Input("vat_new");
-		$checkbox_source_vat = new Html_Checkbox("vat_source", 1);
-		$form = "<div class=\"\"><center><h3>".__('add new source')."</h3><form name=\"\" id=\"form_modif_source\"  method=\"post\"  action=\"".link_content("content=sources.php")."\"><table>";
-		$form .= "<tr><td>".ucfirst(__('name'))."</td><td>".$input->input()."</td></tr>";
-		$form .= "<tr><td><input type=\"submit\" value=\"".__('add')."\" /></td></tr>";
-		$form .="</table></form>";
-		return $form;
-
-	}
 	
-	function show_form_modification()
-	{
-		$input_name = new Html_Input("sources[".$this->id."][name]",$this->name);
-		$input_submit = new Html_Input("sources[".$this->id."][submit]",__('modify'),"submit");
-		$action = new Html_Input("action","save","hidden");
-		$form = "<div class=\"\"><center><h3>".__('modify a source')."</h3><form name=\"\" id=\"form_modif_source\"  method=\"post\"  action=\"".link_content("content=sources.php")."\"><table>";
-		$form .= "<tr><td>".ucfirst(__('name'))." : </td><td>".$input_name->input()."</td></tr>";
-		$form .= "<tr><td>".$action->input().$input_submit->input()."</td></tr>";
-		$form .= "</table></form></center></div><br><br>";
-		
-		return $form;
-	}
-	
-	
-	function show_form_add() {
-		$form = "<div class=\"duplicate show_acronym\">
-						<span class=\"operation\"> <input class=\"add\" type=\"button\" id=\"".$this->id."\"/> </span> <br />
-					<span class=\"acronym\">".__('add')."</span>
-				</div>";
-		
-		return $form;
-	}
-	
-	function form_delete() {
-			$input_hidden_id = new Html_Input("table_source_delete_id", $this->id);
-			$input_hidden_action = new Html_Input("action", "delete");
-			$submit = new Html_Input("sources[".$this->id."][submit]", '',"submit");
-			$submit->properties = array(
-				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
-			);
+	function ask_before_delete() {
+		if ((int)$this->id > 0) {
+			$id = new Html_Input("source[id]", (int)$this->id, "hidden");
+			$delete = new Html_Input("submit", __('delete'), "submit");
 			
-			$form = "<div class=\"delete show_acronym\">
-						<form method=\"post\" name=\"table_source_form_delete\" action=\"\" enctype=\"multipart/form-data\">".
-							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-						</form>
-						<span class=\"acronym\">".__('delete')."</span>
-					</div>";
+			$list = array(
+				'submit' => array(
+					'class' => "itemsform-submit",
+					'value' => $delete->input(),
+				),
+			);
+
+			$form = "<h3>".__("Delete source %s", array($this->name))."</h3>";
+			$form .= "<form method=\"post\" action=\"\">";
+			$form .= $id->input_hidden();
+			$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+			$form .= $items->show();
+			$form .= "</form>";
 			
 			return $form;
+		} else {
+			return false;
+		}
 	}
-	
 
-	function show_form_modify() {
-			$form = "<div class=\"modify show_acronym\">
-						<span class=\"operation\"> <input class=\"modif\" type=\"button\" id=\"".$this->id."\"/> </span> <br />
-						<span class=\"acronym\">".__('modify')."</span>
-					</div>";
-			
+	function edit() {
+		$id = new Html_Input("source[id]", (int)$this->id, "hidden");
+		$name = new Html_Input("source[name]", $this->name);
+		$save = new Html_Input("submit", __('save'), "submit");
+		
+		$list = array(
+			'name' => array(
+				'class' => "itemsform-head itemsform-bold clearfix",
+				'value' => $name->item(__("name")),
+			),
+			'submit' => array(
+				'class' => "itemsform-submit",
+				'value' => $save->input(),
+			),
+		);
+		
+		if ((int)$this->id > 0) {
+			$form = "<h3>".__("Edit source %s", array($this->name))."</h3>";
+		} else {
+			$form = "<h3>".__("Add new source")."</h3>";
+		}
+		$form .= "<form method=\"post\" action=\"\">";
+		$form .= $id->input_hidden();
+		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+		$form .= $items->show();
+		$form .= "</form>";
+		
 		return $form;
 	}
 	
-	function show_operations() {
-		return $this->show_form_modify().$this->form_delete();
+	function links_to_operations() {
+		return $this->link_to_edit().$this->link_to_delete();
 	}
-
+	
 	function is_recently_modified(){
 		if ($this->timestamp > (time() - 10)) {
 			return true;

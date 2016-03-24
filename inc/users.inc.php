@@ -168,8 +168,6 @@ class Users extends Collector {
 		$options = array(
 			"none" => "--",
 			"delete" => ucfirst(__('delete')),
-			"viewexpert" => ucfirst(__('to expert')),
-			"restricted" => ucfirst(__('to customer'))
 		);
 		$select = new Html_Select("action", $options, "none");
 		$select->properties = array(

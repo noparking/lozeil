@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2014 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 require_once dirname(__FILE__)."/../inc/require.inc.php";
 
@@ -10,6 +10,58 @@ class tests_Source extends TableTestCase {
 			"sources",
 			"writings"
 		);
+	}
+	
+	function test_ask_before_delete() {
+		$source = new Source();
+		$source->name = "Via API";
+		$source->save();
+		
+		$form = $source->ask_before_delete();
+		$this->assertPattern("/source\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		
+		$this->truncateTable("sources");
+	}
+	
+	function test_edit() {
+		$source = new Source();
+		$source->name = "Via API";
+		$source->save();
+		
+		$form = $source->edit();
+		$this->assertPattern("/source\[id\]/", $form);
+		$this->assertPattern("/value=\"1\"/", $form);
+		$this->assertPattern("/source\[name\]/", $form);
+		$this->assertPattern("/value=\"Via API\"/", $form);
+		
+		$this->truncateTable("sources");
+	}
+
+	function test_link_to_delete() {
+		$source = new Source();
+		$this->assertNoPattern("/source.delete.php/", $source->link_to_delete());
+		$this->assertNoPattern("/id=0/", $source->link_to_delete());
+	
+		$source->name = "Source 1";
+		$source->save();
+		$this->assertPattern("/source.delete.php/", $source->link_to_delete());
+		$this->assertPattern("/id=".$source->id."/", $source->link_to_delete());
+	
+		$this->truncateTables("sources");
+	}
+	
+	function test_link_to_edit() {
+		$source = new Source();
+		$this->assertPattern("/source.edit.php/", $source->link_to_edit());
+		$this->assertNoPattern("/id=0/", $source->link_to_edit());
+	
+		$source->name = "Source 1";
+		$source->save();
+		$this->assertPattern("/source.edit.php/", $source->link_to_edit());
+		$this->assertPattern("/id=".$source->id."/", $source->link_to_edit());
+	
+		$this->truncateTables("sources");
 	}
 	
 	function test_clean() {
@@ -64,24 +116,5 @@ class tests_Source extends TableTestCase {
 		$this->assertFalse($source->is_deletable());
 		$this->truncateTable("sources");
 		$this->truncateTable("writings");
-	}
-
-	function test_form_add() {
-		$bank = new Bank();
-		$bank->name = "koala";
-		$bank->save();
-		$form = $bank->form_add();
-		$this->assertPattern("/name_new/",$form);
-		$this->truncateTable("sources");
-	}
-
-	function test_show_form_modification () {
-		$bank = new Bank();
-		$bank->name = "koala";
-		$bank->save();
-		$form = $bank->show_form_modification();
-		$this->assertPattern("/koala/",$form);
-		$this->assertPattern("/action/",$form);
-		$this->truncateTable("sources");
 	}
 }
