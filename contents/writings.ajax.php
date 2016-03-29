@@ -13,44 +13,6 @@ if (!empty($_FILES)) {
 
 if (isset($_REQUEST['action'])) {
 	switch ($_REQUEST['action']) {
-
-		case "preview_changes" :
-			$writing = new Writing();
-			$writing->load(array('id' => (int)$_REQUEST['id']));
-			if (preg_match("/table_writings_split_amount/", $_REQUEST['type']) or preg_match("/table_writings_split_submit/", $_REQUEST['type'])) {
-				echo $writing->preview_split($_REQUEST['form']);
-			}
-			if ($_REQUEST['type'] == "table_writings_forward_amount" or $_REQUEST['type'] == "table_writings_forward_amount_select") {
-				echo $writing->preview_forward($_REQUEST['value']);
-			}
-			if ($_REQUEST['type'] == "table_writings_duplicate_amount" or $_REQUEST['type'] == "table_writings_duplicate_amount_select") {
-				echo $writing->preview_duplicate($_REQUEST['value']);
-			}
-			exit(0);
-			break;
-
-		case "form_duplicate" :
-			$writing = new Writing();
-			$writing->load(array('id' => (int)$_POST['table_writings_form_duplicate_id']));
-			echo $writing->form_duplicate();
-			exit(0);
-			break;
-
-
-		case "form_forward" :
-			$writing = new Writing();
-			$writing->load(array('id' => (int)$_POST['table_writings_form_forward_id']));
-			echo $writing->form_forward();
-			exit(0);
-			break;
-
-		case "form_split" :
-			$writing = new Writing();
-			$writing->load(array('id' => (int)$_POST['table_writings_form_split_id']));
-			echo $writing->form_split();
-			exit(0);
-			break;
-
 		case "delete_attachment" :
 			$file = new File();
 			$file->load(array('id' => (int)$_REQUEST['id']));

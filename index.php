@@ -48,35 +48,34 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	
 	$location = clean_location($_SERVER['PHP_SELF']);
 	
-	if (!isset($_REQUEST['method']) and !preg_match("/ajax/", $content)  ) {
-
-		if(isset($_GET['content']) and $_GET['content'] == "login.php") {
-			header("Location: index.php");
-		} elseif(preg_match("/export/", $content) and isset($_POST['date_picker_from']) and isset($_POST['menu_actions_export_submit']) ) {
-			include($content_included);
-			exit();
-		} elseif ($content_object->check_access_denied() === true) {
-			$content_included = dirname(__FILE__)."/contents/".Content::access_denied;
-		}
-
-		$theme = Theme::factory(isset($_REQUEST['theme']) ? $_REQUEST['theme'] : "");
-		echo $theme->html_top();
-		echo $theme->head();
-		echo $theme->body_top($location, $content);
-
-		echo $theme->content_top();
-
-		include($content_included);
-
-		echo $theme->content_bottom();
-		echo $theme->show_status();
-
-		echo $theme->body_bottom();
-		echo $theme->html_bottom();
-		
-	} else {
-		include($content_included);
+	if (isset($_GET['content']) and $_GET['content'] == "login.php") {
+		header("Location: index.php");
+	} elseif ($content_object->check_access_denied() === true) {
+		$content_included = dirname(__FILE__)."/contents/".Content::access_denied;
 	}
+
+	switch (true) {
+		case isset($_REQUEST['method']) or preg_match("/ajax/", $content):
+		case preg_match("/export/", $content) and isset($_POST['date_picker_from']) and isset($_POST['menu_actions_export_submit']):
+			$theme = new Theme_Empty();
+			break;
+		default:
+			$theme = Theme::factory(isset($_REQUEST['theme']) ? $_REQUEST['theme'] : "");
+			break;
+	}
+	echo $theme->html_top();
+	echo $theme->head();
+	echo $theme->body_top($location, $content);
+
+	echo $theme->content_top();
+
+	include($content_included);
+
+	echo $theme->content_bottom();
+	echo $theme->show_status();
+
+	echo $theme->body_bottom();
+	echo $theme->html_bottom();
 	
 	
 } else {

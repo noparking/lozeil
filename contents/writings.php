@@ -29,7 +29,10 @@ if (isset($_REQUEST['action'])) {
 }
 
 $menu = Plugins::factory("Menu_Area");
-echo $menu->show();
+echo $theme->menu($menu);
+
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')));
+echo $theme->heading($heading);
 
 $writings->set_order($_SESSION['order']['name'], $_SESSION['order']['direction'].", number DESC, amount_inc_vat DESC");
 
@@ -43,14 +46,13 @@ if (isset($_GET['start']) and isset($_GET['stop'])) {
 $writings->filter_with($_SESSION['filter']);
 $writings->select();
 
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['filter']['start']), $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']));
-echo $heading->show();
-
-$working =  $writings->display();
-$working .= $writings->modify_options();
-
 $writing = new Writing();
-$working .= $writing->form();
 
-$area = new Working_Area($working);
+$area = new Working_Area(
+	$writings->display_timeline_at($_SESSION['filter']['start']).
+	$writing->link_to_edit().
+	$writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']).
+	$writings->display().
+	$writings->modify_options()
+);
 echo $area->show();

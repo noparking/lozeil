@@ -34,12 +34,7 @@ class Writing extends Record {
 		return parent::load($key, $table, $columns);
 	}
 		
-	
-	
-	function loadlastinserted($table = "writings") 
-	{		
-		
-		
+	function loadlastinserted($table = "writings") {		
 			$columns = $this->get_db_columns();
 	
 			$result = $this->db->query("
@@ -48,13 +43,9 @@ class Writing extends Record {
 				WHERE `timestamp` in (select MAX(`timestamp`) from ".$this->db->config['table_'.$table]." ) LIMIT 0,1; "
 			);
 			$row = $this->db->fetch_array($result[0]);
-			if ($row === false or $row === null)
-			{
-
+			if ($row === false or $row === null) {
 				return false;
-			} 
-			else 
-			{
+			}  else {
 				foreach ($row as $column => $value) {
 				$this->{$this->db_column_to_php_property($column)} = $value;
 				}
@@ -64,8 +55,7 @@ class Writing extends Record {
 	}
 	
 	
-	static function check_must_import()
-	{
+	static function check_must_import() {
 		$import = new Writing();
 		$import->loadlastinserted($table = "writings") ;
 		
@@ -108,24 +98,24 @@ class Writing extends Record {
 	}
 
 	function update() {
-			$result = $this->db->query("UPDATE ".$this->db->config['table_writings'].
-				" SET categories_id = ".(int)$this->categories_id.",
-				banks_id = ".(int)$this->banks_id.",
-				sources_id = ".(int)$this->sources_id.",
-				amount_inc_vat = ".(float)$this->amount_inc_vat.",
-				number  = ".$this->db->quote($this->number).",
-				vat = ".(float)$this->vat.",
-				amount_excl_vat = ".$this->calculate_amount_excl_vat().",
-				comment = ".$this->db->quote($this->comment).",
-				information = ".$this->db->quote($this->information).",
-				paid = ".(int)$this->paid.",
-				day = ".(int)$this->day.",	
-				search_index = ".$this->db->quote($this->search_index()).",
-				accountingcodes_id = ".(int)$this->accountingcodes_id.",
-				attachment = ".(int)$this->attachment.",
-				timestamp = ".time()."
-				WHERE id = ".(int)$this->id
-			);
+		$result = $this->db->query("UPDATE ".$this->db->config['table_writings'].
+			" SET categories_id = ".(int)$this->categories_id.",
+			banks_id = ".(int)$this->banks_id.",
+			sources_id = ".(int)$this->sources_id.",
+			amount_inc_vat = ".(float)$this->amount_inc_vat.",
+			number  = ".$this->db->quote($this->number).",
+			vat = ".(float)$this->vat.",
+			amount_excl_vat = ".$this->calculate_amount_excl_vat().",
+			comment = ".$this->db->quote($this->comment).",
+			information = ".$this->db->quote($this->information).",
+			paid = ".(int)$this->paid.",
+			day = ".(int)$this->day.",	
+			search_index = ".$this->db->quote($this->search_index()).",
+			accountingcodes_id = ".(int)$this->accountingcodes_id.",
+			attachment = ".(int)$this->attachment.",
+			timestamp = ".time()."
+			WHERE id = ".(int)$this->id
+		);
 		
 		$this->db->status($result[1], "u", __("line"));
 
@@ -347,106 +337,32 @@ class Writing extends Record {
 		return $form;
 	}
 	
-	function form_in_table() {
-		if ($_SESSION['accountant_view']) {
-			return $this->form_in_table_accountant();
+	function ask_before_delete() {
+		if ((int)$this->id > 0) {
+			$id = new Html_Input("writing[id]", (int)$this->id, "hidden");
+			$delete = new Html_Input("submit", __("delete"), "submit");
+				
+			$list = array(
+					'submit' => array(
+							'class' => "itemsform-submit",
+							'value' => $delete->input(),
+					),
+			);
+	
+			$form = "<h3>".__("Delete writing %s", array($this->comment))."</h3>";
+			$form .= "<form method=\"post\" action=\"\">";
+			$form .= $id->input_hidden();
+			$items = new Html_List(array('leaves' => $list, 'class' => "itemsform"));
+			$form .= $items->show();
+			$form .= "</form>";
+				
+			return $form;
 		} else {
-			return $this->form_in_table_normal();
+			return false;
 		}
 	}
-	
-	function form_in_table_accountant() {
-		$categories = new Categories();
-		$categories->select();
-		$sources = new Sources();
-		$sources->select();
-		$banks = new Banks();
-		$banks->select();
-		
-		$accountingcode = new Accounting_Code();
-		$currentcode = array();
-		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
-			$currentcode[] = $accountingcode->fullname();
-		}
-		
-		$input_hidden = new Html_Input("action", "edit", "submit");
-		$input_hidden_id = new Html_Input("writings_id", $this->id);
-		$datepicker = new Html_Input_Date("datepicker", $this->day);
-		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
-		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
-		$bank = new Html_Select("banks_id", $banks->names(), $this->banks_id);
-		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
-		$number = new Html_Input("number", $this->number);
-		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
-		$vat = new Html_Input("vat", $this->vat);
-		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
-		$comment = new Html_Textarea("comment", $this->comment);
-		$information = new Html_Textarea("information", $this->information);
-		$information->properties['disabled'] = 'disabled';
-		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
-		$submit = new Html_Input("submit", __('save'), "submit");
-		
-		$link = $this->attachment ? $this->link_to_file_attached() : "";
-		
-		$grid = array(
-			'class' => "itemsform",
-			'leaves' => array(
-				'date' => array(
-					'value' => $datepicker->item(__('date')),
-				),
-				'category' => array(
-					'value' => $category->item(__('category')),
-				),
-				'source' => array(
-					'value' => $source->item(__('source')),
-				),
-				'bank' => array(
-					'value' => $bank->item(__('bank')),
-				),
-				'accountingcode' => array(
-					'value' => $accountingcode_input->item(__('accounting code')),
-				),
-				'number' => array(
-					'value' => $number->item(__('piece nb')),
-				),
-				'amount_excl_vat' => array(
-					'value' => $amount_excl_vat->item(__('amount excluding vat')),
-				),
-				'vat' => array(
-					'value' => $vat->item(__('VAT')),
-				),
-				'amount_inc_vat' => array(
-					'value' => $amount_inc_vat->item(__('amount including vat')),
-				),
-				'comment' => array(
-					'value' => $comment->item(__('comment')),
-				),
-				'information' => array(
-					'value' => $information->item(__('information')),
-				),
-				'paid' => array(
-					'value' => $paid->item(__('paid')),
-				),
-				'submit' => array(
-					'value' => $submit->item(""),
-				)
-			)
-		);
-		$list = new Html_List($grid);
-		
-		$form = "<div id=\"table_edit_writings\">
-				<div class=\"table_edit_writings_form\">
-					<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
-					$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
-					"</form>".
-					$link."
-				</div>
-			</div>";
 
-		return $form;
-	}
-	
-	function form_in_table_normal() {
+	function edit() {
 		$categories = new Categories();
 		$categories->select();
 		$sources = new Sources();
@@ -458,20 +374,19 @@ class Writing extends Record {
 			$currentcode[] = $accountingcode->fullname();
 		}
 
-		$input_hidden = new Html_Input("action", "edit", "submit");
-		$input_hidden_id = new Html_Input("writings_id", $this->id);
-		$datepicker = new Html_Input_Date("datepicker", $this->day);
-		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
-		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
-		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
-		$number = new Html_Input("number", $this->number);
-		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
-		$vat = new Html_Input("vat", $this->vat);
-		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
-		$comment = new Html_Textarea("comment", $this->comment);
-		$information = new Html_Textarea("information", $this->information);
+		$id = new Html_Input("writing[id]", $this->id);
+		$datepicker = new Html_Input_Date("writing[datepicker]", $this->day);
+		$category = new Html_Select("writing[categories_id]", $categories->names(), $this->categories_id);
+		$accountingcode_input = new Html_Input_Ajax("writing[accountingcodes_id]", link_content("content=writings.ajax.php"), $currentcode);
+		$source = new Html_Select("writing[sources_id]", $sources->names(), $this->sources_id);
+		$number = new Html_Input("writing[number]", $this->number);
+		$amount_excl_vat = new Html_Input("writing[amount_excl_vat]", $this->amount_excl_vat);
+		$vat = new Html_Input("writing[vat]", $this->vat);
+		$amount_inc_vat = new Html_Input("writing[amount_inc_vat]", $this->amount_inc_vat);
+		$comment = new Html_Textarea("writing[comment]", $this->comment);
+		$information = new Html_Textarea("writing[information]", $this->information);
 		$information->properties['disabled'] = 'disabled';
-		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
+		$paid = new Html_Radio("writing[paid]", array(__("no"),__("yes")), $this->paid);
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
 		$link = $this->attachment ? $this->link_to_file_attached() : "";
@@ -516,6 +431,9 @@ class Writing extends Record {
 					'category' => array(
 						'value' => $category->item(__('category')),
 					),
+					'accountingcode' => array(
+						'value' => $accountingcode_input->item(__('accounting code')),
+					),
 					'source' => array(
 						'value' => $source->item(__('source')),
 					),
@@ -551,7 +469,7 @@ class Writing extends Record {
 		$form = "<div id=\"table_edit_writings\">
 				<div class=\"table_edit_writings_form\">
 					<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
-					$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
+					$id->input_hidden().$list->show().
 					"</form>".
 					$link."
 				</div>
@@ -560,48 +478,7 @@ class Writing extends Record {
 		return $form;
 	}
 	
-	function show_form_duplicate() {
-		$input_hidden_id = new Html_Input("table_writings_form_duplicate_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "form_duplicate");
-		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
-		
-		$form = "<div class=\"duplicate show_acronym\">
-					<form method=\"post\" name=\"table_writings_form_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-					</form> 
-                                        <span class=\"acronym\">".__('duplicate')."</span>
-				</div>";
-		
-		return $form;
-	}
-	
-	function form_duplicate() {
-		$input_hidden_id = new Html_Input("writing_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "duplicate");
-		$submit = new Html_Input("table_writings_duplicate_submit", utf8_ucfirst(__('save')), "submit");
-		$select = new Html_Select("table_writings_duplicate_amount_select", $this->periods());
-		$input_value = new Html_Input("table_writings_duplicate_amount", "");
-		
-		$grid = array(
-			'class' => "itemsform",
-			'leaves' => array(
-				'duplicate' => array(
-					'value' => $select->item(utf8_ucfirst(__('duplicate over')), "", $input_value->input()),
-				),
-				'submit' => array(
-					'value' => $submit->item(""),
-				),
-			)
-		);
-		$list = new Html_List($grid);
-		$form = "<div class=\"form_duplicate\">
-					<form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
-					</form>
-				</div>";
-		
-		return $form."<div class=\"preview_changes\">".$this->preview_duplicate()."</div>";
-	}
+
 	
 	function form_delete() {
 		if ($this->banks_id == 0) {
@@ -623,116 +500,92 @@ class Writing extends Record {
 		}
 	}
 	
-	function show_form_split() {
-		$input_hidden_id = new Html_Input("table_writings_form_split_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "form_split");
-		$submit = new Html_Input("table_writings_form_split_submit", "", "submit");
-
-		$form = "<div class=\"split show_acronym\">
-					<form method=\"post\" name=\"table_writings_form_split\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-					</form>
-                                        <span class=\"acronym\">".__('split')."</span>
-				</div>";
-		
-		return $form;
-	}
-	
-	function form_split() {
-		$input_hidden_id = new Html_Input("writing_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "split");
-		$submit = new Html_Input("table_writings_split_submit", utf8_ucfirst(__('save')), "submit");
-		$input_value = new Html_Input("table_writings_split_amount[new]", "");
-		$input_value_clone = new Html_Input("table_writings_split_amount[new0]", "");
-		$input_value_clone->properties = array('class' => 'li-clone');
+	function duplicator() {
+		$id = new Html_Input("writing[id]", $this->id);
+		$id->id = "writing-id";
+		$period = new Html_Select("writing[period]", $this->periods());
+		$submit = new Html_Input("submit", __("save"), "submit");
 		
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
-				'duplicate' => array(
-					'value' => $input_value->item(utf8_ucfirst(__('split'))),
-				),
-				'duplicate_clone' => array(
-					'value' => $input_value_clone->item(""),
+				'period' => array(
+					'value' => $period->item(__("Period")),
 				),
 				'submit' => array(
-					'value' => $submit->item(""),
+					'value' => $submit->input(),
+				),
+			)
+		);
+		$list = new Html_List($grid);
+		$form = "<div class=\"form_duplicate\">
+					<form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$id->input_hidden().$list->show()."
+					</form>
+				</div>";
+		
+		return $form."<div class=\"preview_changes\">".$this->preview_duplicate()."</div>";
+	}
+
+	function splitter() {
+		$id = new Html_Input("writing[id]", $this->id);
+		$id->id = "writing-id";
+		$amount = new Html_Input("writing[amounts][new]", "");
+		$amount_clonable = new Html_Input("writing[amounts][new0]", "");
+		$amount_clonable->properties = array('class' => 'li-clone');
+		$submit = new Html_Input("submit", __("save"), "submit");
+				
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'amount' => array(
+					'value' => $amount->item(__("Split")),
+				),
+				'amount_clonable' => array(
+					'value' => $amount_clonable->item(""),
+				),
+				'submit' => array(
+					'value' => $submit->input(),
 				),
 			)
 		);
 
 		$list = new Html_List($grid);
-		
 		$form = "<div class=\"form_split\">
 					<form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+						$id->input_hidden().$list->show()."
 					</form>
 				</div>";
 		
 		return $form."<div class=\"preview_changes\">".$this->preview_split()."</div>";
 	}
 	
-	function show_form_forward() {
-		if ($this->banks_id == 0) {
-			$input_hidden_id = new Html_Input("table_writings_form_forward_id", $this->id);
-			$input_hidden_action = new Html_Input("action", "form_forward");
-			$submit = new Html_Input("table_writings_form_forward_submit", "", "submit");
-			
-			$form = "<div class=\"forward show_acronym\">
-						<form method=\"post\" name=\"table_writings_form_forward\" action=\"\" enctype=\"multipart/form-data\">".
-							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-						</form>
-                                                <span class=\"acronym\">".__('forward')."</span>
-					</div>";
-		
-			return $form;
-		}
-	}
-	
-	
-	function form_forward() {
-		$input_hidden_id = new Html_Input("writing_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "forward");
-		$submit = new Html_Input("table_writings_forward_submit", utf8_ucfirst(__('save')), "submit");
-		$select = new Html_Select("table_writings_forward_amount_select", $this->periods());
-		$input_value = new Html_Input("table_writings_forward_amount", "");
+	function forwarder() {
+		$id = new Html_Input("writing[id]", $this->id);
+		$id->id = "writing-id";
+		$period = new Html_Select("writing[period]", $this->periods());
+		$submit = new Html_Input("submit", __("save"), "submit");
 		
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
-				'forward' => array(
-					'value' => $select->item(utf8_ucfirst(__('forward')), "", $input_value->input()),
+				'period' => array(
+					'value' => $period->item(__("Period")),
 				),
 				'submit' => array(
-					'value' => $submit->item(""),
+					'value' => $submit->input(),
 				),
 			)
 		);
-
-		$list = new Html_List($grid);
 		
+		$list = new Html_List($grid);
 		$form = "<div class=\"form_forward\">
 					<form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+						$id->input_hidden().$list->show()."
 					</form>
 				</div>";
 
 		return $form."<div class=\"preview_changes\">".$this->preview_forward()."</div>";
-	}
-	
-	function show_form_modify() {
-		$input_hidden_id = new Html_Input("table_writings_modify_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "form_edit");
-		$submit = new Html_Input("table_writings_modify_submit", "", "submit");
-		
-		$form = "<div class=\"modify show_acronym\">
-					<form method=\"post\" name=\"table_writings_modify\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
-					</form>
-                                        <span class=\"acronym\">".__('modify')."</span>
-				</div>";
-			
-		return $form;
 	}
 	
 	function fill($hash) {
@@ -819,9 +672,49 @@ class Writing extends Record {
 		}
 		return "";
 	}
+
+	function link_to_edit() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=writing.edit.php&id=".$this->id), __("Edit writing"), array('class' => "ajax"));
+		} else {
+			return Html_Tag::a(link_content("content=writing.edit.php&id"), __("Add new writing"), array('class' => "ajax"));
+		}
+	}
 	
-	function show_operations() {
-		return $this->show_form_modify().$this->show_form_split().$this->show_form_duplicate().$this->show_form_forward().$this->form_delete();
+	function link_to_split() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=writing.split.php&id=".$this->id), __("Split"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+	
+	function link_to_duplicate() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=writing.duplicate.php&id=".$this->id), __("Duplicate"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+	
+	function link_to_forward() {
+		if ((int)$this->id > 0 and $this->banks_id == 0) {
+			return Html_Tag::a(link_content("content=writing.forward.php&id=".$this->id), __("Forward"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+	
+	function link_to_delete() {
+		if ((int)$this->id > 0) {
+			return Html_Tag::a(link_content("content=writing.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+		} else {
+			return "";
+		}
+	}
+	
+	function links_to_operations() {
+		return $this->link_to_edit().$this->link_to_split().$this->link_to_duplicate().$this->link_to_forward().$this->link_to_delete();
 	}
 	
 	function is_recently_modified(){
@@ -945,10 +838,9 @@ class Writing extends Record {
 	
 	function preview_split($request = "", $rowspan = 2) {
 		$amounts = array();
-		
 		parse_str(urldecode($request), $parsed);
 		if (!empty($parsed)) {
-			$amounts = $this->clean_amounts_from_ajax($parsed['table_writings_split_amount']);
+			$amounts = $this->clean_amounts_from_ajax($parsed['writing']['amounts']);
 		}
 		
 		$html_table = new Html_table(array('lines' => $this->grid_preview_split($amounts)));
@@ -1076,9 +968,9 @@ class Writing extends Record {
 		}
 		
 		$html_table = new Html_table(array('lines' => $grid));
-		
 		return $html_table->show();
 	}
+	
 	function show_line() {
 	  $bank = new bank();
 	  $bank->load(array('id' => $this->banks_id));
@@ -1088,18 +980,18 @@ class Writing extends Record {
 	function periods() {
 		return array(
 			"0" => "--",
-			"1" => "1 ".__("month"),
-			"2" => "2 ".__("months"),
-			"3" => "3 ".__("months"),
-			"4" => "4 ".__("months"),
-			"5" => "5 ".__("months"),
-			"6" => "6 ".__("months"),
-			"7" => "7 ".__("months"),
-			"8" => "8 ".__("months"),
-			"9" => "9 ".__("months"),
-			"10" => "10 ".__("months"),
-			"11" => "11 ".__("months"),
-			"12" => "12 ".__("months"),
+			"1m" => "1 ".__("month"),
+			"2m" => "2 ".__("months"),
+			"3m" => "3 ".__("months"),
+			"4m" => "4 ".__("months"),
+			"5m" => "5 ".__("months"),
+			"6m" => "6 ".__("months"),
+			"7m" => "7 ".__("months"),
+			"8m" => "8 ".__("months"),
+			"9m" => "9 ".__("months"),
+			"10m" => "10 ".__("months"),
+			"11m" => "11 ".__("months"),
+			"12m" => "12 ".__("months"),
 			"1t" => "1 ".__("quarter"),
 			"2t" => "2 ".__("quarters"),
 			"3t" => "3 ".__("quarters"),

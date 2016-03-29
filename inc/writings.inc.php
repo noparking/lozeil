@@ -367,7 +367,7 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'class' => "operations",
-						'value' => $writing->show_operations(),
+						'value' => $writing->links_to_operations(),
 					),
 				),
 			);
@@ -494,7 +494,7 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'class' => "operations",
-						'value' => $writing->show_operations(),
+						'value' => $writing->links_to_operations(),
 					),
 				),
 			);

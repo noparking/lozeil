@@ -181,14 +181,6 @@ function refresh_balance() {
 	}).done(function (data) {
 		$("#heading_timeline").html(data);
 	});
-	
-	$.ajax({
-		type: "POST",
-		url : "index.php?content=balance.ajax.php"		
-	}).done(function (data) {
-			$('#menu_header_balance').html(data);
-		}
-	);
 }
 
 

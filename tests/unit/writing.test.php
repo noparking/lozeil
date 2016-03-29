@@ -15,6 +15,21 @@ class tests_Writing extends TableTestCase {
 		);
 	}
 	
+	function test_forwarder() {
+		$writing = new Writing();
+		$this->assertPattern("/writing/[id/]/", $writing->forwarder());
+	}
+	
+	function test_duplicator() {
+		$writing = new Writing();
+		$this->assertPattern("/writing/[id/]/", $writing->duplicator());
+	}
+	
+	function test_splitter() {
+		$writing = new Writing();
+		$this->assertPattern("/writing/[id/]/", $writing->splitter());
+	}
+	
 	function test_save_load() {
 		$writing = new Writing();
 		$writing->categories_id = 1;

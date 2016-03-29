@@ -20,7 +20,9 @@ function close_colorbox_and_refresh() {
         data: {theme: "ajax"},
         type: "GET",
         success: function(data){
-        	$(".content_working").html(data);
+        	var content = $(data).html();
+        	$(".content_working").html(content)
+        		.promise().done(function() {refresh_balance();});
         }
     });
 }

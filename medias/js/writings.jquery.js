@@ -92,16 +92,34 @@ $(document).ready(function() {
 		return false;
 		})
 		
-		.on("keyup change", "form[name=\"table_writings_split\"] li input, form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"], form[name=\"table_writings_duplicate\"] select[name=\"table_writings_duplicate_amount_select\"], form[name=\"table_writings_forward\"] select[name=\"table_writings_forward_amount_select\"]", function() {
+		.on("keyup change", "form[name=\"table_writings_split\"] li input", function() {
 			clearTimeout(timer);
 			var value = $(this).val();
-			var id = $(this).closest("form").find("#writing_id").val();
-			var type = $(this).attr('id');
+			var id = $(this).closest("form").find("#writing-id").val();
+			var type = $(this).attr("id");
 			var form = $(this).closest("form").serialize();
 			timer = setTimeout(function() {
 				$.post(
-					"index.php?content=writings.ajax.php",
-					{action: "preview_changes", value: value, type: type, id: id, form: form},
+					"index.php?content=writing.ajax.php",
+					{action: "preview_changes_split", value: value, type: type, id: id, form: form},
+					function(data) {
+						$(".preview_changes").html(data);
+					}
+				)
+			}, 200);
+		return false;
+		})
+		
+		.on("keyup change", "form[name=\"table_writings_duplicate\"] li select", function() {
+			clearTimeout(timer);
+			var value = $(this).val();
+			var id = $(this).closest("form").find("#writing-id").val();
+			var type = $(this).attr("id");
+			var form = $(this).closest("form").serialize();
+			timer = setTimeout(function() {
+				$.post(
+					"index.php?content=writing.ajax.php",
+					{action: "preview_changes_duplicate", value: value, type: type, id: id, form: form},
 					function(data) {
 						$(".preview_changes").html(data);
 					}
@@ -110,6 +128,24 @@ $(document).ready(function() {
 		return false;
 		})
 
+		.on("keyup change", "form[name=\"table_writings_forward\"] li select", function() {
+			clearTimeout(timer);
+			var value = $(this).val();
+			var id = $(this).closest("form").find("#writing-id").val();
+			var type = $(this).attr("id");
+			var form = $(this).closest("form").serialize();
+			timer = setTimeout(function() {
+				$.post(
+					"index.php?content=writing.ajax.php",
+					{action: "preview_changes_forward", value: value, type: type, id: id, form: form},
+					function(data) {
+						$(".preview_changes").html(data);
+					}
+				)
+			}, 200);
+		return false;
+		})
+		
 		.on("change", "input#amount_excl_vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
