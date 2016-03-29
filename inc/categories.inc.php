@@ -82,13 +82,12 @@ class Categories extends Collector  {
 	}
 
 	function grid_body() {
-		$category_number = 0;
 		foreach ($this as $category) {
-			$category_number++;
-			$class = "";
-
-			if ($category->is_recently_modified())
+			if ($category->is_recently_modified()) {
 				$class = "modified";
+			} else {
+				$class = "";
+			}
 			$checker = new Html_CheckBox("category[".$category->id."][checked]",$category->id);
 			$checkbox_category_vat = new Html_Checkbox("category[".$category->id."][vat_category]", 1, $category->vat_category);
 			
@@ -121,7 +120,6 @@ class Categories extends Collector  {
 		  );
 		}
 
-		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "4", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of categories')).': '.$category_number)));
 		return $grid;
 	}
 

@@ -70,12 +70,12 @@ class Banks extends Collector  {
 	}
 
 	function grid_body() {
-		$bank_number = 0;
 		foreach ($this as $bank) {
-			$bank_number++;
-			$class = "";
-			if ($bank->is_recently_modified())
+			if ($bank->is_recently_modified()) {
 				$class = "modified";
+			} else {
+				$class = "";
+			}
 			$input = new Html_Input("checkbox_test", $bank->name);
 			$checker = new Html_Checkbox("banks[".$bank->id."][checked]", $bank->id);
 			$iban = new Html_Input("banks[".$bank->id."][iban]", $bank->iban);
@@ -109,6 +109,7 @@ class Banks extends Collector  {
 				)
 			);
 		}
+
 		return $grid;
 	}
 

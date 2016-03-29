@@ -51,12 +51,11 @@ class Sources extends Collector  {
 	}
 
 	function grid_body() {
-		$source_number = 0;
 		foreach ($this as $source) {
-			$source_number++;
-			$class = "";
 			if ($source->is_recently_modified()) {
 				$class = "modified";
+			} else {
+				$class = "";
 			}
 			$checker = new Html_CheckBox("sources[".$source->id."][checked]", $source->id);
 			
@@ -81,7 +80,6 @@ class Sources extends Collector  {
 			);
 		}
 
-		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "2", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of sources')).': '.$source_number)));
 		return $grid;
 	}
 
