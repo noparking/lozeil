@@ -17,17 +17,17 @@ class tests_Writing extends TableTestCase {
 	
 	function test_forwarder() {
 		$writing = new Writing();
-		$this->assertPattern("/writing/[id/]/", $writing->forwarder());
+		$this->assertPattern("/writing\[id\]/", $writing->forwarder());
 	}
 	
 	function test_duplicator() {
 		$writing = new Writing();
-		$this->assertPattern("/writing/[id/]/", $writing->duplicator());
+		$this->assertPattern("/writing\[id\]/", $writing->duplicator());
 	}
 	
 	function test_splitter() {
 		$writing = new Writing();
-		$this->assertPattern("/writing/[id/]/", $writing->splitter());
+		$this->assertPattern("/writing\[id\]/", $writing->splitter());
 	}
 	
 	function test_save_load() {
@@ -580,46 +580,6 @@ Autre complément d'infos");
 		$this->truncateTable("sources");
 		$this->truncateTable("categories");
 		$this->truncateTable("banks");
-	}
-	
-	function test_form_duplicate() {
-		$writing = new Writing();
-		$writing->id = 40;
-		$form_duplicate = $writing->form_duplicate();
-		$this->assertPattern("/class=\"form_duplicate/", $form_duplicate);
-		$this->assertPattern("/value=\"40\"/", $form_duplicate);
-		$this->assertPattern("/table_writings_duplicate_submit/", $form_duplicate);
-		$this->assertPattern("/table_writings_duplicate_amount/", $form_duplicate);
-	}
-	
-	function test_form_delete() {
-		$writing = new Writing();
-		$writing->id = 40;
-		$form_delete = $writing->form_delete();
-		$this->assertPattern("/class=\"delete/", $form_delete);
-		$this->assertPattern("/value=\"40\"/", $form_delete);
-		$this->assertPattern("/table_writings_delete_submit/", $form_delete);
-		$this->assertPattern("/javascript:return confirm/", $form_delete);
-	}
-	
-	function test_form_split() {
-		$writing = new Writing();
-		$writing->id = 40;
-		$form_split = $writing->form_split();
-		$this->assertPattern("/class=\"form_split/", $form_split);
-		$this->assertPattern("/value=\"40\"/", $form_split);
-		$this->assertPattern("/table_writings_split_submit/", $form_split);
-		$this->assertPattern("/table_writings_split_amount/", $form_split);
-	}
-	
-	function test_form_forward() {
-		$writing = new Writing();
-		$writing->id = 40;
-		$form_forward = $writing->form_forward();
-		$this->assertPattern("/class=\"form_forward/", $form_forward);
-		$this->assertPattern("/value=\"40\"/", $form_forward);
-		$this->assertPattern("/table_writings_forward_submit/", $form_forward);
-		$this->assertPattern("/table_writings_forward_amount/", $form_forward);
 	}
 		
 	function test_duplicate() {
