@@ -359,10 +359,12 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+						'nowrap' => "nowrap",
 					),
 					array(
 						'type' => "td",
 						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+						'nowrap' => "nowrap",
 					),
 					array(
 						'type' => "td",
@@ -375,25 +377,27 @@ class Writings extends Collector {
 		$grid[] = array(
 			'class' => "table_total",
 			'cells' => array(
-					array(
-						'colspan' => "8",
-						'type' => "th",
-						'value' => "",
-					),
 				array(
-						'type' => "th",
-						'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
-					),
+					'colspan' => "8",
+					'type' => "th",
+					'value' => "",
+				),
 				array(
-						'type' => "th",
-						'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
-					),
+					'type' => "th",
+					'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
+					'nowrap' => "nowrap",
+				),
 				array(
-						'type' => "th",
-						'value' => "",
-					),
-				)
-			);
+					'type' => "th",
+					'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
+					'nowrap' => "nowrap",
+				),
+				array(
+					'type' => "th",
+					'value' => "",
+				),
+			)
+		);
 		return $grid;
 	}
 	
@@ -486,10 +490,12 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+						'nowrap' => "nowrap",
 					),
 					array(
 						'type' => "td",
 						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+						'nowrap' => "nowrap",
 					),
 					array(
 						'type' => "td",
@@ -503,26 +509,28 @@ class Writings extends Collector {
 		$grid[] = array(
 			'class' => "table_total",
 			'cells' => array(
-					array(
-						'colspan' => "8",
-						'type' => "td",
-						'value' => "",
-					),
 				array(
-						'type' => "td",
-						'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
-					),
+					'colspan' => "8",
+					'type' => "td",
+					'value' => "",
+				),
 				array(
-						'type' => "td",
-						'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
-					),
+					'type' => "td",
+					'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
+					'nowrap' => "nowrap",
+				),
 				array(
-						'type' => "td",
-						'value' => "",
-					),
-				)
-			);
-		
+					'type' => "td",
+					'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
+					'nowrap' => "nowrap",
+				),
+				array(
+					'type' => "td",
+					'value' => "",
+				),
+			)
+		);
+	
 		return $grid;
 	}
 
