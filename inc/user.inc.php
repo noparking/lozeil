@@ -271,7 +271,7 @@ class User extends Record  {
 	}
 	
 	function links_to_operations() {
-		return "<span class=\"operations\">".$this->link_to_edit().$this->link_to_delete()."</span>";
+		return $this->link_to_edit().$this->link_to_delete();
 	}
 
 	function is_recently_modified(){

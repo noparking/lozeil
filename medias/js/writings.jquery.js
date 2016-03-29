@@ -212,14 +212,6 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		.on("mouseenter", "#table_writings tr", function() {
-			$(this).find(".operations > a:not(.edit)").css("display", "inline-block");
-		})
-		
-		.on("mouseleave", "#table_writings tr", function() {
-			$(this).find(".operations > a:not(.edit)").hide();
-		})
-		
 		.on("change", "select[name='categories_id']", function() {
 			var select = $(this);
 			$.post(
