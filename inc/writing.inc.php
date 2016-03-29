@@ -675,15 +675,15 @@ class Writing extends Record {
 
 	function link_to_edit() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=writing.edit.php&id=".$this->id), __("Edit writing"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.edit.php&id=".$this->id), __("Edit writing"), array('class' => "ajax edit"));
 		} else {
-			return Html_Tag::a(link_content("content=writing.edit.php&id"), __("Add new writing"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.edit.php&id"), __("Add new writing"), array('class' => "ajax edit"));
 		}
 	}
 	
 	function link_to_split() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=writing.split.php&id=".$this->id), __("Split"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.split.php&id=".$this->id), __("Split"), array('class' => "ajax split"));
 		} else {
 			return "";
 		}
@@ -691,7 +691,7 @@ class Writing extends Record {
 	
 	function link_to_duplicate() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=writing.duplicate.php&id=".$this->id), __("Duplicate"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.duplicate.php&id=".$this->id), __("Duplicate"), array('class' => "ajax duplicate"));
 		} else {
 			return "";
 		}
@@ -699,7 +699,7 @@ class Writing extends Record {
 	
 	function link_to_forward() {
 		if ((int)$this->id > 0 and $this->banks_id == 0) {
-			return Html_Tag::a(link_content("content=writing.forward.php&id=".$this->id), __("Forward"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.forward.php&id=".$this->id), __("Forward"), array('class' => "ajax forward"));
 		} else {
 			return "";
 		}
@@ -707,7 +707,7 @@ class Writing extends Record {
 	
 	function link_to_delete() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=writing.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=writing.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax delete"));
 		} else {
 			return "";
 		}

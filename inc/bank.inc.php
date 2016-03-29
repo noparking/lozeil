@@ -108,15 +108,15 @@ class Bank extends Record {
 	
 	function link_to_edit() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=bank.edit.php&id=".$this->id), __("Edit bank %s", array($this->name)), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=bank.edit.php&id=".$this->id), __("Edit bank %s", array($this->name)), array('class' => "ajax edit"));
 		} else {
-			return Html_Tag::a(link_content("content=bank.edit.php&id"), __("Add new bank"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=bank.edit.php&id"), __("Add new bank"), array('class' => "ajax edit"));
 		}
 	}
 	
 	function link_to_delete() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=bank.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=bank.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax delete"));
 		} else {
 			return "";
 		}

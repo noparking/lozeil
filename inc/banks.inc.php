@@ -104,6 +104,7 @@ class Banks extends Collector  {
 					array(
 						'type' => "td",
 						'value' => $bank->links_to_operations(),
+						'class' => "operations",
 					),
 				)
 			);

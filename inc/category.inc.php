@@ -95,15 +95,15 @@ class Category extends Record {
 
 	function link_to_edit() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=category.edit.php&id=".$this->id), __("Edit category %s", array($this->name)), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=category.edit.php&id=".$this->id), __("Edit category %s", array($this->name)), array('class' => "ajax edit"));
 		} else {
-			return Html_Tag::a(link_content("content=category.edit.php&id"), __("Add new category"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=category.edit.php&id"), __("Add new category"), array('class' => "ajax edit"));
 		}
 	}
 
 	function link_to_delete() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=category.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=category.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax delete"));
 		} else {
 			return "";
 		}

@@ -93,31 +93,32 @@ class Categories extends Collector  {
 			$checkbox_category_vat = new Html_Checkbox("category[".$category->id."][vat_category]", 1, $category->vat_category);
 			
 			$grid[$category->id] =  array(
-						  'class' => $class,
-						  'id' => 'table_'.$category->id,
-						  'cells' => array(
-								  	array(
-									'type' => "td",
-									'value' => $checker->input(),
-									),
-									array(
-									'type' => "td",
-									'value' => htmlspecialchars($category->name),
-									),
-									array(
-									'type' => "td",
-									'value' => htmlspecialchars($category->vat),
-									),
-									array(
-									'type' => "td",
-									'value' => $checkbox_category_vat->input_readonly(),
-									),
-								   array(
-									'type' => "td",
-									 'value' => $category->links_to_operations(),
-									),
-								   )
-						  );
+				'class' => $class,
+				'id' => 'table_'.$category->id,
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $checker->input(),
+					),
+					array(
+						'type' => "td",
+						'value' => htmlspecialchars($category->name),
+					),
+					array(
+						'type' => "td",
+						'value' => htmlspecialchars($category->vat),
+					),
+					array(
+						'type' => "td",
+						'value' => $checkbox_category_vat->input_readonly(),
+					),
+					array(
+						'type' => "td",
+						'value' => $category->links_to_operations(),
+						'class' => "operations",
+					),
+			   )
+		  );
 		}
 
 		$grid[] = array('class' => "table_total", 'cells' => array(array('colspan' => "4", 'type' => "th", 'value' => ""), array('type' => "th", 'value' => ucfirst(__('number of categories')).': '.$category_number)));

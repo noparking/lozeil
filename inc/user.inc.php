@@ -33,15 +33,15 @@ class User extends Record  {
 	
 	function link_to_edit() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=user.edit.php&id=".$this->id), __("Edit user %s", array($this->name)), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=user.edit.php&id=".$this->id), __("Edit user %s", array($this->name)), array('class' => "ajax edit"));
 		} else {
-			return Html_Tag::a(link_content("content=user.edit.php&id"), __("Add new user"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=user.edit.php&id"), __("Add new user"), array('class' => "ajax edit"));
 		}
 	}
 
 	function link_to_delete() {
 		if ((int)$this->id > 0) {
-			return Html_Tag::a(link_content("content=user.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax"));
+			return Html_Tag::a(link_content("content=user.delete.php&id=".$this->id), __("Delete"), array('class' => "ajax delete"));
 		} else {
 			return "";
 		}
@@ -271,7 +271,7 @@ class User extends Record  {
 	}
 	
 	function links_to_operations() {
-		return $this->link_to_edit().$this->link_to_delete();
+		return "<span class=\"operations\">".$this->link_to_edit().$this->link_to_delete()."</span>";
 	}
 
 	function is_recently_modified(){

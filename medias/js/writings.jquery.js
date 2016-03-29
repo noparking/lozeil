@@ -213,11 +213,11 @@ $(document).ready(function() {
 		})
 		
 		.on("mouseenter", "#table_writings tr", function() {
-			$(this).find(".operations > div:not(.modify)").css("display", "inline-block");
+			$(this).find(".operations > a:not(.edit)").css("display", "inline-block");
 		})
 		
 		.on("mouseleave", "#table_writings tr", function() {
-			$(this).find(".operations > div:not(.modify)").hide();
+			$(this).find(".operations > a:not(.edit)").hide();
 		})
 		
 		.on("change", "select[name='categories_id']", function() {

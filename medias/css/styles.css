@@ -334,17 +334,46 @@ textarea #information {
 	display: inline-block;
 }
 
-.modify input[type='submit'] {
+.operations a {
+	color: transparent;
+	font-size: 0;
 	display: inline-block;
-	margin-left: 5px;
-	border: 0;
-	background: transparent;
+	vertical-align: middle;
+}
+
+.operations a.edit {
+	background: url(../images/bullet-wrench.png);
+	background-size: cover;
 	width: 18px;
 	height: 18px;
-	background-image :  url(../images/bullet-wrench.png);
-	background-repeat: no-repeat;
-	background-size: 18px;
-	cursor: pointer;
+}
+
+.operations a.delete {
+	background: url(../images/delete.png);
+	background-size: cover;
+	width: 18px;
+	height: 18px;
+}
+
+.operations a.split {
+	background: url(../images/arrow_split.png);
+	background-size: cover;
+	width: 18px;
+	height: 18px;
+}
+
+.operations a.forward {
+	background: url(../images/forward.png);
+	background-size: cover;
+	width: 40px;
+	height: 18px;
+}
+
+.operations a.duplicate {
+	background: url(../images/more.png);
+	background-size: cover;
+	width: 18px;
+	height: 18px;
 }
 
 .reset input[type='submit'] {
@@ -482,24 +511,6 @@ tr:hover .delete_balance {
 
 tr.modified {
 	background-color: #FFFF78;
-}
-
-.operation .acronym {
-	margin-top: 10px;
-}
-
-.operations {
-	padding: 10px 10px 10px 2px;
-	background-color: white;
-	border-radius: 50px;
-}
-
-.operations > div {
-	display: none;
-}
-
-.operations > div.modify {
-	display: inline-block;
 }
 
 #evolution_periodical {

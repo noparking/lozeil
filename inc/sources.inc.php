@@ -55,9 +55,10 @@ class Sources extends Collector  {
 		foreach ($this as $source) {
 			$source_number++;
 			$class = "";
-			if ($source->is_recently_modified())
+			if ($source->is_recently_modified()) {
 				$class = "modified";
-			$checker = new Html_CheckBox("sources[".$source->id."][checked]",$source->id);
+			}
+			$checker = new Html_CheckBox("sources[".$source->id."][checked]", $source->id);
 			
 			$grid[$source->id] =  array(
 				'class' => $class,
@@ -74,6 +75,7 @@ class Sources extends Collector  {
 					array(
 						'type' => "td",
 						'value' => $source->links_to_operations(),
+						'class' => "operations",
 					),
 				)
 			);
