@@ -129,7 +129,7 @@ class Database_Tables_Source {
 				`completed` int(1) NOT NULL DEFAULT '0',
 				`user_id` int(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8;"
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 			),
 
 			'reportings' => array(
@@ -144,7 +144,7 @@ class Database_Tables_Source {
 				`contents` varchar(200) NOT NULL DEFAULT '',
 				`timestamp` INT(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;"
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 			),
 
 			'sources' => array(
@@ -164,7 +164,7 @@ class Database_Tables_Source {
 				`value` mediumtext NOT NULL,
 				PRIMARY KEY (`id`),
 				KEY `user_id` (`user_id`)
-				) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;"
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 			),
 
 			'users' => array(
