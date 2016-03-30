@@ -364,6 +364,7 @@ $__['select all'] = "tout sélectionner";
 $__['send new password'] = "envoyer un nouveau mot de passe";
 $__['show'] = "afficher";
 $__['show accounting code'] = "afficher les codes comptables";
+$__['Show columns within the writings view'] = "Afficher les colonnes dans la vue 'trésorerie'";
 $__['show form'] = "afficher le formulaire";
 $__['simple'] = "simple";
 $__['simple activity'] = "simple activité";

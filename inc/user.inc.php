@@ -10,6 +10,7 @@ class User extends Record  {
 	public $timestamp = 0;
 
 	protected $db = null;
+	protected $options = array();
 
 	function __construct($user_id = 0, $db = null) {
 		$this->id = (int)$user_id;
@@ -27,8 +28,27 @@ class User extends Record  {
 		}
 	}
 	
+	function options() {
+		return $this->options;
+	}
+	
 	function load(array $key = array(), $table = "users", $columns = null) {
 		return parent::load($key, $table, $columns);
+	}
+	
+	function load_in_cascade(array $key = array(), $table = "users", $columns = null) {
+		$result = parent::load($key, $table, $columns);
+		$options = new User_Options();
+		$options->user_id = $this->id;
+		$options->select();
+		foreach ($options as $option) {
+			$this->options[$option->name] = $option;
+		}
+		return $result;
+	}
+	
+	function fill_in_cascade($hash) {
+		return parent::fill($hash);
 	}
 	
 	function link_to_edit() {
@@ -56,6 +76,31 @@ class User extends Record  {
 		}
 
 		return $this->id;
+	}
+	
+	function save_in_cascade() {
+		$result = $this->save();
+		$this->save_options();
+		return $result;
+	}
+	
+	function save_options() {
+		foreach ($this->options as $name => $value) {
+			$option = new User_Option();
+			if ($option->load(array('user_id' => $this->id, 'name' => $name))) {
+				if ($value === null) {
+					$option->delete();
+				} else {
+					$option->value = $value;
+					$option->save();
+				}
+			} else {
+				$option->user_id = $this->id;
+				$option->name = $name;
+				$option->value = $value;
+				$option->save();
+			}
+		}
 	}
 	
 	function insert() {
@@ -120,6 +165,16 @@ class User extends Record  {
 			$cleaned['email'] = trim(preg_replace('/\s+/', ' ', $cleaned['email']));
 		}
 
+		return $cleaned;
+	}
+	
+	function clean_in_cascade($variables) {
+		$cleaned = $this->clean($variables);
+		if (isset($variables['options']) and is_array($variables['options'])) {
+			foreach ($variables['options'] as $option => $option_value) {
+				$cleaned['options'][$option] = $option_value;
+			}
+		}
 		return $cleaned;
 	}
 
@@ -250,12 +305,33 @@ class User extends Record  {
 				'class' => "clearfix",
 				'value' => $email->item(__("email")),
 			),
-			'submit' => array(
-				'class' => "itemsform-submit",
-				'value' => $save->input(),
-			),
 		);
 		
+		$list['options_writings'] = array(
+			'class' => "clearfix",
+			'value' => __("Show columns within the writings view"),
+		);
+		$options = array(
+			'accountingcodes_id' => __("accounting code"),
+			'categories_id' => __("category"),
+			'sources_id' => __("source"),
+			'banks_id' => __("bank"),
+			'number' => __("piece nb"),
+			'vat' => __("VAT"),
+		);
+		foreach ($options as $option => $option_name) {
+			$select = new Html_Select("user[options][".$option."]", array('--' => "--", '1' => __("yes"), '0' => __("no")), isset($this->options[$option]) ? $this->options[$option]->value : "");
+			$list['options_'.$option] = array(
+				'class' => "clearfix",
+				'value' => $select->item($option_name),
+			);
+		}
+		
+		$list['submit'] = array(
+			'class' => "itemsform-submit",
+			'value' => $save->input(),
+		);
+
 		if ((int)$this->id > 0) {
 			$form = "<h3>".__("Edit user %s", array($this->name))."</h3>";
 		} else {
