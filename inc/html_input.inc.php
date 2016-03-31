@@ -117,6 +117,10 @@ class Html_Input {
 		return "<p>".$this->label($label).$this->input().$complement."</p>";
 	}
 	
+	function item_shown($label, $display = "", $complement = "") {
+		return $this->label($label)."<span>".$this->value."</span>".$complement;
+	}
+
 	function item($label, $display = "", $complement = "") {
 		$html = $this->label($label);
 		if (empty($display) or !empty($this->value)) {

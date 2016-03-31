@@ -17,7 +17,7 @@ $id = isset($id) ? $id : (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
 $writing = new Writing();
 $writing->load(array('id' => $id));
-$working = $writing->edit();
+$working = $writing->edit_as($authenticated_user);
 
 $area = new Working_Area($working);
 echo $area->show();

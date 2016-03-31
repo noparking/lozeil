@@ -19,6 +19,8 @@ class Writing extends Record {
 	public $timestamp = 0;
 	public $vat = 0;
 	
+	protected $user;
+
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
 		$this->id = $id;
@@ -164,8 +166,12 @@ class Writing extends Record {
 			$post['information'] = trim(preg_replace('/\s+/', ' ', $post['information']));
 		}
 
-		if (isset($post['datepicker'])) {
-			$cleaned['day'] = timestamp_from_datepicker($post['datepicker']);
+		if (isset($post['day'])) {
+			if (is_array($post['day'])) {
+				$cleaned['day'] = timestamp_from_datepicker($post['day']);
+			} else {
+				$cleaned['day'] = $post['day'];
+			}
 		}
 		
 		if (isset($post['accountingcodes_id'])) {
@@ -279,7 +285,7 @@ class Writing extends Record {
 		$accountingcodes = new Accounting_Codes();
 		$accountingcodes->select();
 		
-		$datepicker = new Html_Input_Date("datepicker", $_SESSION['filter']['start']);
+		$day = new Html_Input_Date("datepicker", $_SESSION['filter']['start']);
 		$category = new Html_Select("categories_id", $categories->names());
 		$source = new Html_Select("sources_id", $sources->names());
 		$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->fullnames());
@@ -295,7 +301,7 @@ class Writing extends Record {
 			'class' => "itemsform",
 			'leaves' => array(
 				'date' => array(
-					'value' => $datepicker->item(__('date')),
+					'value' => $day->item(__('date')),
 				),
 				'category' => array(
 					'value' => $category->item(__('category')),
@@ -361,117 +367,144 @@ class Writing extends Record {
 			return false;
 		}
 	}
-
-	function edit() {
+	
+	function leaf_day() {
+		$day = new Html_Input_Date("writing[day]", $this->day);
+		if ($this->banks_id > 0) {
+			return $day->item_shown(__("date"));
+		} else {
+			return $day->item(__("date"));
+		}
+	}
+	
+	function leaf_categories_id() {
 		$categories = new Categories();
 		$categories->select();
+		$categories_id = new Html_Select("writing[categories_id]", $categories->names(), $this->categories_id);
+		return $categories_id->item(__("category"));
+	}
+	
+	function leaf_accountingcodes_id() {
+		$accountingcode = new Accounting_Code();
+		$values = array();
+		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
+			$values[] = $accountingcode->fullname();
+		}
+		$accountingcodes_id = new Html_Input_Ajax("writing[accountingcodes_id]", link_content("content=writings.ajax.php"), $values);
+		return $accountingcodes_id->item(__("accounting code"));
+	}
+	
+	function leaf_sources_id() {
 		$sources = new Sources();
 		$sources->select();
-				
-		$accountingcode = new Accounting_Code();
-		$currentcode = array();
-		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
-			$currentcode[] = $accountingcode->fullname();
-		}
-
-		$id = new Html_Input("writing[id]", $this->id);
-		$datepicker = new Html_Input_Date("writing[datepicker]", $this->day);
-		$category = new Html_Select("writing[categories_id]", $categories->names(), $this->categories_id);
-		$accountingcode_input = new Html_Input_Ajax("writing[accountingcodes_id]", link_content("content=writings.ajax.php"), $currentcode);
-		$source = new Html_Select("writing[sources_id]", $sources->names(), $this->sources_id);
+		$sources_id = new Html_Select("writing[sources_id]", $sources->names(), $this->sources_id);
+		return $sources_id->item(__("source"));
+	}
+	
+	function leaf_number() {
 		$number = new Html_Input("writing[number]", $this->number);
+		return $number->item(__("piece nb"));
+	}
+	
+	function leaf_amount_excl_vat() {
 		$amount_excl_vat = new Html_Input("writing[amount_excl_vat]", $this->amount_excl_vat);
+		return $amount_excl_vat->item(__("amount excluding vat"));
+	}
+	
+	function leaf_vat() {
 		$vat = new Html_Input("writing[vat]", $this->vat);
+		return $vat->item(__('VAT'));
+	}
+
+	function leaf_amount_inc_vat() {
 		$amount_inc_vat = new Html_Input("writing[amount_inc_vat]", $this->amount_inc_vat);
+		if ($this->banks_id > 0) {
+			return $amount_inc_vat->item_shown(__("amount including vat"));
+		} else {
+			return $amount_inc_vat->item(__("amount including vat"));
+		}
+	}
+	
+	function leaf_comment() {
 		$comment = new Html_Textarea("writing[comment]", $this->comment);
+		return $comment->item(__("comment"));
+	}
+	
+	function leaf_information() {
 		$information = new Html_Textarea("writing[information]", $this->information);
-		$information->properties['disabled'] = 'disabled';
-		$paid = new Html_Radio("writing[paid]", array(__("no"),__("yes")), $this->paid);
+		return $information->item_shown(__("information"));
+	}
+	
+	function edit_as(User $user) {
+		$this->user = $user;
+		return $this->edit();
+	}
+
+	function edit() {
+		$id = new Html_Input("writing[id]", $this->id);
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
-		$link = $this->attachment ? $this->link_to_file_attached() : "";
-		
-		if ($this->banks_id > 0) {
-			$grid = array(
-				'class' => "itemsform",
-				'leaves' => array(
-					'category' => array(
-						'value' => $category->item(__('category')),
-					),
-					'accountingcode' => array(
-						'value' => $accountingcode_input->item(__('accounting code')),
-					),
-					'source' => array(
-						'value' => $source->item(__('source')),
-					),
-					'number' => array(
-						'value' => $number->item(__('piece nb')),
-					),
-					'vat' => array(
-						'value' => $vat->item(__('VAT')),
-					),
-					'comment' => array(
-						'value' => $comment->item(__('comment')),
-					),
-					'information' => array(
-						'value' => $information->item(__('information')),
-					),
-					'submit' => array(
-						'value' => $submit->item(""),
-					)
-				)
-			);
-		} else {
-			$grid = array(
-				'class' => "itemsform",
-				'leaves' => array(
-					'date' => array(
-						'value' => $datepicker->item(__('date')),
-					),
-					'category' => array(
-						'value' => $category->item(__('category')),
-					),
-					'accountingcode' => array(
-						'value' => $accountingcode_input->item(__('accounting code')),
-					),
-					'source' => array(
-						'value' => $source->item(__('source')),
-					),
-					'number' => array(
-						'value' => $number->item(__('piece nb')),
-					),
-					'amount_excl_vat' => array(
-						'value' => $amount_excl_vat->item(__('amount excluding vat')),
-					),
-					'vat' => array(
-						'value' => $vat->item(__('VAT')),
-					),
-					'amount_inc_vat' => array(
-						'value' => $amount_inc_vat->item(__('amount including vat')),
-					),
-					'comment' => array(
-						'value' => $comment->item(__('comment')),
-					),
-					'information' => array(
-						'value' => $information->item(__('information')),
-					),
-					'paid' => array(
-						'value' => $paid->item(""),
-					),
-					'submit' => array(
-						'value' => $submit->item(""),
-					),
-				)
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'day' => array(
+					'value' => $this->leaf_day(),
+				),
+			),
+		);
+		if (!isset($this->user) or $this->user->is_editing("categories_id")) {
+			$grid['leaves']['categories_id'] = array(
+				'value' => $this->leaf_categories_id(),
 			);
 		}
+		if (!isset($this->user) or $this->user->is_editing("accountingcodes_id")) {
+			$grid['leaves']['accountingcodes_id'] = array(
+				'value' => $this->leaf_accountingcodes_id(),
+			);
+		}
+		if (!isset($this->user) or $this->user->is_editing("sources_id")) {
+			$grid['leaves']['sources_id'] = array(
+				'value' => $this->leaf_sources_id(),
+			);
+		}
+		if (!isset($this->user) or $this->user->is_editing("number")) {
+			$grid['leaves']['number'] = array(
+				'value' => $this->leaf_number(),
+			);
+		}
+		if (!isset($this->user) or $this->user->is_editing("vat")) {
+			$grid['leaves']['amount_excl_vat'] = array(
+				'value' => $this->leaf_amount_excl_vat(),
+			);
+		}
+		if (!isset($this->user) or $this->user->is_editing("vat")) {
+			$grid['leaves']['vat'] = array(
+				'value' => $this->leaf_vat(),
+			);
+		}
+		$grid['leaves']['amount_inc_vat'] = array(
+			'value' => $this->leaf_amount_inc_vat(),
+		);
+		$grid['leaves']['comment'] = array(
+			'value' => $this->leaf_comment(),
+		);
+		$grid['leaves']['information'] = array(
+			'value' => $this->leaf_information(),
+		);
+		if ($this->attachment) {
+			$grid['leaves']['attachment'] = array(
+				'value' => $this->link_to_file_attached(), 
+			);
+		}
+		$grid['leaves']['submit'] = array(
+			'value' => $submit->item(""),
+		);
 		$list = new Html_List($grid);
-		
 		$form = "<div id=\"table_edit_writings\">
 				<div class=\"table_edit_writings_form\">
 					<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
 					$id->input_hidden().$list->show().
-					"</form>".
-					$link."
+					"</form>
 				</div>
 			</div>";
 

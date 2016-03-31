@@ -25,6 +25,10 @@ class Html_Input_Date extends Html_Input {
 		return $day->input_hidden();
 	}
 	
+	function item_shown($label, $display = "", $complement = "") {
+		return $this->label($label)."<span>".Format::date($this->value)."</span>".$complement;
+	}
+	
 	function item($label, $display = "", $complement = "") {
 		return $this->label($label).$this->input().$complement;
 	}

@@ -7,14 +7,88 @@ class tests_Writing extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
+			"accountingcodes",
+			"banks",
 			"categories",
 			"sources",
-			"writings",
-			"banks",
-			"accountingcodes"
+			"users",
+			"useroptions",
+			"writings"
 		);
 	}
 	
+	function test_edit__avec_user_qui_ne_veut_tout_voir() {
+		$user = new User();
+		$user->name = "qui_ne_veut_tout_voir";
+		$user->save();
+		
+		$options = array(
+			'accountingcodes_id' => __("accounting code"),
+			'categories_id' => __("category"),
+			'sources_id' => __("source"),
+			'banks_id' => __("bank"),
+			'number' => __("piece nb"),
+			'vat' => __("VAT"),
+		);
+		foreach ($options as $name => $description) {
+			$option = new User_Option();
+			$option->user_id = $user->id;
+			$option->name = $name;
+			$option->value = 0;
+			$option->save();
+		}
+		
+		$editor = new User();
+		$editor->load_in_cascade(array('id' => $user->id));
+
+		$writing = new Writing();
+		$edit = $writing->edit_as($editor);
+		$this->assertPattern("/name=\"writing\[id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[day]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[categories_id\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[accountingcodes_id\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[sources_id\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[number\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[amount_excl_vat\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[amount_inc_vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[comment\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[information\]/", $edit);
+		
+		$this->truncateTables("users", "useroptions");
+	}
+	
+	function test_edit() {
+		$writing = new Writing();
+		$edit = $writing->edit();
+		$this->assertPattern("/name=\"writing\[id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[day]/", $edit);
+		$this->assertPattern("/name=\"writing\[categories_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[accountingcodes_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[sources_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[number\]/", $edit);
+		$this->assertPattern("/name=\"writing\[amount_excl_vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[amount_inc_vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[comment\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[information\]/", $edit);
+		
+		$writing = new Writing();
+		$writing->banks_id = 1;
+		$edit = $writing->edit();
+		$this->assertPattern("/name=\"writing\[id\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[day]/", $edit);
+		$this->assertPattern("/name=\"writing\[categories_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[accountingcodes_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[sources_id\]/", $edit);
+		$this->assertPattern("/name=\"writing\[number\]/", $edit);
+		$this->assertPattern("/name=\"writing\[amount_excl_vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[vat\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[amount_inc_vat\]/", $edit);
+		$this->assertPattern("/name=\"writing\[comment\]/", $edit);
+		$this->assertNoPattern("/name=\"writing\[information\]/", $edit);
+	}
+
 	function test_forwarder() {
 		$writing = new Writing();
 		$this->assertPattern("/writing\[id\]/", $writing->forwarder());
@@ -1093,11 +1167,7 @@ Autre complément d'infos");
 		$post = array(
 			'action' => 'edit',
 			'writings_id' => '310',
-			'datepicker' => array (
-							'd' => '09',
-							'm' => '07',
-							'Y' => '2013'
-							  ),
+			'day' => array ('d' => '09', 'm' => '07', 'Y' => '2013'),
 			'categories_id' => '2',
 			'sources_id' => '0',
 			'e243c26543db4bd701a1f3563acf584b' => '512',
@@ -1128,11 +1198,7 @@ Autre complément d'infos");
 		$post = array(
 			'action' => 'edit',
 			'writings_id' => '310',
-			'datepicker' => array (
-							'd' => '09',
-							'm' => '07',
-							'Y' => '2013'
-							  ),
+			'day' => array ('d' => '09', 'm' => '07', 'Y' => '2013'),
 			'categories_id' => '2',
 			'sources_id' => '0',
 			'e243c26543db4bd701a1f3563acf584b' => '',
@@ -1161,11 +1227,7 @@ Autre complément d'infos");
 		$post = array(
 			'action' => 'edit',
 			'writings_id' => '310',
-			'datepicker' => array (
-							'd' => '09',
-							'm' => '07',
-							'Y' => '2013'
-							  ),
+			'day' => array ('d' => '09', 'm' => '07', 'Y' => '2013'),
 			'categories_id' => '2',
 			'sources_id' => '0',
 			'e243c26543db4bd701a1f3563acf584b' => '',

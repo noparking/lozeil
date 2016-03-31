@@ -71,6 +71,10 @@ class Html_Textarea {
 	function paragraph($label) {
 		return "<p>".$this->label($label).$this->input()."</p>";
 	}
+	
+	function item_shown($label, $display = "", $complement = "") {
+		return $this->label($label)."<span>".$this->value."</span>".$complement;
+	}
 
 	function item($label, $display = "", $complement = "") {
 		$inside = "";

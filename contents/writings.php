@@ -52,7 +52,7 @@ $area = new Working_Area(
 	$writings->display_timeline_at($_SESSION['filter']['start']).
 	$writing->link_to_edit().
 	$writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']).
-	$writings->display().
+	$writings->display_as($authenticated_user).
 	$writings->modify_options()
 );
 echo $area->show();

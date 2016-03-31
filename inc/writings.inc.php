@@ -6,6 +6,8 @@ class Writings extends Collector {
 	public $amounts = array();
 	public $categories_id = null;
 	
+	protected $user;
+
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
 			$class = substr(__CLASS__, 0, -1);
@@ -143,98 +145,105 @@ class Writings extends Collector {
 	}
 		
 	function grid_header() {
-		if ($_SESSION['accountant_view']) {
-			return $this->grid_header_accountant();
-		} else {
-			return $this->grid_header_normal();
-		}
-	}
-	
-	function grid_header_accountant() {
-		$grid = $this->grid_header_normal();
-		unset($grid['header']['cells'][3]);
-		return $grid;
-	}
-	
-	function grid_header_normal() {
 		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
 			'header' => array(
 				'class' => "table_header",
 				'cells' => array(
-					array(
+					'checkbox' => array(
 						'type' => "th",
 						'id' => "checkbox",
 						'value' => $checkbox->input()
 					),
-					array(
+					'day' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("day"),
 						'id' => "day",
 						'value' => utf8_ucfirst(__("date")),
 					),
-					array(
+					'number' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("number"),
 						'id' => "number",
 						'value' => utf8_ucfirst(__('piece nb')),
 					),
-					array(
+					'accountingcodes_id' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("accountingcodes_id"),
 						'id' => "category_name",
 						'value' => utf8_ucfirst(__("accounting code")),
 					),
-					array(
+					'categories_id' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("category_name"),
 						'id' => "category_name",
 						'value' => utf8_ucfirst(__("category")),
 					),
-					array(
+					'sources_id' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("source_name"),
 						'id' => "source_name",
 						'value' => utf8_ucfirst(__("source")),
 					),
-					array(
+					'banks_id' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("bank_name"),
 						'id' => "bank_name",
 						'value' => utf8_ucfirst(__("bank")),
 					),
-					array(
+					'comment' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("comment"),
 						'id' => "comment",
 						'value' => utf8_ucfirst(__("comment")),
 					),
-					array(
+					'vat' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("vat"),
 						'id' => "vat",
 						'value' => __("VAT"),
 					),
-					array(
+					'debit' => array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("amount_inc_vat"),
 						'id' => "amount_inc_vat",
 						'value' => utf8_ucfirst(__("debit")),
 					),
-					array(
+					'credit' => array(
 						'type' => "th",
 						'class' => "sort",
 						'id' => "amount_inc_vat",
 						'value' => utf8_ucfirst(__("credit")),
 					),
-					array(
+					'operations' => array(
 						'type' => "th",
 						'id' => "operations",
 						'value' => "",
 					),
 				),
 			),
-		);		
+		);
+		
+		if (isset($this->user)) {
+			if (!$this->user->is_editing("number")) {
+				unset($grid['header']['cells']['number']);
+			}
+			if (!$this->user->is_editing("accountingcodes_id")) {
+				unset($grid['header']['cells']['accountingcodes_id']);
+			}
+			if (!$this->user->is_editing("categories_id")) {
+				unset($grid['header']['cells']['categories_id']);
+			}
+			if (!$this->user->is_editing("sources_id")) {
+				unset($grid['header']['cells']['sources_id']);
+			}
+			if (!$this->user->is_editing("banks_id")) {
+				unset($grid['header']['cells']['banks_id']);
+			}
+			if (!$this->user->is_editing("vat")) {
+				unset($grid['header']['cells']['vat']);
+			}
+		}
 		return $grid;
 	}
 	
@@ -271,14 +280,10 @@ class Writings extends Collector {
 	
 	
 	function grid_body() {
-		if ($_SESSION['accountant_view']) {
-			return $this->grid_body_accountant();
-		} else {
-			return $this->grid_body_normal();
-		}
-	}
-	
-	function grid_body_accountant() {
+		$categories = new Categories();
+		$categories->select();
+		$categories_name = $categories->names();
+		
 		$sources = new Sources();
 		$sources->select();
 		$sources_name = $sources->names();
@@ -319,66 +324,79 @@ class Writings extends Collector {
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
 			$checkbox->properties = array("class" => "table_checkbox");
-			$grid[] = array(
-				'class' => $class,
-				'id' => "table_".$writing->id,
-				'cells' => array(
-					array(
-						'type' => "td",
-						'value' => $checkbox->input(),
-					),
-					array(
-						'type' => "td",
-						'value' => date("d/m/Y", $writing->day),
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->number,
-					),
-					array(
-						'type' => "td",
-						'value' => isset($accounting_codes_number[$writing->accountingcodes_id]) ? $accounting_codes_number[$writing->accountingcodes_id] : "",
-					),
-					array(
-						'type' => "td",
-						'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
-					),
-					array(
-						'type' => "td",
-						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
-					),
-					array(
-						'type' => "td",
-						'class' => empty($informations) ? "" : "table_writings_comment",
-						'value' => $writing->comment.$informations,
-					),
-					array(
-						'type' => "td",
-						'value' => ($writing->vat != 0) ? $writing->vat : "",
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
-						'nowrap' => "nowrap",
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
-						'nowrap' => "nowrap",
-					),
-					array(
-						'type' => "td",
-						'class' => "operations",
-						'value' => $writing->links_to_operations(),
-					),
+			$cells =  array(
+				array(
+					'type' => "td",
+					'value' => $checkbox->input(),
+				),
+				array(
+					'type' => "td",
+					'value' => date("d/m/Y", $writing->day),
 				),
 			);
+			if (!isset($this->user) or $this->user->is_editing("number")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => $writing->number,
+				);
+			}
+			if (!isset($this->user) or $this->user->is_editing("accountingcodes_id")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => isset($accounting_codes_number[$writing->accountingcodes_id]) ? $accounting_codes_number[$writing->accountingcodes_id] : "",
+				);
+			}
+			if (!isset($this->user) or $this->user->is_editing("categories_id")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => isset($categories_name[$writing->categories_id]) ? $categories_name[$writing->categories_id] : "",
+				);
+			}
+			if (!isset($this->user) or $this->user->is_editing("sources_id")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
+				);
+			}
+			if (!isset($this->user) or $this->user->is_editing("banks_id")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
+				);
+			}
+			$cells[] = array (
+				'type' => "td",
+				'class' => empty($informations) ? "" : "table_writings_comment",
+				'value' => $writing->comment.$informations,
+			);
+			if (!isset($this->user) or $this->user->is_editing("vat")) {
+				$cells[] = array(
+					'type' => "td",
+					'value' => ($writing->vat != 0) ? $writing->vat : "",
+				);
+			}
+			$cells[] = array(
+				'type' => "td",
+				'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+				'nowrap' => "nowrap",
+			);
+			$cells[] = array(
+				'type' => "td",
+				'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
+				'nowrap' => "nowrap",
+			);
+			$cells[] = array(
+				'type' => "td",
+				'class' => "operations",
+				'value' => $writing->links_to_operations(),
+			);
+			$grid[] = array('class' => $class, 'id' => "table_".$writing->id, 'cells' => $cells);
 		}
 		$grid[] = array(
 			'class' => "table_total",
 			'cells' => array(
 				array(
-					'colspan' => "8",
+					'colspan' => count($this->grid_header()['header']['cells']) - 3,
 					'type' => "th",
 					'value' => "",
 				),
@@ -398,139 +416,6 @@ class Writings extends Collector {
 				),
 			)
 		);
-		return $grid;
-	}
-	
-	function grid_body_normal() {
-		$categories = new Categories();
-		$categories->select();
-		$categories_names = $categories->names();
-		$sources = new Sources();
-		$sources->select();
-		$sources_name = $sources->names();
-		$banks = new Banks();
-		$banks->select();
-		$banks_name = $banks->names();
-		$accounting_codes = new Accounting_Codes();
-		$accounting_codes->select();
-		$accounting_codes_names = $accounting_codes->names();
-		
-		$grid = array();
-		
-		if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
-			$duplicate = $this->get_duplicate_color_classes();
-		}
-		
-		
-		$debit = 0;
-		$credit = 0;
-		foreach ($this as $writing) {
-			if ($writing->amount_inc_vat < 0) {
-				$debit += $writing->amount_inc_vat;
-			} else {
-				$credit += $writing->amount_inc_vat;
-			}
-			$class = "draggable droppable";
-			if ($writing->is_recently_modified()) {
-				$class .= " modified";
-			}
-			if ($writing->attachment) {
-				$class .= " file_attached";
-			}
-			
-			if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
-				if (isset($duplicate[$writing->day][$writing->amount_inc_vat]) and $duplicate[$writing->day][$writing->amount_inc_vat]) {
-					$class .= $duplicate[$writing->day][$writing->amount_inc_vat];
-				}
-			}
-			$informations = $writing->show_further_information();
-			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
-			$checkbox->properties = array("class" => "table_checkbox");
-			$grid[] = array(
-				'class' => $class,
-				'id' => "table_".$writing->id,
-				'cells' => array(
-					array(
-						'type' => "td",
-						'value' => $checkbox->input(),
-					),
-					array(
-						'type' => "td",
-						'value' => date("d/m/Y", $writing->day),
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->number,
-					),
-					array(
-						'type' => "td",
-						'value' => isset($accounting_codes_names[$writing->accountingcodes_id]) ? $accounting_codes_names[$writing->accountingcodes_id] : "",
-					),
-					array(
-						'type' => "td",
-						'value' => isset($categories_names[$writing->categories_id]) ? $categories_names[$writing->categories_id] : "",
-					),
-					array(
-						'type' => "td",
-						'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
-					),
-					array(
-						'type' => "td",
-						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
-					),
-					array(
-						'type' => "td",
-						'class' => empty($informations) ? "" : "table_writings_comment",
-						'value' => $writing->comment.$informations,
-					),
-					array(
-						'type' => "td",
-						'value' => ($writing->vat != 0) ? $writing->vat : "",
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->amount_inc_vat < 0 ? number_adjust_format($writing->amount_inc_vat) : "",
-						'nowrap' => "nowrap",
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->amount_inc_vat >= 0 ? number_adjust_format($writing->amount_inc_vat) : "",
-						'nowrap' => "nowrap",
-					),
-					array(
-						'type' => "td",
-						'class' => "operations",
-						'value' => $writing->links_to_operations(),
-					),
-				),
-			);
-		}
-		
-		$grid[] = array(
-			'class' => "table_total",
-			'cells' => array(
-				array(
-					'colspan' => "8",
-					'type' => "td",
-					'value' => "",
-				),
-				array(
-					'type' => "td",
-					'value' => number_adjust_format($debit)."&nbsp;".$GLOBALS['param']['currency'],
-					'nowrap' => "nowrap",
-				),
-				array(
-					'type' => "td",
-					'value' => number_adjust_format($credit)."&nbsp;".$GLOBALS['param']['currency'],
-					'nowrap' => "nowrap",
-				),
-				array(
-					'type' => "td",
-					'value' => "",
-				),
-			)
-		);
-	
 		return $grid;
 	}
 
@@ -542,6 +427,11 @@ class Writings extends Collector {
 		$html_table = new Html_table(array('lines' => $this->grid()));
 		
 		return $html_table->show();
+	}
+	
+	function display_as(User $user) {
+		$this->user = $user;
+		return $this->display();
 	}
 	
 	function display() {

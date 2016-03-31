@@ -32,6 +32,21 @@ class User extends Record  {
 		return $this->options;
 	}
 	
+	function is_editing($name) {
+		if (count($this->options) == 0) {
+			$this->load_in_cascade(array('id' => $this->id));
+		}
+		if (isset($this->options[$name])) {
+			if ($this->options[$name]->value == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
 	function load(array $key = array(), $table = "users", $columns = null) {
 		return parent::load($key, $table, $columns);
 	}
