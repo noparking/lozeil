@@ -18,6 +18,86 @@ class tests_Writings extends TableTestCase {
 		$GLOBALS['param']['fiscal year begin'] = "01";
 	}
 	
+	function test_estimate_accounting_code_from_ids() {
+		$code = new Accounting_Code();
+		$code->name = "Code de test";
+		$code->number = "411TEST";
+		$code->save();
+		
+		$code_2 = new Accounting_Code();
+		$code_2->name = "Code de rêve II";
+		$code_2->number = "411TEST2";
+		$code_2->save();
+		
+		$writing = new Writing();
+		$writing->comment = "Pour le code de test";
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 3, 21, 2016);
+		$writing->accountingcodes_id = $code->id;
+		$writing->save();
+		
+		$writing_1 = new Writing();
+		$writing_1->comment = "Pour le code de test";
+		$writing_1->amount_inc_vat = 250;
+		$writing_1->day = mktime(0, 0, 0, 3, 21, 2016);
+		$writing_1->save();
+		
+		$writings = new Writings();
+		$writings->estimate_accounting_code_from_ids(array($writing_1->id));
+		
+		$writing_1->load(array('id' => $writing_1->id));
+		$this->assertEqual($writing_1->accountingcodes_id, 0);
+
+		$bayesianelements = new Bayesian_Elements();
+		$bayesianelements->stuff_with($writing);
+		$bayesianelements->increment();
+
+		$writings = new Writings();
+		$writings->estimate_accounting_code_from_ids(array($writing_1->id));
+		
+		$writing_1->load(array('id' => $writing_1->id));
+		$this->assertEqual($writing_1->accountingcodes_id, $code->id);
+		
+		$writing_2 = new Writing();
+		$writing_2->comment = "Pour le code de rêve";
+		$writing_2->amount_inc_vat = -250;
+		$writing_2->day = mktime(0, 0, 0, 3, 21, 2016);
+		$writing_2->save();
+		
+		$writings = new Writings();
+		$writings->estimate_accounting_code_from_ids(array($writing_2->id));
+		
+		$writing_2->load(array('id' => $writing_2->id));
+		$this->assertEqual($writing_2->accountingcodes_id, $code->id);
+		
+		$writing_2->accountingcodes_id = $code_2->id;
+		$writing_2->save();
+		
+		$bayesianelements = new Bayesian_Elements();
+		$bayesianelements->stuff_with($writing_2);
+		$bayesianelements->increment();
+		
+		$writings = new Writings();
+		$writings->estimate_accounting_code_from_ids(array($writing_2->id));
+		
+		$writing_2->load(array('id' => $writing_2->id));
+		$this->assertEqual($writing_2->accountingcodes_id, $code_2->id);
+
+		$writing_21 = new Writing();
+		$writing_21->comment = "Pour le code de rêve";
+		$writing_21->amount_inc_vat = -250;
+		$writing_21->day = mktime(0, 0, 0, 4, 1, 2016);
+		$writing_21->save();
+		
+		$writings = new Writings();
+		$writings->estimate_accounting_code_from_ids(array($writing_21->id));
+		
+		$writing_21->load(array('id' => $writing_21->id));
+		$this->assertEqual($writing_21->accountingcodes_id, $code_2->id);
+		
+		$this->truncateTables("accountingcodes", "bayesianelements", "writings");
+	}
+
 	function test_grid_body__grid_header() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 250;
