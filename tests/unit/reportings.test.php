@@ -106,20 +106,20 @@ class tests_Reportings extends TableTestCase {
 		$affectation1->save();
 
 		$period1 = new Balance_Period();
-		$period1->start = time();
+		$period1->start = mktime(9, 0, 0, 3, 30, 2016);
 		$period1->stop = strtotime("+5 months", $period1->start);
 		$period1->save();
 
 		$period2 = new Balance_Period();
-		$period2->start = strtotime("-11 months", time());
-		$period2->stop = time();
+		$period2->start = strtotime("-11 months", mktime(9, 0, 0, 3, 30, 2016));
+		$period2->stop = mktime(9, 0, 0, 3, 30, 2016);
 		$period2->save();
 
 		$balance1 = new Balance();
 		$balance1->accountingcodes_id = $code1->id;
 		$balance1->period_id = $period2->id;
 		$balance1->amount = 150;
-		$balance1->day = time();
+		$balance1->day = mktime(9, 0, 0, 3, 30, 2016);
 		$balance1->save();
 
 		$code2 = new Accounting_Code();
@@ -136,17 +136,17 @@ class tests_Reportings extends TableTestCase {
 		$balance2->accountingcodes_id = $code2->id;
 		$balance2->period_id = $period1->id;
 		$balance2->amount = -100;
-		$balance2->day = time();
+		$balance2->day = mktime(9, 0, 0, 3, 30, 2016);
 		$balance2->save();
 
 		$balance3 = new Balance();
 		$balance3->accountingcodes_id = $code2->id;
 		$balance3->period_id = $period1->id;
 		$balance3->amount = -350;
-		$balance3->day = strtotime("-1 year", time());
+		$balance3->day = strtotime("-1 year", mktime(9, 0, 0, 3, 30, 2016));
 		$balance3->save();
 
-		$_SESSION['filter'] = array('start' => time(), 'stop' => strtotime("+1 year", time()));
+		$_SESSION['filter'] = array('start' => mktime(9, 0, 0, 3, 30, 2016), 'stop' => strtotime("+1 year", mktime(9, 0, 0, 3, 30, 2016)));
 		$_SESSION['filter']['period'] = "variable";
 
 		$this->assertEqual(month_from_timestamp($period1->start, $period1->stop), 6);
@@ -374,7 +374,7 @@ class tests_Reportings extends TableTestCase {
 		$balance1->accountingcodes_id = $code1->id;
 		$balance1->period_id = $period2->id;
 		$balance1->amount = 150;
-		$balance1->day = time();
+		$balance1->day = mktime(9, 0, 0, 3, 30, 2016);
 		$balance1->save();
 
 		$code2 = new Accounting_Code();
