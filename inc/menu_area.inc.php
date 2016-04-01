@@ -105,13 +105,11 @@ class Menu_Area {
 			ucwords(__("categories")) => "categories.php",
 			ucwords(__("banks")) => "banks.php",
 			ucwords(__("sources")) => "sources.php",
+			ucwords(__("activities")) => "activities.php",
+			ucwords(__("models")) => "models.php",
+			ucwords(__("accounting plan")) => "accountingplan.php",
 		);
 		
-		if(isset($_SESSION['accountant_view']) and $_SESSION['accountant_view'] == "1" ) {
-			$configuration[ucwords(__("activities"))] = "activities.php";
-			$configuration[ucwords(__("models"))] = "models.php";
-			$configuration[ucwords(__("accounting plan"))] = "accountingplan.php";
-		}
 
 		$grid = array();
 		if ($ext_treasury === true) {
