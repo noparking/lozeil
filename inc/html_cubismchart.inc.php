@@ -1,5 +1,5 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/* Lozeil -- Copyright (C) No Parking 2013 - 2016 */
 
 class Html_Cubismchart {
 	public $name = "";
@@ -48,10 +48,11 @@ class Html_Cubismchart {
 	}
 	
 	function prepare_navigation($filter = "", $scale = "") {
-		list($previous_year_start, $previous_year_stop) = determine_fiscal_year(strtotime("-1 year ".date("m/d/Y", (int)$this->start)));
-		list($next_year_start, $next_year_stop) = determine_fiscal_year(strtotime("+1 year ".date("m/d/Y", (int)$this->start)));
-		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$previous_year_start."&amp;stop=".$previous_year_stop."&amp;filter=".$filter."&amp;scale=".$scale),"<<")."</span>
-			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$next_year_start."&amp;stop=".$next_year_stop."&amp;filter=".$filter."&amp;scale=".$scale),">>")."</span>";
+		list($start, $stop) = determine_fiscal_year((int)$this->start);
+		list($previous_start, $previous_stop) = determine_month(mktime(0, 0, 0, date("m", $start) - 1, 1, date("Y", $start)));
+		list($next_start, $next_stop) = determine_month(mktime(0, 0, 0, date("m", $stop) + 1, 1, date("Y", $stop)));
+		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$previous_start."&amp;stop=".$previous_stop."&amp;filter=".$filter."&amp;scale=".$scale),"<<")."</span>
+			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$next_start."&amp;stop=".$next_stop."&amp;filter=".$filter."&amp;scale=".$scale),">>")."</span>";
 	}
 	
 	function show() {
