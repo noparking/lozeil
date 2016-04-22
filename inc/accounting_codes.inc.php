@@ -161,7 +161,6 @@ class Accounting_Codes extends Collector  {
 	}
 
 	function display() {
-		return "<div id=\"accounting_codes\">".
-				$this->show()."</div>";
+		return "<div id=\"accounting_codes\">".$this->show()."</div>";
 	}
 }
