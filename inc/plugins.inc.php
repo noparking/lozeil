@@ -2,7 +2,6 @@
 /* Lozeil -- Copyright (C) No Parking 2014 - 2014 */
 
 class Plugins {
-	
 	static function factory() {
 		$args = func_get_args();
 		$class = $args[0];

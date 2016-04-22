@@ -24,7 +24,7 @@ class Menu_Area {
 	function show() {
 		$liste_menu = $this->grid_navigation();
 		$plug = $this->grid_other_actions();
-		foreach($plug as $p) {
+		foreach ($plug as $p) {
 			$liste_menu[] = $p;
 		}
 		
@@ -34,23 +34,23 @@ class Menu_Area {
 		$layout_logged_in_as = "<div id=\"layout_logged_in_as\"><p>".__('logged in as').": <strong>".$account."</strong> | ".Html_Tag::a(link_content("content=logout.php"),__('log out'))."</p></div>";
 		$level0 = "<header><div id=\"menu\" class=\"default\"><div class=\"level_0 clearfix\"><ul>";
 		$level1 = "<div class=\"level_1\" > <ul style=\"width: 1000px;\">";
-		$page = isset($_GET['content']) && !empty($_GET['content'])?($_GET['content']):"users.php";
+		$page = isset($_GET['content']) && !empty($_GET['content'])?($_GET['content']):"writings.php";
+
 		foreach($liste_menu  as $cat) {
 			$title = $cat['title'];
 			$souscat = $cat['categorie'];
-			
-			if (in_array($page , $souscat) ) {
+
+			if (in_array($page, $souscat)) {
 				$level0 .= "<li class=\"selected\"><a href=\"".link_content("content=".$this->firstinarray($souscat))." \" >".$title."</a></li>";	
-				foreach($souscat as $nom => $lien)
-				{
-					if ($page == $lien )
+				foreach($souscat as $nom => $lien) {
+					if ($page == $lien ) {
 						$level1 .= "<li class=\"selected\"><a href=\"".link_content("content=".$lien)."\" >".$nom."</a></li>";
-					else
+					} else {
 						$level1 .= "<li><a href=\"".link_content("content=".$lien)."\" >".$nom."</a></li>";
+					}
 				}
 				$level1 .= "</ul></div></div></header>";
-			}
-			else {
+			} else {
 				$level0 .= "<li><a href=\"".link_content("content=".$this->firstinarray($souscat))." \" >".$title."</a></li>";
 			}
 		}
